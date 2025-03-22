@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*input tag css */
+.react-tag-input {
+    width: 100%;
+    background: #f4f5f7;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    padding: 0;
+  }
+  .react-tag-input__input {
+    font-size: 0.875rem;
+    margin: 0;
+    height: 2.8rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    background: transparent;
+    color: #4c4f52;
+  }
+  /* .react-tag-input__input:focus {
+    background: #ffffff;
+  } */
+  .react-tag-input__input::placeholder,
+  .react-tag-input__input:-moz-placeholder,
+  .react-tag-input__input:-ms-input-placeholder,
+  .react-tag-input__input::-moz-placeholder,
+  .react-tag-input__input::-webkit-input-placeholder {
+    font-size: 10px;
+    font-weight: 400;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  }
+  
+  /* react tag input css */
+  .react-tag-input {
+    box-sizing: border-box;
+    position: relative;
+    /* width: 100%; */
+    height: auto;
+    /* min-height: 2.375em; */
+    /* padding: 0.1875em 0.375em; */
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    /* font-size: 1rem; */
+    /* background: white; */
+    /* color: #333; */
+    /* border: 1px solid #e1e1e1; */
+    /* border-radius: 3px; */
+  }
+  
+  .react-tag-input * {
+    box-sizing: border-box;
+  }
+  
+  .react-tag-input > * {
+    margin: 0.1875em;
+  }
+  
+  .react-tag-input__input {
+    width: auto;
+    flex-grow: 1;
+    /* height: 2.5em; */
+    padding: 0 0 0 0.1875em;
+    /* margin: 0 0.1875em; */
+    /* font-size: 1em; */
+    line-height: 1;
+    /* background: transparent; */
+    /* color: #333; */
+    /* border: none; */
+    border-radius: 5px;
+    outline: 0;
+    box-shadow: none;
+    -webkit-appearance: none;
+  }
+  
+  .react-tag-input__input::placeholder,
+  .react-tag-input__input:-moz-placeholder,
+  .react-tag-input__input:-ms-input-placeholder,
+  .react-tag-input__input::-moz-placeholder,
+  .react-tag-input__input::-webkit-input-placeholder {
+    color: #333;
+  }
+  
+  .react-tag-input__input:focus {
+    border: none;
+  }
+  
+  .react-tag-input__tag {
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-size: 0.85em;
+    line-height: 1;
+    background: #e1e1e1;
+    border-radius: 3px;
+  }
+  
+  .react-tag-input__tag__content {
+    outline: 0;
+    border: none;
+    white-space: nowrap;
+    padding: 0 0.9375em;
+  }
+  
+  .react-tag-input__tag__remove {
+    position: relative;
+    height: 2em;
+    width: 2em;
+    font-size: 0.85em;
+    cursor: pointer;
+    background: darken(#e1e1e1, 5%);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+  
+  .react-tag-input__tag__remove:before,
+  .react-tag-input__tag__remove:after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    content: " ";
+    height: 0.9em;
+    width: 0.15em;
+    background-color: #333;
+  }
+  
+  .react-tag-input__tag__remove:before {
+    transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  }
+  
+  .react-tag-input__tag__remove:after {
+    transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+  }
+  
+  .react-tag-input__tag-readonly {
+    width: 0;
+  }
+  
+  .react-tag-input__tag-readonly:before,
+  .react-tag-input__tag-readonly:after {
+    content: "";
+    width: 0;
+  }
+  .react-tag-input__tag {
+    margin: 0.175rem 0.375rem;
+    color: #24262d;
+  }
+
+  /* Tab */
+  .react-tabs__tab--selected {
+    @apply !bg-brand !rounded-lg !text-white
+}
+  /* Tab */

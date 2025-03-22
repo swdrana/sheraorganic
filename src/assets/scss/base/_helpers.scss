@@ -1,0 +1,304 @@
+.pt-80 {
+  padding-top: 80px;
+}
+.pt-100 {
+  padding-top: 100px;
+  @include small-screen {
+    padding-top: 60px;
+  }
+}
+.pt-120 {
+  padding-top: 120px;
+  @include small-screen {
+    padding-top:70px;
+  }
+}
+@include small-screen {
+  .gshop-hero.pt-120{
+    padding-top: 90px;
+  }
+}
+.pb-80 {
+  padding-bottom: 80px;
+  @include small-screen {
+    padding-bottom: 50px;
+  }
+}
+.pb-100 {
+  padding-bottom: 100px;
+  @include small-screen {
+    padding-bottom: 60px;
+  }
+}
+.ptb-100 {
+  padding: 100px 0;
+  @include small-screen {
+    padding: 60px 0;
+  }
+}
+.ptb-120 {
+  padding: 120px 0;
+  @include small-screen {
+    padding: 70px 0;
+  }
+}
+.pb-120 {
+  padding-bottom: 120px;
+  @include small-screen {
+    padding-bottom: 70px;
+  }
+}
+.pb-200 {
+  padding-bottom: 200px;
+  @include small-screen {
+    padding-bottom: 150px;
+  }
+}
+.mt-30 {
+  margin-top: 30px;
+}
+.mt--40 {
+  margin-top: -40px;
+}
+.mt--50 {
+  margin-top: -50px;
+}
+.mt--60 {
+  margin-top: -60px;
+}
+.mt--90 {
+  margin-top: -90px;
+}
+.mt-10 {
+  margin-top: 10px;
+}
+.mt-80 {
+  margin-top: 80px;
+}
+.gshop-title {
+  mark {
+    .border-line {
+      left: 0; 
+      bottom: -5px;
+    }
+  }
+}
+.z-1 {
+  z-index: 1;
+}
+.z-2 {
+  z-index: 2;
+}
+.z-5 {
+  z-index: 5;
+}
+.z--1 {
+  z-index: -1;
+}
+.gshop-subtitle {
+  font-family: $oleo-font;
+  font-weight: $font-weight-normal;
+}
+.bg-shade {
+  background-color: $shade-bg;
+}
+.rounded-btn {
+  width: 35px;
+  height: 35px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: $white;
+  color: $text-color;
+  transition: $transition-base;
+  svg {
+    path {
+      fill: $text-color;
+      transition: $transition-base;
+    }
+  }
+  &:hover {
+    background-color: $primary;
+    color: $white;
+    svg {
+      path {
+        fill: $white;
+      }
+    }
+  }
+}
+.lh-0 {
+  line-height: 0;
+}
+
+.hl-primary {
+  color: $hl-primary;
+}
+.hl-bg-primary {
+  background-color: $hl-primary;
+}
+
+.text-hl-primary {
+  color: $hl-primary;
+}
+
+
+// For Next Js Project
+.horizontal-product-card.next_style .thumbnail {
+  width: 120px;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  background-color: transparent;
+  height: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media(max-width: 575px) {
+    width: auto;
+    height: auto;
+  }
+}
+
+.vertical-product-card.trend_style .thumbnail {
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  background-color: transparent;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-curve {
+  .section-curve-wrapper {
+      background-image: url("/img/shapes/section-curve.png");
+  }
+}
+
+.contact-left-box  {
+    background-image: url("/img/shapes/circle-half-fill.png");
+}
+
+.feedback_slider_btn_next {
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255,124,8,.1);
+  color: #ff7c08;
+  border-radius: 50%;
+  margin-left: 16px;
+  transition: all .3s ease-in-out;
+}
+
+.at_scrollbar.scrollbar.cart-navbar-wrapper::-webkit-scrollbar ,
+.widget-nav.next_sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.at_scrollbar.scrollbar.cart-navbar-wrapper::-webkit-scrollbar-track,
+.widget-nav.next_sidebar::-webkit-scrollbar-track {
+  background-color: #f0f0f0; 
+}
+
+.at_scrollbar.scrollbar.cart-navbar-wrapper::-webkit-scrollbar-thumb,
+.widget-nav.next_sidebar::-webkit-scrollbar-thumb {
+  background-color: $primary; 
+  border-radius: 0px;
+}
+
+.my_account {
+  .react-tabs__tab--selected {
+    background-color: transparent !important;
+  }
+}
+
+.order-history-table {
+  margin-bottom: 0;
+  tr {
+    th {
+      background-color: $primary;
+      color: $white;
+      font-weight: 600;
+    }
+    td {
+      padding-block: 10px !important;
+      .view-invoice {
+        background-color: transparent;
+        box-shadow: none;
+        border-bottom: 0;
+        color: $primary;
+      }
+    }
+    &:nth-child(odd) {
+      td {
+        background-color: $shade-bg;
+      }
+    }
+  }
+}
+
+.cart_tbody {
+  tr {
+    td {
+      text-align: left !important;
+      padding-inline: 0 !important;
+    }
+  }
+}
+
+.table_page {
+  a {
+    color: $dark;
+  }
+}
+
+.table_page_active {
+  a {
+    color: $white;
+  }
+}
+
+.cart-table.next_style {
+  th {
+    background-color: $primary;
+    color: $white;
+  }
+  th , td {
+    padding-inline: 24px !important;
+    padding-block: 15px;
+    &:first-child {
+      width: 100px;
+    }
+  }
+}
+
+.product-info-tab.next_style {
+  .pt-info-tab-nav li a {
+    &.active {
+      color: $white;
+    }
+    &::before {
+      display: none;
+    }
+  }
+}
+
+select:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.max-text-30 {
+  max-width: 30ch;
+}
+
+.pagination {
+  .page-link {
+    &:hover {
+      a {
+        color: $white;
+      }
+    }
+  }
+}
+// For Next Js Projectch

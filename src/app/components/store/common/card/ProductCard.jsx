@@ -1,0 +1,95 @@
+"use client";
+
+import Link from "next/link";
+import StarRating from "../others/StartRating";
+
+import useAddToCart from "../../hooks/useAddToCart";
+import useAddWishlist from "../../hooks/useAddWishlist";
+import { useMainContext } from "../../provider/MainContextStore";
+
+const ProductCard = ({ product }) => {
+  const { handelAddItem } = useAddToCart();
+
+  const { handleWishlist, wishlist } = useAddWishlist();
+  const { setOpenProductModal, setProductDetails } = useMainContext();
+  return (
+    <>
+      <div className="col-xxl-3 col-lg-4 col-md-6 col-sm-10">
+        <div className="vertical-product-card trend_style rounded-2 position-relative border-0 bg-white">
+          {product.prices.discount >= 1 && (
+            <span className="offer-badge text-white fw-bold fs-xxs bg-danger position-absolute start-0 top-0">
+              {product.prices.discount.toFixed(0)}% OFF
+            </span>
+          )}
+
+          <div className="thumbnail position-relative text-center p-4 overflow-hidden">
+            <img src={product.image[0]} alt="apple" className="img-fluid" />
+
+            <div className="product-btns position-absolute d-flex gap-2 flex-column">
+              <a
+                type="button"
+                onClick={() => handleWishlist(product)}
+                className="rounded-btn"
+              >
+                {wishlist?.some((item) => item._id === product._id) ? (
+                  <i className="fa-solid fa-heart"></i>
+                ) : (
+                  <i className="fa-regular fa-heart"></i>
+                )}
+              </a>
+
+              <a
+                type="button"
+                onClick={() => {
+                  setOpenProductModal(true), setProductDetails(product);
+                }}
+                className="rounded-btn"
+              >
+                <i className="fa-regular fa-eye"></i>
+              </a>
+            </div>
+          </div>
+          <div className="card-content">
+            <div className="mb-2 tt-category tt-line-clamp tt-clamp-1">
+              <a href="#" className="d-inline-block text-muted fs-xxs">
+                {product.category}
+              </a>
+            </div>
+            <Link
+              href={`/product-details/${product._id}`}
+              className="card-title fw-medium d-block mb-2 tt-line-clamp tt-clamp-2"
+            >
+              {product.name}
+            </Link>
+            <div className="d-flex align-items-center flex-nowrap star-rating fs-xxs mb-2">
+              <StarRating rating={product?.averageRating} />
+              <span className="flex-shrink-0">
+                ({product.ratings?.length} Reviews)
+              </span>
+            </div>
+            <div className="d-flex gap-3">
+              <h6 className="price text-dark mb-4">
+                ${product.prices.price}.00
+              </h6>
+              {product.prices.discount >= 1 && (
+                <h6 className="price deleted text-danger mb-4">
+                  ${product.prices.originalPrice}.00
+                </h6>
+              )}
+            </div>
+
+            <a
+              type="button"
+              onClick={() => handelAddItem({ ...product, id: product._id })}
+              className="btn btn-outline-secondary d-block btn-md"
+            >
+              Add to Cart
+            </a>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default ProductCard;

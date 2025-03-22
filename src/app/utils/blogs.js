@@ -1,0 +1,38 @@
+export const allBlogs = [
+  {
+    _id: "6746d71062fb772d2bb675a2",
+    title: "The Changing Face of Indian Food in America By Quickly",
+    category: "Baby Care",
+    description:
+      "Making the American palate bolder by streamlining Indian food, Quicklly resonates with growing South Asians via its diverse Indian offerings. \n\nEminent voices and the growing South Asian population in the USA have put Indian food on the global radar. While global icons like Tom Cruise to Bill Gates openly confess their love for Indian food, the burgeoning population has expedited the rising demand for desi flavors - resulting in Indian eateries and ethnic stores all over the American map. The western population is very aware of 'palak paneer' or 'chicken butter masala' - whether you call samosa, a potato-filled fried pastry, or Chole Bhature, a chickpea curry with fried flatbreads, you can't hide your love for Indian food! \n\nPioneering in the fast-growing food delivery ecosystem, Quicklly's on-time delivery of diverse Indian food and groceries has positioned the company as the nation's leading online South Asian marketplace. Amidst the historical forecast of the online food delivery market reaching US$231.30bn in 2023, Quicklly has taken active and aggressive measures to make authentic Indian food affordable and accessible to every corner of the nation. \n\n \n\nPowering the DNA of Indian Food in America\n\nIndian food is vast. The diversity of tastes and flavors reflecting its vibrant culture continues to enchant its lovers, and every desi swears by the love for masaledaar Indian food. The demand for Indian piquancy is getting stronger, and to meet the cravings of the world's second-largest immigrant group, Quicklly turns heads with an array of locally sourced Indian food delivery prepared by cuisine experts. \n\nWe are a one-stop shop for South Asian food and groceries. Partnered with 100+ restaurants featuring 1,50,000+ traditional, hard-to-find, specialty, and top-selling Indian products, we are catering to the cravings for a home-cooked taste that was once a distant hope for the Indian population in America. You can simply Indian food order online, and we deliver warm fresh food right to your doors. \n\n\"We are unique in many ways. Our products fly off the shelf in no time for being authentic and of the highest quality. We love spicy Indian food and aim to connect its diverse and strong taste to every pocket of America,\" says Keval Raj, Co-founder of Quicklly. \"Indian population in America is growing at lightning speed, and Quicklly is a way to make everyone feel at home while away from their loved ones,\" he added. \n\nOur range of Indian food and groceries is a permanent fixture in the dining landscape of every desi family or Indian food lover. Whether you're craving restaurant Indian food, Ready to eat Indian meals, Indian sweets and snacks online, Indian meal kits, homemade Indian snacks online USA, fresh Indian groceries, Indian sweets gift baskets, or Indian traditional food recipes, we've it all",
+    img: "https://res.cloudinary.com/dmadhbgty/image/upload/v1732695820/grostore/Ug88ABhEwM9ewmG4YqUHMUPeTu7e7kiY2dTPxtwU-min.png",
+    status: "show",
+    createdAt: "2024-11-27T08:23:44.179Z",
+    updatedAt: "2024-11-27T08:23:44.179Z",
+    __v: 0,
+  },
+  {
+    _id: "6746aee2e9e3636638c03268",
+    title: "Make Your Life Healthier, Happier & Enjoy",
+    category: "Fresh Fruits",
+    description:
+      "Today we’re celebrating episode 5 of Fun With Food! We’re making Mini Pizza Bagels with special guest Feeling Fox while learning about the feeling of frustration and how to process feelings in a healthy way, the letter T sound, counting, shapes, colors and the health benefits of tomatoes!\n\nIf you’re looking for learning videos for kids that are quality, wholesome and fun I recommend watching our new show, Fun With Food! Fun With Food is an Educational Cooking Show for Kids. In each episode, we make a recipe or go on a food adventure while learning about letters, numbers, colors, shapes, nutrition, feelings and more. Fun with Food is created and hosted by Megan Roosevelt, Registered Dietitian Nutritionist and mom of 2.\n\n\nBenefits of Tomatoes\n\nTomatoes are a fruit made of mostly water, which make them a great, hydrating food! Tomatoes are also a good source of vitamin C, vitamin K, folate and potassium. Vitamin C is important for a healthy immune system to help us fight sickness such as getting a cold. Tomatoes also contain lycopene, which is what gives tomatoes their red color. Lycopene supports our brain health and memory!",
+    img: "https://res.cloudinary.com/dmadhbgty/image/upload/v1732695681/grostore/cO3Tsm7sYIdbrp7ofTXygsGPTvw28XneqoaRlTwU-min.png",
+    status: "show",
+    createdAt: "2024-11-27T05:32:18.630Z",
+    updatedAt: "2024-11-27T08:21:27.096Z",
+    __v: 0,
+  },
+  {
+    _id: "6746a8f0f7895700de8cec7a",
+    title: "Republic Day Special - Dive Into The Patriotic Sprit Quickly",
+    category: "Fresh Organic",
+    description:
+      "With those perfectly practiced parades embellishing India's pride, it's hard not to get swept by the patriotic feeling that arises within. The Day that marks the enforcement of one of the longest Constitutions ever written in the world calls for a great celebration to marvel at India's rich culture and heritage. And to make your plans turn into a fool-proof celebration, we deliver the tastiest Indian dishes, embracing the diversity of Indian cuisine.\n\nThis Republic Day, go Vocal for the Local taste of India with our range of authentic Indian food and groceries. Made using authentic Indian ingredients, our range of Indian delights is an absolute pick to excite your Republic Day celebration. \n\nShould this year's menu hint at your undying love for India, we've rounded some of the top Indian delights that say, \"treat yourself\" with every bite. Planning to order Indian sweets, snacks or spicy Indian food? Reunite with your food-loving friends and fam to indulge in our detailed list of gastronomy delights. \n\n\n\nReady to Eat Indian Meals\n\nEmbracing the diversity of Indian cuisine in our offerings, our Ready-to-eat Indian meals are a reassurance of familiar home-cooked flavors. With an expansive range of veg and non-veg options like Paneer Tikka Masala and Rice, Chicken Tikka Masala and Rice, Veg Biryani, Chicken Biryani, and more, Ready-to-eat Indian meals bring you the joy of rich desi flavors while you're away from home. \n\nUnpack our freshly packed meal, pop it in the oven and savor it warm. Just that easy! We deliver free doorstep deliveries to every corner of the nation so you can Order. Savor and Repeat! \n\n\n\nIndian Sweets & Snacks\n\nBarfis, Sev, or Motichoor Laddoos hold a special place in every desi's heart. Celebrate your patriotic spirits by indulging in our range of authentic Indian sweets and snacks, including Kaju Barfis, Mawa Barfis, Pista Rolls, Rasgullas, Chewda Mix, Paras, and Alu Bhujia, to name a few. \n\nNothing can beat the decadent melt-in-mouth flavors of Indian sweets. As India revels in pride with flag-hoisting ceremonies, empowering speeches, and parades, you can celebrate the spirit of nationalism with our super tasty desi delights. Order online Indian sweets from the nation's most popular places like Rajbhog Sweets, Mithaas, Sweet Bengal, and more",
+    img: "https://res.cloudinary.com/dmadhbgty/image/upload/v1732695761/grostore/RZXqchNL0kNKU4R4kzF5vuycpVoCbm8nLzOlXjAn-min.png",
+    status: "hide",
+    createdAt: "2024-11-27T05:06:56.183Z",
+    updatedAt: "2024-12-02T11:22:45.259Z",
+    __v: 0,
+  },
+];
