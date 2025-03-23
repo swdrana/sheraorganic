@@ -1,11 +1,12 @@
 "use client";
 
 import Loading from "@/app/components/store/common/others/Loading";
-import { getSession, signIn, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // For App Router in Next.js 13
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { createUser } from "@/app/backend/controllers/user.controller";
 
 const Login = ({ setting }) => {
   const [error, setError] = useState("");
@@ -39,6 +40,70 @@ const Login = ({ setting }) => {
     if (result?.error) {
       console.error("Login failed:", result.error);
       setError("email or password not match");
+      setLoading(false);
+    }
+  };
+
+  // const handleAnonymousLogin = async () => {
+  //   setError("");
+  //   setLoading(true);
+
+  //   const callbackUrl =
+  //     new URLSearchParams(window.location.search).get("callbackUrl") || "/";
+
+  //   const result = await signIn("anonymous", {
+  //     redirect: false,
+  //     callbackUrl,
+  //   });
+
+  //   if (result?.error) {
+  //     console.error("Anonymous login failed:", result.error);
+  //     setError("Anonymous login failed");
+  //     setLoading(false);
+  //   }
+  // };
+  const handleAnonymousLogin = async () => {
+    setError("");
+    setLoading(true);
+    const date = new Date().toISOString();
+    const userData = {
+      email: `${date}@anonymous.com`,
+      name: "Anonymous",
+      password: date,
+    };
+
+    const res = await createUser(userData);
+    // console.log("res..in signup page...", res);
+    if (res?.error) {
+      setError(res?.error);
+      setLoading(false);
+    }
+
+    // console.log("res...", res);
+    if (res?.user) {
+      setError("");
+      const email = res.user.email;
+      const password = res.user.password;
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+
+      // console.log("result...", result);
+
+      const callbackUrl =
+        new URLSearchParams(window.location.search).get("callbackUrl") || "/";
+      if (result.error) {
+        setError(result.error);
+        setLoading(false);
+      } else {
+        setLoading(false);
+        router.push(callbackUrl);
+      }
+    } else {
+      //   const data = await res.json();
+      //   setError(data.message);
       setLoading(false);
     }
   };
@@ -188,6 +253,13 @@ const Login = ({ setting }) => {
                       className="btn btn-primary w-100"
                     >
                       Sign In
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary w-100 mt-2"
+                      onClick={handleAnonymousLogin}
+                    >
+                      Anonymous Login
                     </button>
                   </div>
                 </div>
