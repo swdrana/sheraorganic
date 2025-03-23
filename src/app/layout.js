@@ -23,30 +23,30 @@ import { useEffect, useState } from "react";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname(); // Use usePathname to get the current path
-  let title = "Home- Grostore Online Store";
+  let title = "Home- SheraOrganic Online Store";
   let description = "Welcome to my Next.js application!";
 
   if (pathname.startsWith("/products")) {
-    title = "Products - Grostore Online Store";
-    description = "Browse the latest products in the Grostore online store.";
+    title = "Products - SheraOrganic Online Store";
+    description = "Browse the latest products in the SheraOrganic online store.";
   } else if (pathname.startsWith("/about")) {
-    title = "About Us - Grostore Online Store";
-    description = "Learn more about the Grostore online store and our mission.";
+    title = "About Us - SheraOrganic Online Store";
+    description = "Learn more about the SheraOrganic online store and our mission.";
   } else if (pathname.startsWith("/contact")) {
-    title = "Contact Us - Grostore Online Store";
-    description = "Get in touch with the Grostore online store team.";
+    title = "Contact Us - SheraOrganic Online Store";
+    description = "Get in touch with the SheraOrganic online store team.";
   } else if (pathname.startsWith("/coupons")) {
-    title = "Coupons - Grostore Online Store";
-    description = "Get in touch with the Grostore online store team.";
+    title = "Coupons - SheraOrganic Online Store";
+    description = "Get in touch with the SheraOrganic online store team.";
   } else if (pathname.startsWith("/blog")) {
-    title = "Blog - Grostore Online Store";
-    description = "Get in touch with the Grostore online store team.";
+    title = "Blog - SheraOrganic Online Store";
+    description = "Get in touch with the SheraOrganic online store team.";
   } else if (pathname.startsWith("/terms-condition")) {
-    title = "Terms - Grostore Online Store";
-    description = "Get in touch with the Grostore online store team.";
+    title = "Terms - SheraOrganic Online Store";
+    description = "Get in touch with the SheraOrganic online store team.";
   } else if (pathname.startsWith("/product-details")) {
-    title = "Product Details - Grostore Online Store";
-    description = "Get in touch with the Grostore online store team.";
+    title = "Product Details - SheraOrganic Online Store";
+    description = "Get in touch with the SheraOrganic online store team.";
   }
 
   const { setting, settingLoading } = useSetting();
