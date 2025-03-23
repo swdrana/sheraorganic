@@ -24,24 +24,24 @@ export async function GET() {
     await connectDB();
 
     // Clear the collection
-    await Attribute.deleteMany();
-    await Brand.deleteMany();
-    await Product.deleteMany();
-    await Category.deleteMany();
-    await Order.deleteMany();
-    await Setting.deleteMany();
-    await User.deleteMany();
-    await Blog.deleteMany();
+    // await Attribute.deleteMany();
+    // await Brand.deleteMany();
+    // await Product.deleteMany();
+    // await Category.deleteMany();
+    // await Order.deleteMany();
+    // await Setting.deleteMany();
+    // await User.deleteMany();
+    // await Blog.deleteMany();
 
     // Insert seed data
-    await Attribute.insertMany(allAttributes);
-    await Brand.insertMany(allBrands);
-    await Product.insertMany(allProducts);
-    await Category.insertMany(allCategories);
-    await Order.insertMany(allOrders);
-    await User.insertMany(allUsers);
-    await Blog.insertMany(allBlogs);
-    await Setting.insertMany(allSetting);
+    // await Attribute.insertMany(allAttributes);
+    // await Brand.insertMany(allBrands);
+    // await Product.insertMany(allProducts);
+    // await Category.insertMany(allCategories);
+    // await Order.insertMany(allOrders);
+    // await User.insertMany(allUsers);
+    // await Blog.insertMany(allBlogs);
+    // await Setting.insertMany(allSetting);
 
     return NextResponse.json({ message: "Database seeded successfully!" });
   } catch (error) {
