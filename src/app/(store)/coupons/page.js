@@ -71,7 +71,7 @@ const page = () => {
                   >
                     <div className="card-body text-center p-5">
                       <div className="offer-text mb-2 justify-content-center">
-                        <div className="up-to fw-bold text-light">UP TO</div>
+                        <div className="up-to fw-bold text-danger">UP TO</div>
                         <div className="display-4 fw-bold text-danger">
                           {c?.discountPercentage}
                         </div>
@@ -80,15 +80,16 @@ const page = () => {
                         </p>
                       </div>
                       <CopyToClipboard
+                      className="bg-transparent"
                         text={c.couponCode}
                         onCopy={() => handleCopied(c.couponCode)}
                       >
-                        <div className="coupon-row">
-                          <span className="copyCode">{c.couponCode}</span>
+                        <div className="coupon-row text-danger">
+                          <span className="copyCode p-2 bg-[#ff0000c7] rounded-md me-2">{c.couponCode}</span>
                           {copied && c.couponCode === copiedCode ? (
-                            <span className="copyBtn">Copied!</span>
+                            <span className="copyBtn bg-transparent text-primary px-2">Copied!</span>
                           ) : (
-                            <span className="copyBtn">Copy Code</span>
+                            <span className="copyBtn bg-transparent text-danger px-2">Copy Code</span>
                           )}
                         </div>
                       </CopyToClipboard>
