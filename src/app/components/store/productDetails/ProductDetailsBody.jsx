@@ -1,23 +1,20 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useCart } from "react-use-cart";
 import { Controller } from "swiper"; // Import Controller from modules in Swiper 8.4.0
-import ProductDetailsTab from "./ProductDetailsTab";
-import ProductDetailsSidebar from "./ProductDetailsSidebar";
-import useSingleProduct from "../dataFetching/useSingleProduct";
-import useProducts from "../dataFetching/useProducts";
+import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { getAllAttributes } from "../../../backend/controllers/attribute.controller";
+import PreLoader from "../common/others/PreLoader";
 import StarRating from "../common/others/StartRating";
 import usebrands from "../dataFetching/useBrand";
-import Link from "next/link";
+import useSingleProduct from "../dataFetching/useSingleProduct";
 import useAddToCart from "../hooks/useAddToCart";
-import { useCart } from "react-use-cart";
-import Loading from "../common/others/Loading";
-import { getAllAttributes } from "../../../backend/controllers/attribute.controller";
-import VariantList from "./VariantList";
 import Price from "./Price";
-import SkeletonLoading from "./SkeletonLoading";
-import PreLoader from "../common/others/PreLoader";
+import ProductDetailsSidebar from "./ProductDetailsSidebar";
+import ProductDetailsTab from "./ProductDetailsTab";
+import VariantList from "./VariantList";
 
 const ProductDetailsBody = ({ id }) => {
   const [firstSwiper, setFirstSwiper] = useState(null);
@@ -419,10 +416,20 @@ const ProductDetailsBody = ({ id }) => {
                               className="btn btn-secondary btn-md"
                             >
                               <span className="me-2">
-                                <i className="fa-solid fa-bag-shopping"></i>
+                              <i class="fas fa-cart-plus"></i>
                               </span>
                               Add to Cart
                             </a>
+                            
+                          <Link href={`/checkout`}
+                            onClick={() => handelAddItem({ ...product, id: product._id })}
+                            className="btn btn-primary d-block btn-md "
+                          >
+                            <span className="me-2">
+                              <i className="fa-solid fa-bag-shopping"></i>
+                            </span>
+                            Buy Now
+                          </Link>
                           </div>
                           <div className="tt-category-tag mt-4">
                             {brands.map((brand, i) => (

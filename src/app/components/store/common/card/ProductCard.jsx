@@ -14,7 +14,7 @@ const ProductCard = ({ product }) => {
   const { setOpenProductModal, setProductDetails } = useMainContext();
   return (
     <>
-      <div className="col-xxl-3 col-lg-4 col-md-6 col-sm-10">
+      <div className="col-xxl-3 col-lg-4 col-md-6 col-sm-10 group">
         <div className="vertical-product-card trend_style rounded-2 position-relative border-0 bg-white">
           {product.prices.discount >= 1 && (
             <span className="offer-badge text-white fw-bold fs-xxs bg-danger position-absolute start-0 top-0">
@@ -23,7 +23,13 @@ const ProductCard = ({ product }) => {
           )}
 
           <div className="thumbnail position-relative text-center p-4 overflow-hidden">
-            <img src={product.image[0]} alt="apple" className="img-fluid" />
+            <Link href={`/product-details/${product._id}`}>
+              <img
+                src={product.image[0]}
+                alt="apple"
+                className="img-fluid group-hover:scale-105 transition-all ease-in-out transition-duration-500"
+              />
+            </Link>
 
             <div className="product-btns position-absolute d-flex gap-2 flex-column">
               <a
@@ -50,38 +56,37 @@ const ProductCard = ({ product }) => {
             </div>
           </div>
           <div className="card-content">
-            <div className="mb-2 tt-category tt-line-clamp tt-clamp-1">
-              <a href="#" className="d-inline-block text-muted fs-xxs">
-                {product.category}
-              </a>
-            </div>
-            <Link
-              href={`/product-details/${product._id}`}
-              className="card-title fw-medium d-block mb-2 tt-line-clamp tt-clamp-2"
-            >
-              {product.name}
-            </Link>
-            <div className="d-flex align-items-center flex-nowrap star-rating fs-xxs mb-2">
-              <StarRating rating={product?.averageRating} />
-              <span className="flex-shrink-0">
-                ({product.ratings?.length} Reviews)
-              </span>
-            </div>
-            <div className="d-flex gap-3">
-              <h6 className="price text-dark mb-4">
-                ${product.prices.price}.00
-              </h6>
-              {product.prices.discount >= 1 && (
-                <h6 className="price deleted text-danger mb-4">
-                  ${product.prices.originalPrice}.00
+            <Link href={`/product-details/${product._id}`}>
+              <div className="mb-2 tt-category tt-line-clamp tt-clamp-1">
+                <a href="#" className="d-inline-block text-muted fs-xxs">
+                  {product.category}
+                </a>
+              </div>
+              <div className="card-title fw-medium d-block mb-2 tt-line-clamp tt-clamp-2">
+                {product.name}
+              </div>
+              <div className="d-flex align-items-center flex-nowrap star-rating fs-xxs mb-2">
+                <StarRating rating={product?.averageRating} />
+                <span className="flex-shrink-0">
+                  ({product.ratings?.length} Reviews)
+                </span>
+              </div>
+              <div className="d-flex gap-3">
+                <h6 className="price text-dark mb-4">
+                  ${product.prices.price}.00
                 </h6>
-              )}
-            </div>
+                {product.prices.discount >= 1 && (
+                  <h6 className="price deleted text-danger mb-4">
+                    ${product.prices.originalPrice}.00
+                  </h6>
+                )}
+              </div>
+            </Link>
 
             <a
-              type="button"
+              // type="button"
               onClick={() => handelAddItem({ ...product, id: product._id })}
-              className="btn btn-outline-secondary d-block btn-md"
+              className="btn btn-outline-secondary d-block btn-md hover:cursor-auto"
             >
               Add to Cart
             </a>

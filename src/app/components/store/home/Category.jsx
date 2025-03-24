@@ -25,7 +25,10 @@ const Category = ({ categorys, products }) => {
             </div>
             <div className="row justify-content-center g-4">
               {categorys?.slice(0, 6).map((category, index) => (
-                <div
+                <Link
+                href={`/products/category=${category.name
+                  .replace(/\s+/g, "")
+                  .toLowerCase()}=${category._id}`}
                   className="col-xxl-2 col-lg-3 col-md-4 col-sm-6"
                   key={index}
                 >
@@ -41,14 +44,11 @@ const Category = ({ categorys, products }) => {
                         className="img-fluid"
                       />
                     </div>
-                    <Link
-                      href={`/products/category=${category.name
-                        .replace(/\s+/g, "")
-                        .toLowerCase()}=${category._id}`}
+                    <div
                       className="text-dark fs-sm fw-bold d-block mt-3"
                     >
                       {category.name}
-                    </Link>
+                    </div>
                     <span className="total-count position-relative ps-3 fs-sm fw-medium doted-primary">
                       {
                         products?.filter(
@@ -58,16 +58,16 @@ const Category = ({ categorys, products }) => {
                         ).length
                       }{" "}
                     </span>
-                    <Link
-                      href={`/products/category=${category.name
-                        .replace(/\s+/g, "")
-                        .toLowerCase()}=${category._id}`}
+                    <div
+                      // href={`/products/category=${category.name
+                        // .replace(/\s+/g, "")
+                        // .toLowerCase()}=${category._id}`}
                       className="explore-btn position-absolute"
                     >
                       <i className="fa-solid fa-arrow-up"></i>
-                    </Link>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

@@ -3,8 +3,8 @@
 import Link from "next/link";
 import StarRating from "../others/StartRating";
 
-import { useMainContext } from "../../provider/MainContextStore";
 import useAddWishlist from "../../hooks/useAddWishlist";
+import { useMainContext } from "../../provider/MainContextStore";
 
 const FeatureBrandProductCard = ({ product, i }) => {
   const { handleWishlist, wishlist } = useAddWishlist();
@@ -43,7 +43,7 @@ const FeatureBrandProductCard = ({ product, i }) => {
             </a>
           </div>
         </div>
-        <div className="card-content mt-4 mt-sm-0">
+        <Link href={`/product-details/${product._id}`} className="card-content mt-4 mt-sm-0">
           <div className="d-flex align-items-center flex-nowrap star-rating">
             <StarRating rating={product?.averageRating} />
             <span className="flex-shrink-0">
@@ -51,12 +51,12 @@ const FeatureBrandProductCard = ({ product, i }) => {
               ({product.ratings?.length} Reviews)
             </span>
           </div>
-          <Link
-            href={`/product-details/${product._id}`}
+          <div
+            // href={`/product-details/${product._id}`}
             className="fw-bold text-heading title tt-line-clamp tt-clamp-1"
           >
             {product.name}
-          </Link>
+          </div>
           <div className="pricing mt-2">
             {product?.prices?.discount > 0 && (
               <span className="fw-bold h4 deleted me-1 text-muted">
@@ -67,16 +67,16 @@ const FeatureBrandProductCard = ({ product, i }) => {
               ${product.prices.price}.00
             </span>
           </div>
-          <Link
-            href="/products"
+          <div
+            // href="/products"
             className="fs-xs fw-bold mt-3 d-inline-block explore-btn"
           >
-            Shop Now
+            Show Details
             <span className="ms-1">
               <i className="fa-solid fa-arrow-right"></i>
             </span>{" "}
-          </Link>
-        </div>
+          </div>
+        </Link>
       </div>
     </>
   );
