@@ -1,24 +1,24 @@
 "use client";
 
-import { Fragment, useRef, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { RiDeleteBin5Fill } from "react-icons/ri";
-import { toast } from "react-toastify";
-import { useMainContext } from "../context/mainContext";
-import { deleteProduct } from "@/app/backend/controllers/product.controller";
-import { deleteCoupon } from "@/app/backend/controllers/coupon.controller";
-import { deleteStaff } from "@/app/backend/controllers/staff.controller";
-import { deleteAttribute } from "@/app/backend/controllers/attribute.controller";
 import { deleteChildAttribute } from "@/app/backend/actions/attribute.action";
 import { deleteCategoryById } from "@/app/backend/actions/category.action";
-import Loading from "../loader/Loading";
+import { deleteAttribute } from "@/app/backend/controllers/attribute.controller";
 import { deleteBrand } from "@/app/backend/controllers/brand.controller";
+import { deleteCoupon } from "@/app/backend/controllers/coupon.controller";
+import { deleteProduct } from "@/app/backend/controllers/product.controller";
+import { deleteStaff } from "@/app/backend/controllers/staff.controller";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useRef, useState } from "react";
+import { RiDeleteBin5Fill } from "react-icons/ri";
+import { toast } from "react-toastify";
 import { deleteBlog } from "../../../backend/controllers/blog.controller";
+import { useMainContext } from "../context/mainContext";
+import Loading from "../loader/Loading";
 
 const DeleteModal2 = ({
   productId,
   categoryId,
-  staffId,
+  // staffId,
   couponId,
   attributeId,
   attributeChildrenId,
@@ -28,10 +28,12 @@ const DeleteModal2 = ({
 }) => {
   const [submitting, setSubmitting] = useState(false);
   const {
+    staffId,
     isDeleteModal,
     setIsDeleteModal,
     setChildCategoryUpdate,
     setStaffUpdate,
+    staffUpdate,
     setUpdateCoupon,
     setUpdateProduct,
     setUpdateAttribute,
@@ -40,7 +42,7 @@ const DeleteModal2 = ({
     setBlogUpdate,
   } = useMainContext();
   const cancelButtonRef = useRef(null);
-
+  // console.log(staffId,'staffId')
   // console.log('attributeId....',attributeId)
   // console.log('id, id-2',attributeChildrenId , variantId )
   //  console.log('categoryId....',categoryId)
@@ -99,7 +101,8 @@ const DeleteModal2 = ({
 
     //delete staff
     else if (staffId !== undefined) {
-      setStaffUpdate(false);
+      setStaffUpdate(true);
+      console.log(staffUpdate, "staffUpdate");
       setSubmitting(true);
       const res = await deleteStaff(staffId);
       // console.log("res in delete modal", res);
