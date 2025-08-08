@@ -231,34 +231,16 @@ const ProductDetailsBody = ({ id }) => {
                               loop={true}
                               loopedSlides={6}
                             >
-                              <SwiperSlide className="swiper-slide text-center">
-                                <img
-                                  src={product?.image[0]}
-                                  alt="jam"
-                                  className="img-fluid"
-                                />
-                              </SwiperSlide>
-                              <SwiperSlide className="swiper-slide text-center">
-                                <img
-                                  src="/img/products/p-lg-2.png"
-                                  alt="jam"
-                                  className="img-fluid"
-                                />
-                              </SwiperSlide>
-                              <SwiperSlide className="swiper-slide text-center">
-                                <img
-                                  src="/img/products/p-lg-3.png"
-                                  alt="jam"
-                                  className="img-fluid"
-                                />
-                              </SwiperSlide>
-                              <SwiperSlide className="swiper-slide text-center">
-                                <img
-                                  src="/img/products/p-lg-4.png"
-                                  alt="jam"
-                                  className="img-fluid"
-                                />
-                              </SwiperSlide>
+                              {product?.image.map((img, i) =>{
+                                return (
+                                  <SwiperSlide className="swiper-slide text-center" key={i}>
+                                    <img
+                                      src={img}
+                                      alt={img}
+                                      className="img-fluid"
+                                    />
+                                  </SwiperSlide>
+                                )})}
                             </Swiper>
                           </div>
 
@@ -281,34 +263,17 @@ const ProductDetailsBody = ({ id }) => {
                                 576: { slidesPerView: 4 },
                               }}
                             >
-                              <SwiperSlide className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center">
-                                <img
-                                  src={product?.image[0]}
-                                  alt="jam"
-                                  className="img-fluid"
-                                />
-                              </SwiperSlide>
-                              <SwiperSlide className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center">
-                                <img
-                                  src="/img/products/thumb-sm-2.png"
-                                  alt="jam"
-                                  className="img-fluid"
-                                />
-                              </SwiperSlide>
-                              <SwiperSlide className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center">
-                                <img
-                                  src="/img/products/thumb-sm-3.png"
-                                  alt="jam"
-                                  className="img-fluid"
-                                />
-                              </SwiperSlide>
-                              <SwiperSlide className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center">
-                                <img
-                                  src="/img/products/thumb-sm-4.png"
-                                  alt="jam"
-                                  className="img-fluid"
-                                />
-                              </SwiperSlide>
+                              {product?.image.map((img, i) =>{
+                                // console.log(img)
+                                return (
+                                  <SwiperSlide className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center" key={i}>
+                                    <img
+                                      src={img}
+                                      alt={img}
+                                      className="img-fluid"
+                                    />
+                                  </SwiperSlide>
+                                )})}
                             </Swiper>
                           </div>
                         </div>
@@ -416,20 +381,23 @@ const ProductDetailsBody = ({ id }) => {
                               className="btn btn-secondary btn-md"
                             >
                               <span className="me-2">
-                              <i class="fas fa-cart-plus"></i>
+                                <i class="fas fa-cart-plus"></i>
                               </span>
                               Add to Cart
                             </a>
-                            
-                          <Link href={`/checkout`}
-                            onClick={() => handelAddItem({ ...product, id: product._id })}
-                            className="btn btn-primary d-block btn-md "
-                          >
-                            <span className="me-2">
-                              <i className="fa-solid fa-bag-shopping"></i>
-                            </span>
-                            Buy Now
-                          </Link>
+
+                            <Link
+                              href={`/checkout`}
+                              onClick={() =>
+                                handelAddItem({ ...product, id: product._id })
+                              }
+                              className="btn btn-primary d-block btn-md "
+                            >
+                              <span className="me-2">
+                                <i className="fa-solid fa-bag-shopping"></i>
+                              </span>
+                              Buy Now
+                            </Link>
                           </div>
                           <div className="tt-category-tag mt-4">
                             {brands.map((brand, i) => (

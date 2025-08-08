@@ -153,7 +153,7 @@ const RelatatedProduct = ({ id }) => {
                     </span>
                   </div>
                   <h6 className="price text-danger mb-3">
-                    ${product?.prices?.price}.00
+                    ৳{product?.prices?.price}.00
                   </h6>
 
                   <a

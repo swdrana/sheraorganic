@@ -21,7 +21,7 @@ const ProductDetailsSidebar = () => {
               </span>
               <div className="info-right">
                 <h6 className="mb-1 fs-md">Free Shipping</h6>
-                <span className="fw-medium fs-xs">For orders from $50</span>
+                <span className="fw-medium fs-xs">For orders from ৳50</span>
               </div>
             </div>
             <div className="sidebar-info-list d-flex align-items-center gap-3 p-4 border-top">
@@ -111,7 +111,7 @@ const ProductDetailsSidebar = () => {
                     </Link>
                     <div className="pricing mt-0">
                       <span className="fw-bold fs-xxs text-danger">
-                        ${p.prices.price}.00
+                        ৳{p.prices.price}.00
                       </span>
                     </div>
                     <div className="d-flex align-items-center flex-nowrap star-rating mt-1">

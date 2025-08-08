@@ -10,7 +10,7 @@ const Price = ({ product, price, originalPrice }) => {
           
         >
          
-          ${price}
+          ৳{price}
         </span>
       ) : (
         <span
@@ -20,7 +20,7 @@ const Price = ({ product, price, originalPrice }) => {
           
         >
       
-          ${product?.prices?.price}
+          ৳{product?.prices?.price}
         </span>
       )}
 
@@ -32,7 +32,7 @@ const Price = ({ product, price, originalPrice }) => {
           
         >
         
-          ${parseFloat(originalPrice).toFixed(2)}
+          ৳{parseFloat(originalPrice).toFixed(2)}
         </del>
       ) : null}
     </div>
