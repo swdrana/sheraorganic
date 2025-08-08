@@ -73,11 +73,11 @@ const ProductCard = ({ product }) => {
               </div>
               <div className="d-flex gap-3">
                 <h6 className="price text-dark mb-4">
-                  ${product.prices.price}.00
+                  ৳{product.prices.price}.00
                 </h6>
                 {product.prices.discount >= 1 && (
                   <h6 className="price deleted text-danger mb-4">
-                    ${product.prices.originalPrice}.00
+                    ৳{product.prices.originalPrice}.00
                   </h6>
                 )}
               </div>

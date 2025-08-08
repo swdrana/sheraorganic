@@ -60,10 +60,10 @@ const WeeklyBestDealsCard = ({ product }) => {
             </Link>
             <div className="pricing mt-2">
               <span className="fw-bold h4 deleted me-1">
-                ${product?.prices?.originalPrice}.00
+                ৳{product?.prices?.originalPrice}.00
               </span>
               <span className="fw-bold h4 text-danger">
-                ${product?.prices?.price}.00
+                ৳{product?.prices?.price}.00
               </span>
             </div>
             <a

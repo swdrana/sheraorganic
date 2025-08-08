@@ -140,7 +140,7 @@ const page = () => {
                     </ul>
                     <span className="flex-shrink-0">(5.2k Reviews)</span>
                   </div>
-                  <h6 className="price text-danger mb-3">$140.00</h6>
+                  <h6 className="price text-danger mb-3">৳140.00</h6>
                   <div className="card-progressbar mb-2 rounded-pill">
                     <span
                       className="card-progress bg-primary"
@@ -237,7 +237,7 @@ const page = () => {
                     </ul>
                     <span className="flex-shrink-0">(5.2k Reviews)</span>
                   </div>
-                  <h6 className="price text-danger mb-3">$140.00</h6>
+                  <h6 className="price text-danger mb-3">৳140.00</h6>
                   <div className="card-progressbar mb-2 rounded-pill">
                     <span
                       className="card-progress bg-primary"
@@ -331,7 +331,7 @@ const page = () => {
                     </ul>
                     <span className="flex-shrink-0">(5.2k Reviews)</span>
                   </div>
-                  <h6 className="price text-danger mb-3">$140.00</h6>
+                  <h6 className="price text-danger mb-3">৳140.00</h6>
                   <div className="card-progressbar mb-2 rounded-pill">
                     <span
                       className="card-progress bg-primary"
@@ -425,7 +425,7 @@ const page = () => {
                     </ul>
                     <span className="flex-shrink-0">(5.2k Reviews)</span>
                   </div>
-                  <h6 className="price text-danger mb-3">$140.00</h6>
+                  <h6 className="price text-danger mb-3">৳140.00</h6>
                   <div className="card-progressbar mb-2 rounded-pill">
                     <span
                       className="card-progress bg-primary"
@@ -522,7 +522,7 @@ const page = () => {
                     </ul>
                     <span className="flex-shrink-0">(5.2k Reviews)</span>
                   </div>
-                  <h6 className="price text-danger mb-3">$140.00</h6>
+                  <h6 className="price text-danger mb-3">৳140.00</h6>
                   <div className="card-progressbar mb-2 rounded-pill">
                     <span
                       className="card-progress bg-primary"
@@ -616,7 +616,7 @@ const page = () => {
                     </ul>
                     <span className="flex-shrink-0">(5.2k Reviews)</span>
                   </div>
-                  <h6 className="price text-danger mb-3">$140.00</h6>
+                  <h6 className="price text-danger mb-3">৳140.00</h6>
                   <div className="card-progressbar mb-2 rounded-pill">
                     <span
                       className="card-progress bg-primary"

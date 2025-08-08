@@ -74,11 +74,11 @@ const TrendingProductCard = ({ product }) => {
             <div className="pricing mt-2">
               {product?.prices?.discount > 0 && (
                 <span className="fw-bold  deleted me-1 text-muted">
-                  ${product.prices.originalPrice}.00
+                  ৳{product.prices.originalPrice}.00
                 </span>
               )}
               <span className="fw-bold  text-danger">
-                ${product.prices.price}.00
+                ৳{product.prices.price}.00
               </span>
             </div>
           </div>
