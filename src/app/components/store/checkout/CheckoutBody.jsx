@@ -34,6 +34,7 @@ const CheckoutBody = () => {
   const { items, updateItemQuantity, emptyCart, cartTotal } = useCart();
   const [shippingCost, setShippingCost] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [selectedShipping, setSelectedShipping] = useState("0");
 
   const taxes =
     cartTotal * 0.01 < 50
@@ -285,66 +286,33 @@ const CheckoutBody = () => {
                           <div className="d-flex justify-content-between align-items-center">
                             <div className="d-flex align-items-center gap-2">
                               <input
-                                onClick={() => setShippingCost(20)}
+                                onClick={() => {
+                                  setShippingCost(0);
+                                  setSelectedShipping("0");
+                                }}
                                 type="radio"
                                 name="shipping"
-                                value="20"
-                                id="20"
+                                value="0"
+                                id="0"
                                 className="form-check-input"
-                                {...register("shipping", {
-                                  required: "Shipping method is required",
-                                })}
+                                defaultChecked={true}
+                                {...register("shipping")}
                               />
                               <label
                                 className="form-check-label fw-semibold"
-                                htmlFor="20"
+                                htmlFor="0"
                               >
-                                Normal Shipping -{" "}
-                                <span className="text-primary">$20 USD</span>
+                                Normal Delivery -{" "}
+                                <span className="text-primary">Free</span>
                               </label>
                             </div>
                           </div>
                           <div className="py-2">
                             <p className="text-muted">
-                              Estimated delivery on Feb 7 days
+                              Estimated delivery on 5-7 days
                             </p>
                           </div>
                         </div>
-
-                        <div className="p-3 border rounded mt-3">
-                          <div className="d-flex justify-content-between align-items-center">
-                            <div className="d-flex align-items-center gap-2">
-                              <input
-                                onClick={() => setShippingCost(40)}
-                                type="radio"
-                                name="shipping"
-                                value="40"
-                                id="40"
-                                className="form-check-input"
-                                {...register("shipping", {
-                                  required: "Shipping method is required",
-                                })}
-                              />
-                              <label
-                                className="form-check-label fw-semibold"
-                                htmlFor="40"
-                              >
-                                Fast Shipping -{" "}
-                                <span className="text-primary">$40 USD</span>
-                              </label>
-                            </div>
-                          </div>
-                          <div className="py-2">
-                            <p className="text-muted">
-                              Estimated delivery on Feb 3 days
-                            </p>
-                          </div>
-                        </div>
-                        {errors.shipping && (
-                          <p className="text-danger mt-3 fw-bold">
-                            {errors.shipping.message}
-                          </p>
-                        )}
                       </div>
                       <h4 className="mt-7">Payment Method</h4>
 
