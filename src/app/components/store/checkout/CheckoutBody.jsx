@@ -308,11 +308,7 @@ const CheckoutBody = () => {
                               </label>
                             </div>
                           </div>
-                          <div className="py-2">
-                            <p className="text-muted">
-                              Estimated delivery on 1-2 days
-                            </p>
-                          </div>
+
                         </div>
 
                         <div className="p-3 border rounded mt-3">
@@ -341,11 +337,7 @@ const CheckoutBody = () => {
                               </label>
                             </div>
                           </div>
-                          <div className="py-2">
-                            <p className="text-muted">
-                              Estimated delivery on 3-5 days
-                            </p>
-                          </div>
+
                         </div>
                         {errors.shipping && (
                           <p className="text-danger mt-3 fw-bold">
