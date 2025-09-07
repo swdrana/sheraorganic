@@ -1,10 +1,34 @@
 "use client";
 
 import Link from "next/link";
-
+import { useSession } from "next-auth/react";
 import useAddToCart from "../../hooks/useAddToCart";
+import { trackAddToCart } from "@/app/utilities/facebookPixel";
 const ProductListCard = ({ product }) => {
   const { handelAddItem, handleIncrement, handleDecrement } = useAddToCart();
+  const { data: session } = useSession();
+
+  const handleAddToCartWithTracking = (product) => {
+    // Track Facebook Pixel AddToCart event
+    trackAddToCart({
+      content_ids: [product._id],
+      contents: [{
+        id: product._id,
+        quantity: 1,
+        item_price: product.prices.price
+      }],
+      currency: 'BDT',
+      value: product.prices.price,
+      user_data: {
+        em: session?.user?.email || '',
+        fn: session?.user?.name?.split(' ')[0] || '',
+        ln: session?.user?.name?.split(' ')[1] || ''
+      }
+    });
+    
+    // Add to cart
+    handelAddItem({ ...product, id: product._id });
+  };
   return (
     <>
       <div className="col-xl-12">
@@ -49,7 +73,7 @@ const ProductListCard = ({ product }) => {
 
               <a
                 type="button"
-                onClick={() => handelAddItem({ ...product, id: product._id })}
+                onClick={() => handleAddToCartWithTracking(product)}
                 className="btn btn-outline-secondary btn-sm border-secondary mt-4 direct-add-to-cart-btn add-to-cart-text"
               >
                 Add to Cart

@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Controller } from "swiper"; // Import Controller from modules in Swiper 8.4.0
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 import StarRating from "./StartRating";
 
@@ -14,6 +15,7 @@ import useAddToCart from "../../hooks/useAddToCart";
 import { getAllAttributes } from "../../../../backend/controllers/attribute.controller";
 import VariantList from "../../productDetails/VariantList";
 import Price from "../../productDetails/Price";
+import { trackAddToCart } from "@/app/utilities/facebookPixel";
 
 const ProductModal = () => {
   const [firstSwiper, setFirstSwiper] = useState(null);
@@ -159,6 +161,8 @@ const ProductModal = () => {
   }, [productDetails, attributes]);
 
   // console.log("variantTitle", variantTitle);
+  const { data: session } = useSession();
+
   const handleAddToCart = (p) => {
     if (p.variants.length === 1 && p.variants[0].quantity < 1)
       return toast.error("Insufficient stock");
@@ -206,6 +210,24 @@ const ProductModal = () => {
               : originalPrice,
         },
       };
+      
+      // Track Facebook Pixel AddToCart event
+      trackAddToCart({
+        content_ids: [p._id],
+        contents: [{
+          id: p._id,
+          quantity: quantity,
+          item_price: newItem.prices.price
+        }],
+        currency: 'BDT',
+        value: newItem.prices.price * quantity,
+        user_data: {
+          em: session?.user?.email || '',
+          fn: session?.user?.name?.split(' ')[0] || '',
+          ln: session?.user?.name?.split(' ')[1] || ''
+        }
+      });
+      
       // console.log("newitem for add to cart.......", newItem);
       handelAddItem(newItem);
     } else {

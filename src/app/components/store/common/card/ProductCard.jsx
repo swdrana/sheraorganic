@@ -2,16 +2,41 @@
 
 import Link from "next/link";
 import StarRating from "../others/StartRating";
+import { useSession } from "next-auth/react";
 
 import useAddToCart from "../../hooks/useAddToCart";
 import useAddWishlist from "../../hooks/useAddWishlist";
 import { useMainContext } from "../../provider/MainContextStore";
+import { trackAddToCart } from "@/app/utilities/facebookPixel";
 
 const ProductCard = ({ product }) => {
   const { handelAddItem } = useAddToCart();
+  const { data: session } = useSession();
 
   const { handleWishlist, wishlist } = useAddWishlist();
   const { setOpenProductModal, setProductDetails } = useMainContext();
+
+  const handleAddToCartWithTracking = (product) => {
+    // Track Facebook Pixel AddToCart event
+    trackAddToCart({
+      content_ids: [product._id],
+      contents: [{
+        id: product._id,
+        quantity: 1,
+        item_price: product.prices.price
+      }],
+      currency: 'BDT',
+      value: product.prices.price,
+      user_data: {
+        em: session?.user?.email || '',
+        fn: session?.user?.name?.split(' ')[0] || '',
+        ln: session?.user?.name?.split(' ')[1] || ''
+      }
+    });
+    
+    // Add to cart
+    handelAddItem({ ...product, id: product._id });
+  };
   return (
     <>
       <div className="col-xxl-3 col-lg-4 col-md-6 col-sm-10 group">
@@ -85,7 +110,7 @@ const ProductCard = ({ product }) => {
 
             <a
               // type="button"
-              onClick={() => handelAddItem({ ...product, id: product._id })}
+              onClick={() => handleAddToCartWithTracking(product)}
               className="btn btn-outline-secondary d-block btn-md hover:cursor-auto"
             >
               Add to Cart

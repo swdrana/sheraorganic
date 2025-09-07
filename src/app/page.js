@@ -15,6 +15,7 @@ import WeeklyBestDeals from "./components/store/home/WeeklyBestDeals";
 import { useEffect } from "react";
 import useBlog from "./components/store/dataFetching/useBlog";
 import PreLoader from "./components/store/common/others/PreLoader";
+import { PageView } from "./utilities/facebookPixel";
 
 const page = () => {
   const { setting, settingLoading } = useSetting();
@@ -27,6 +28,11 @@ const page = () => {
     settingLoading,
     categoryLoading
   );
+
+  // Facebook Pixel PageView tracking
+  useEffect(() => {
+    PageView();
+  }, []);
   return (
     <>
       {settingLoading || categoryLoading || productloading ? (

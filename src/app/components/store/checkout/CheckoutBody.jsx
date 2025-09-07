@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useCart } from "react-use-cart";
 import { getAllCoupons } from "@/app/backend/controllers/coupon.controller";
+import { InitiateCheckout, Purchase } from "@/app/utilities/facebookPixel";
 
 import dayjs from "dayjs";
 const CheckoutBody = () => {
@@ -59,6 +60,26 @@ const CheckoutBody = () => {
         cvc,
       } = values;
 
+      // Track InitiateCheckout event
+      InitiateCheckout({
+        content_ids: items.map(item => item.id),
+        contents: items.map(item => ({
+          id: item.id,
+          quantity: item.quantity,
+          item_price: item.price
+        })),
+        currency: 'BDT',
+        num_items: items.length,
+        value: grandTotal,
+        user_data: {
+          em: email,
+          ph: phone,
+          fn: name.split(' ')[0],
+          ln: name.split(' ')[1] || '',
+          ct: address
+        }
+      });
+
       const userInfo = {
         name: name,
         email: email,
@@ -81,6 +102,26 @@ const CheckoutBody = () => {
       const res = await createOrder(orderData);
       // console.log("res......", res);
       if (res?.message) {
+        // Track Purchase event
+        Purchase({
+          content_ids: items.map(item => item.id),
+          contents: items.map(item => ({
+            id: item.id,
+            quantity: item.quantity,
+            item_price: item.price
+          })),
+          currency: 'BDT',
+          num_items: items.length,
+          value: grandTotal,
+          user_data: {
+            em: email,
+            ph: phone,
+            fn: name.split(' ')[0],
+            ln: name.split(' ')[1] || '',
+            ct: address
+          }
+        });
+        
         emptyCart();
         // Cookies.remove("couponInfo");
         // getOrderRevalidate();

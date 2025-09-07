@@ -15,6 +15,8 @@ import Price from "./Price";
 import ProductDetailsSidebar from "./ProductDetailsSidebar";
 import ProductDetailsTab from "./ProductDetailsTab";
 import VariantList from "./VariantList";
+import { trackAddToCart } from "../../../utilities/facebookPixel";
+import { useSession } from "next-auth/react";
 
 const ProductDetailsBody = ({ id }) => {
   const [firstSwiper, setFirstSwiper] = useState(null);
@@ -22,6 +24,7 @@ const ProductDetailsBody = ({ id }) => {
   const [loadingHuteiThak, set] = useState(true);
 
   const { product, productLoading } = useSingleProduct(id);
+  const { data: session } = useSession();
 
   const { brands } = usebrands();
   // console.log("product..", product);
@@ -200,6 +203,19 @@ const ProductDetailsBody = ({ id }) => {
       };
       // console.log("newitem for add to cart.......", newItem);
       handelAddItem(newItem);
+      
+      // Facebook Pixel tracking
+      trackAddToCart(
+        session?.user?._id || null,
+        session?.user?.displayName || null,
+        session?.user?.email || null,
+        session?.user?.phoneNumber || null,
+        session?.user?.shipping || null,
+        product._id,
+        product.name,
+        product.category,
+        salePrice || product.prices.price
+      );
     } else {
       return toast.error("Please select all variant first!");
     }
