@@ -25,6 +25,59 @@ const Invoice = ({ invoiceNo }) => {
     pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
     pdf.save("invoice.pdf");
   };
+
+  const printInvoice = () => {
+    const element = invoiceRef.current;
+    if (!element) return;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Invoice</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .invoice-section { padding: 20px; }
+            .invoice-box { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+            .invoice-title { display: flex; align-items: center; margin-bottom: 20px; }
+            .invoice-title h3 { font-size: 24px; font-weight: 600; margin: 0; }
+            .badge { padding: 4px 12px; border-radius: 9999px; background-color: #dbeafe; color: #2563eb; font-weight: 500; margin-left: 12px; }
+            .invoice-table-sm { width: 100%; margin-top: 8px; }
+            .invoice-table-sm td { padding: 4px 0; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { padding: 8px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+            th { background-color: #f9fafb; font-weight: 600; }
+            .text-right { text-align: right; }
+            .d-flex { display: flex; }
+            .align-items-center { align-items: center; }
+            .justify-content-between { justify-content: space-between; }
+            .g-5 { gap: 20px; }
+            .col-lg-6 { width: 50%; }
+            .ms-3 { margin-left: 12px; }
+            .fw-medium { font-weight: 500; }
+            .bg-primary-light { background-color: #dbeafe; }
+            .text-primary { color: #2563eb; }
+            .rounded-pill { border-radius: 9999px; }
+            .p-4 { padding: 16px; }
+            .p-sm-6 { padding: 24px; }
+            .pt-6 { padding-top: 24px; }
+            .pb-120 { padding-bottom: 120px; }
+            strong { font-weight: bold; }
+            @media print {
+              body { margin: 0; }
+              .invoice-section { padding: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          ${element.innerHTML}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+    printWindow.close();
+  };
   return (
     <>
       <section ref={invoiceRef} className="invoice-section pt-6 pb-120">
@@ -168,13 +221,13 @@ const Invoice = ({ invoiceNo }) => {
               </table>
             </div>
             <div className="d-flex align-items-center justify-content-between flex-wrap gap-3 mt-7">
-              <a
+              <button
                 type="button"
-                disabled={true}
+                onClick={printInvoice}
                 className="btn btn-primary btn-md"
               >
-                Prient Invoice
-              </a>
+                Print Invoice
+              </button>
               <a
                 type="button"
                 onClick={downloadInvoice}

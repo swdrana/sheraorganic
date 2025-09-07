@@ -44,6 +44,53 @@ const Orders = ({ orderCode }) => {
     pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
     pdf.save("invoice.pdf");
   };
+
+  const printInvoice = () => {
+    const element = invoiceRef.current;
+    if (!element) return;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Invoice</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .invoice-section { padding: 20px; }
+            .invoice-box { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+            .invoice-title { display: flex; align-items: center; margin-bottom: 20px; }
+            .invoice-title h3 { font-size: 24px; font-weight: 600; margin: 0; }
+            .badge { padding: 4px 12px; border-radius: 9999px; background-color: #dbeafe; color: #2563eb; font-weight: 500; margin-left: 12px; }
+            .invoice-table-sm { width: 100%; margin-top: 8px; }
+            .invoice-table-sm td { padding: 4px 0; }
+            .font-bold { font-weight: bold; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { padding: 8px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+            th { background-color: #f9fafb; font-weight: 600; }
+            .text-right { text-align: right; }
+            .flex { display: flex; }
+            .justify-between { justify-content: space-between; }
+            .gap-5 { gap: 20px; }
+            .w-full { width: 100%; }
+            .lg\\:w-1\\/2 { width: 50%; }
+            .mt-2 { margin-top: 8px; }
+            .mt-4 { margin-top: 16px; }
+            .mb-4 { margin-bottom: 16px; }
+            @media print {
+              body { margin: 0; }
+              .invoice-section { padding: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          ${element.innerHTML}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+    printWindow.close();
+  };
   return (
     <>
       {orderCode ? (
@@ -136,8 +183,8 @@ const Orders = ({ orderCode }) => {
                           </td>
                           <td>{o?.sku}</td>
                           <td>{o?.quantity}</td>
-                          <td>${o?.price}.00</td>
-                          <td>${o?.itemTotal}.00</td>
+                          <td>৳{o?.price}.00</td>
+                          <td>৳{o?.itemTotal}.00</td>
                         </tr>
                       ))}
                     </tbody>
@@ -157,32 +204,32 @@ const Orders = ({ orderCode }) => {
                           <strong className="text-dark block whitespace-nowrap">
                             Shipping Cost
                           </strong>
-                          <span>${codeOrder?.shippingCost}.00</span>
+                          <span>৳{codeOrder?.shippingCost}.00</span>
                         </td>
                         <td>
                           <strong className="text-dark block whitespace-nowrap">
                             Discount
                           </strong>
-                          <span>${codeOrder?.discount}.00</span>
+                          <span>৳{codeOrder?.discount}.00</span>
                         </td>
                         <td>
                           <strong className="text-dark block whitespace-nowrap">
                             Taxes
                           </strong>
-                          <span>${codeOrder?.taxes}.00</span>
+                          <span>৳{codeOrder?.taxes}.00</span>
                         </td>
                         <td>
                           <strong className="text-dark block whitespace-nowrap">
                             Total Price
                           </strong>
-                          <span>${codeOrder?.subTotal}.00</span>
+                          <span>৳{codeOrder?.subTotal}.00</span>
                         </td>
                         <td>
                           <strong className="text-dark block whitespace-nowrap">
                             Total Amount
                           </strong>
                           <span className="text-blue-600 font-bold">
-                            ${codeOrder?.total}.00
+                            ৳{codeOrder?.total}.00
                           </span>
                         </td>
                       </tr>
@@ -191,7 +238,7 @@ const Orders = ({ orderCode }) => {
                 </div>
                 <div className="flex items-center justify-between flex-wrap gap-3 mt-7">
                   <button
-                    disabled
+                    onClick={printInvoice}
                     className="btn btn-primary bg-blue-600 text-white font-semibold py-2 px-4 rounded-md"
                   >
                     Print Invoice
