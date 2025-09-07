@@ -35,7 +35,7 @@ const OrderHistory = () => {
                       <td> {dayjs(order?.createdAt).format("YYYY-MM-DD")}</td>
                       <td>{order.paymentMethod}</td>
                       <td>{order.status}</td>
-                      <td className="text-secondary">${order.total}.00</td>
+                      <td className="text-secondary">৳{order.total}.00</td>
                       <td className="text-center">
                         <Link
                           href={`/invoice/${order.orderCode}`}

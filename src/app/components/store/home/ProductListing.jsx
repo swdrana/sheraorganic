@@ -86,8 +86,8 @@ const ProductListing = () => {
                       European Lemon Zest
                     </a>
                     <div className="pricing mt-2">
-                      <span className="fw-bold h4 deleted me-1">$240.00</span>
-                      <span className="fw-bold h4 text-danger">$140.00</span>
+                      <span className="fw-bold h4 deleted me-1">৳240.00</span>
+                      <span className="fw-bold h4 text-danger">৳140.00</span>
                     </div>
                     <a
                       href="product-details.html"
@@ -166,8 +166,8 @@ const ProductListing = () => {
                       European Lemon Zest
                     </a>
                     <div className="pricing mt-2">
-                      <span className="fw-bold h4 deleted me-1">$240.00</span>
-                      <span className="fw-bold h4 text-danger">$140.00</span>
+                      <span className="fw-bold h4 deleted me-1">৳240.00</span>
+                      <span className="fw-bold h4 text-danger">৳140.00</span>
                     </div>
                     <a
                       href="product-details.html"
@@ -246,8 +246,8 @@ const ProductListing = () => {
                       European Lemon Zest
                     </a>
                     <div className="pricing mt-2">
-                      <span className="fw-bold h4 deleted me-1">$240.00</span>
-                      <span className="fw-bold h4 text-danger">$140.00</span>
+                      <span className="fw-bold h4 deleted me-1">৳240.00</span>
+                      <span className="fw-bold h4 text-danger">৳140.00</span>
                     </div>
                     <a
                       href="product-details.html"
@@ -339,8 +339,8 @@ const ProductListing = () => {
                       European Lemon Zest
                     </a>
                     <div className="pricing mt-2">
-                      <span className="fw-bold h4 deleted me-1">$240.00</span>
-                      <span className="fw-bold h4 text-danger">$140.00</span>
+                      <span className="fw-bold h4 deleted me-1">৳240.00</span>
+                      <span className="fw-bold h4 text-danger">৳140.00</span>
                     </div>
                     <a
                       href="product-details.html"
@@ -419,8 +419,8 @@ const ProductListing = () => {
                       European Lemon Zest
                     </a>
                     <div className="pricing mt-2">
-                      <span className="fw-bold h4 deleted me-1">$240.00</span>
-                      <span className="fw-bold h4 text-danger">$140.00</span>
+                      <span className="fw-bold h4 deleted me-1">৳240.00</span>
+                      <span className="fw-bold h4 text-danger">৳140.00</span>
                     </div>
                     <a
                       href="product-details.html"
@@ -499,8 +499,8 @@ const ProductListing = () => {
                       European Lemon Zest
                     </a>
                     <div className="pricing mt-2">
-                      <span className="fw-bold h4 deleted me-1">$240.00</span>
-                      <span className="fw-bold h4 text-danger">$140.00</span>
+                      <span className="fw-bold h4 deleted me-1">৳240.00</span>
+                      <span className="fw-bold h4 text-danger">৳140.00</span>
                     </div>
                     <a
                       href="product-details.html"

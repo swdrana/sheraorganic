@@ -70,7 +70,7 @@ const Dashboad = () => {
                       >
                         {order.status}
                       </td>
-                      <td className="text-secondary">${order.total}.00</td>
+                      <td className="text-secondary">৳{order.total}.00</td>
                       <td className="text-center">
                         <Link
                           href={`/invoice/${order.orderCode}`}

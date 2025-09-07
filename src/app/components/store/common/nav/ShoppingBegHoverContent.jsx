@@ -63,7 +63,7 @@ const ShoppingBegHoverContent = () => {
                       <div className="products_meta d-flex align-items-center">
                         <div>
                           <span className="price text-primary fw-semibold mx-1">
-                            ${item.price}.00
+                            ৳{item.price}.00
                           </span>
 
                           <span className="count">x {item.quantity}</span>
@@ -83,7 +83,7 @@ const ShoppingBegHoverContent = () => {
               <div className="d-flex align-items-center justify-content-between mt-3">
                 <h6 className="mb-0">Subtotal:</h6>
                 <span className="fw-semibold text-primary">
-                  ${cartTotal}.00
+                  ৳{cartTotal}.00
                 </span>
               </div>
 

@@ -456,6 +456,7 @@ const CheckoutBody = () => {
                               type="radio"
                               name="payment"
                               value="cod"
+                              defaultChecked
                               {...register("payment", {
                                 required: "payment method is required",
                               })}
@@ -542,21 +543,21 @@ const CheckoutBody = () => {
                       <tbody>
                         <tr>
                           <td>Items ({items.length}):</td>
-                          <td className="text-end">${cartTotal}.00</td>
+                          <td className="text-end">৳{cartTotal}.00</td>
                         </tr>
                         <tr>
                           <td>Shipping & handling:</td>
-                          <td className="text-end">${shippingCost}.00</td>
+                          <td className="text-end">৳{shippingCost}.00</td>
                         </tr>
                         <tr>
                           <td>Discount:</td>
                           <td className="text-end">
-                            ${Math.floor(discount)}.00
+                            ৳{Math.floor(discount)}.00
                           </td>
                         </tr>
                         <tr>
                           <td>Tax:</td>
-                          <td className="text-end">${taxes}.00</td>
+                          <td className="text-end">৳{taxes}.00</td>
                         </tr>
                       </tbody>
                     </table>
@@ -565,7 +566,7 @@ const CheckoutBody = () => {
                     <div className="d-flex align-items-center justify-content-between">
                       <h6 className="mb-0 fs-md">Total</h6>
                       <h6 className="mb-0 fs-md">
-                        ${Math.floor(grandTotal)}.00
+                        ৳{Math.floor(grandTotal)}.00
                       </h6>
                     </div>
                     <button

@@ -114,8 +114,8 @@ const Invoice = ({ invoiceNo }) => {
                       </td>
                       <td>{o?.sku}</td>
                       <td>{o?.quantity}</td>
-                      <td>${o?.price}.00</td>
-                      <td>${o?.itemTotal}.00</td>
+                      <td>৳{o?.price}.00</td>
+                      <td>৳{o?.itemTotal}.00</td>
                     </tr>
                   ))}
                 </tbody>
@@ -135,32 +135,32 @@ const Invoice = ({ invoiceNo }) => {
                       <strong className="text-dark d-block text-nowrap">
                         Shipping Cost
                       </strong>
-                      <span>${codeOrder?.shippingCost}.00</span>
+                      <span>৳{codeOrder?.shippingCost}.00</span>
                     </td>
                     <td>
                       <strong className="text-dark d-block text-nowrap">
                         Discount
                       </strong>
-                      <span>${codeOrder?.discount}.00</span>
+                      <span>৳{codeOrder?.discount}.00</span>
                     </td>
                     <td>
                       <strong className="text-dark d-block text-nowrap">
                         Taxes
                       </strong>
-                      <span>${codeOrder?.taxes}.00</span>
+                      <span>৳{codeOrder?.taxes}.00</span>
                     </td>
                     <td>
                       <strong className="text-dark d-block text-nowrap">
                         Total Price
                       </strong>
-                      <span>${codeOrder?.subTotal}.00</span>
+                      <span>৳{codeOrder?.subTotal}.00</span>
                     </td>
                     <td>
                       <strong className="text-dark d-block text-nowrap">
                         Total Amount
                       </strong>
                       <span className="text-primary fw-bold">
-                        ${codeOrder?.total}.00
+                        ৳{codeOrder?.total}.00
                       </span>
                     </td>
                   </tr>
