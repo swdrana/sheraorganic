@@ -161,7 +161,7 @@ const Login = ({ setting }) => {
                 </div>
                 <h2 className="mb-4 h3">
                   Hey there! <br />
-                  Welcome back <span className="text-secondary">Grostore.</span>
+                  Welcome back <span className="text-secondary">Shera Organic Shop.</span>
                 </h2>
                 <div className="row g-3">
                   <div className="col-sm-12">
@@ -211,7 +211,7 @@ const Login = ({ setting }) => {
                     </div>
                   </div>
                 </div>
-                <div className="row mt-5">
+                {/* <div className="row mt-5">
                   <div className="col-12">
                     <label className="fw-bold">Admin Access</label>
                     <div className="d-flex flex-wrap align-items-center justify-content-between border-bottom pb-3">
@@ -242,7 +242,7 @@ const Login = ({ setting }) => {
                       </button>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 {error && <div className="mt-5 text-danger">{error}</div>}
                 {loading && <Loading />}
                 <div className="row g-4 mt-4">
@@ -256,10 +256,10 @@ const Login = ({ setting }) => {
                     </button>
                     <button
                       type="button"
-                      className="btn btn-outline-secondary w-100 mt-2"
+                      className="btn btn-secondary w-100 mt-2"
                       onClick={handleAnonymousLogin}
                     >
-                      Anonymous Login
+                      লগইন ছাড়া অর্ডার করুন
                     </button>
                   </div>
                 </div>
