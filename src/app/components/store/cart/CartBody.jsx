@@ -75,7 +75,8 @@ const CartBody = () => {
             ) : (
               <>
                 {" "}
-                <div className="mt-4 bg-white rounded-2 overflow-hidden">
+                {/* Desktop Table View */}
+                <div className="mt-4 bg-white rounded-2 overflow-hidden d-none d-lg-block">
                   <table className="cart-table next_style w-100">
                     <thead>
                       <th>Image</th>
@@ -119,17 +120,11 @@ const CartBody = () => {
                             </div>
                           </td>
                           <td>
-                            <span className="text-dark fw-bold me-2 d-lg-none">
-                              Unit Price:
-                            </span>
                             <span className="text-dark fw-semibold">
                               ${item.price}.00
                             </span>
                           </td>
                           <td>
-                            <span className="text-dark fw-bold me-2 d-lg-none">
-                              Total Price:
-                            </span>
                             <span className="text-dark fw-bold">
                               ${item.price * item.quantity}.00
                             </span>
@@ -138,6 +133,64 @@ const CartBody = () => {
                       ))}
                     </tbody>
                   </table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="mt-4 d-lg-none">
+                  {items.map((item, i) => (
+                    <div key={i} className="bg-white rounded-2 p-3 mb-3 border">
+                      <div className="row align-items-center">
+                        <div className="col-4">
+                          <div className="border border-success border-opacity-25 rounded-md overflow-hidden" style={{width: '80px', height: '80px'}}>
+                            <img
+                              src={item.image[0]}
+                              alt="product-thumb"
+                              className="w-100 h-100 object-fit-contain"
+                            />
+                          </div>
+                        </div>
+                        <div className="col-8">
+                          <h6 className="fw-medium mb-2 text-truncate">
+                            {item.name}
+                          </h6>
+                          <div className="d-flex justify-content-between align-items-center mb-2">
+                            <span className="text-muted small">Unit Price:</span>
+                            <span className="fw-semibold">${item.price}.00</span>
+                          </div>
+                          <div className="d-flex justify-content-between align-items-center mb-2">
+                            <span className="text-muted small">Quantity:</span>
+                            <div className="product-qty d-inline-flex align-items-center">
+                              <button
+                                onClick={() => handleDecrease(item)}
+                                className="decrese btn btn-sm btn-outline-secondary"
+                                style={{minWidth: '30px', height: '30px', padding: '0'}}
+                              >
+                                -
+                              </button>
+                              <input 
+                                type="text" 
+                                value={item.quantity} 
+                                className="form-control text-center mx-1"
+                                style={{width: '50px', height: '30px', padding: '0'}}
+                                readOnly
+                              />
+                              <button
+                                onClick={() => handleIncrease(item)}
+                                className="increase btn btn-sm btn-outline-secondary"
+                                style={{minWidth: '30px', height: '30px', padding: '0'}}
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span className="text-muted small">Total:</span>
+                            <span className="fw-bold text-primary">${item.price * item.quantity}.00</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
                 <div className="row g-4">
                   <div className="col-xl-7"></div>
