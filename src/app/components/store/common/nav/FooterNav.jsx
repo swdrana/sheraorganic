@@ -84,7 +84,7 @@ const FooterNav = ({ setCategoryOffcanvas, categoryOffcanvas }) => {
           </Link>
           <Link
             className="d-flex align-items-center mobile-toolbar-item"
-            href="/checkout"
+            href="/cart"
           >
             <span className="mobile-toolbar-icon mobile-cart-icon">
               <svg
