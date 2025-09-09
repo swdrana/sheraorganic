@@ -484,7 +484,7 @@ const Navbar = () => {
         </div>
       </header>
       {/* Floating Social Buttons */}
-      <div className="fixed bottom-32 right-2 md:right-10 z-40">
+      <div className="fixed bottom-20 right-2 md:right-10 z-40">
         <div className="mb-2">
           <a
             href="https://wa.me/+8801793143054"
@@ -521,13 +521,14 @@ const Navbar = () => {
             </svg>
           </a>
         </div>
+        {isScrolled && (
+          <div className="mb-2">
+            <button onClick={scrollToTop} className="block w-10 h-10 bg-orange-500 hover:bg-orange-600 text-white rounded transition-colors">
+              <i className="fa-regular fa-hand-pointer"></i>
+            </button>
+          </div>
+        )}
       </div>
-      
-      {isScrolled && (
-        <button onClick={scrollToTop} className="scroll-top-btn active" style={{zIndex: 60}}>
-          <i className="fa-regular fa-hand-pointer"></i>
-        </button>
-      )}
     </>
   );
 };
