@@ -59,6 +59,11 @@ const sidebar = [
     icon: FiCompass,
     name: "Orders",
   },
+  {
+    path: "/admin/packing-reports",
+    icon: FiTarget,
+    name: "Packing Reports",
+  },
 
   {
     path: "/admin/staff",

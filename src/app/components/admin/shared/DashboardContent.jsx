@@ -19,6 +19,7 @@ import CustomerOrder from "../customerOrder/CustomerOrder";
 import Brands from "../brands/Brands";
 import ProductForm from "../test/ProductForm";
 import BlogsBody from "../blogs/BlogsBody";
+import PackingReports from "../packingReports/PackingReports";
 
 const DashboardContent = ({
   attributeChildrenId,
@@ -57,6 +58,7 @@ const DashboardContent = ({
               {pathname === "/admin/brands" && <Brands />}
               {pathname === "/admin/settings" && <Settings />}
               {pathname === "/admin/blogs" && <BlogsBody />}
+              {pathname === "/admin/packing-reports" && <PackingReports />}
               {userId && <CustomerOrder userId={userId} />}
               {attributeChildrenId && (
                 <ChildAttribute attributeChildrenId={attributeChildrenId} />
