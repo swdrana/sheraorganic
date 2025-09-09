@@ -12,27 +12,72 @@
   z-index: 99;
 }
 .mobile-toolbar-item {
-  padding: $spacer * .5;
+  padding: 6px 4px;
   border-left: $border-width solid $border-color;
-  text-align: left;
-  padding-inline: 35px;
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   &:first-child { border-right: 0; }
   .badge { font-size: .625rem; }
 }
 .mobile-toolbar-icon {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: $body-color;
+  margin: 0 auto 2px auto;
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 .mobile-toolbar-label {
   display: block;
   color: $body-color;
-  font-size: $font-size-xs;
+  font-size: 10px;
+  line-height: 1.2;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  width: 100%;
 }
 @include media-breakpoint-down(lg) {
   .mobile-toolbar-enabled .footer { padding-bottom: 3.5rem; }
   .mobile-toolbar {
-    display: block;
+    display: flex;
     & + .btn-scroll-top { bottom: $spacer + 3.5rem; }
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-toolbar-item {
+    padding: 4px 2px;
+  }
+  .mobile-toolbar-label {
+    font-size: 9px;
+  }
+  .mobile-toolbar-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .mobile-toolbar-item {
+    padding: 3px 1px;
+  }
+  .mobile-toolbar-label {
+    font-size: 8px;
+  }
+  .mobile-toolbar-icon svg {
+    width: 12px;
+    height: 12px;
   }
 }
 
@@ -40,18 +85,19 @@
   position: relative;
   svg{
     position: relative;
-    z-index: -1;
+    z-index: 1;
   }
   small.badge{
     position: absolute;
     padding: 0;
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
     text-align: center;
-    left: 52%;
+    font-size: 8px;
+    top: -4px;
+    right: -4px;
     border-radius: 50%;
-    z-index: 1;
+    z-index: 2;
   }
-
 }
