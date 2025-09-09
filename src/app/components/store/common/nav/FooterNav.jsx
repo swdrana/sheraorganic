@@ -1,6 +1,15 @@
+"use client";
 import Link from "next/link";
+import { useCart } from "react-use-cart";
+import { useEffect, useState } from "react";
 
 const FooterNav = ({ setCategoryOffcanvas, categoryOffcanvas }) => {
+  const { totalItems } = useCart();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   return (
     <>
       <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-lg z-50 block md:hidden lg:hidden">
@@ -82,7 +91,7 @@ const FooterNav = ({ setCategoryOffcanvas, categoryOffcanvas }) => {
                   fill="currentColor"
                 />
               </svg>
-              <small className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center leading-none">12</small>
+              <small className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center leading-none">{mounted ? totalItems : 0}</small>
             </span>
             <span className="text-xs text-gray-600 leading-tight">Cart</span>
           </Link>

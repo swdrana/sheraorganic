@@ -141,7 +141,7 @@ const Navbar = () => {
         {/*==== navbar top =========*/}
         <NavbarTop />
 
-        <div className="container">
+        <div className="container px-3 px-md-3">
           <div className="gshop-navbar bg-white rounded ps-lg-5 position-relative">
             <div className="row align-items-center">
               <div className="col-xxl-2 col-xl-3 col-md-3 col-5">
@@ -160,7 +160,7 @@ const Navbar = () => {
                 </Link>
               </div>
               <div className="col-xxl-10 col-xl-9 col-md-9 col-7">
-                <div className="gshop-navbar-right d-flex align-items-center justify-content-end position-relative">
+                <div className="gshop-navbar-right d-flex align-items-center justify-content-end position-relative pr-0">
                   <div className="category-dropdown position-relative d-none d-md-inline-block">
                     <a
                       type="button"
@@ -430,7 +430,7 @@ const Navbar = () => {
                   </div>
                   <button
                     onClick={() => setOpenOffcanvas(true)}
-                    className="gshop-offcanvas-btn offcanvas-toggle ms-3"
+                    className="gshop-offcanvas-btn offcanvas-toggle ms-3 mr-0"
                   >
                     <svg
                       width="30"
