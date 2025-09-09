@@ -1,6 +1,7 @@
 "use client";
 
 import useOrderCode from "../dataFetching/useOrderCode";
+import useSetting from "../dataFetching/useSetting";
 import { useRef } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -8,6 +9,7 @@ const Invoice = ({ invoiceNo }) => {
   const invoiceRef = useRef();
   // console.log("invoiceNo..", invoiceNo);
   const { codeOrder, codeOrderLoading } = useOrderCode(invoiceNo);
+  const { setting, settingLoading } = useSetting();
   // console.log("codeOrder in invoice", codeOrder);
 
   const downloadInvoice = async () => {
@@ -111,13 +113,12 @@ const Invoice = ({ invoiceNo }) => {
                 </table>
               </div>
               <div className="col-lg-5 col-md-8">
-                <div className="text-lg-end">
+                <div className="text-end">
                   <a href="#">
-                    <img src="/img/logo.png" alt="logo" className="img-fluid" />
+                    <img src={setting?.home?.logo || "/img/logo.png"} alt="logo" className="img-fluid ms-auto d-block" style={{maxWidth: '150px'}} />
                   </a>
                   <h6 className="mb-0 text-gray mt-4">
-                    Cecilia Chapman, 711-2880 Nulla St, Mankato Mississippi
-                    96522
+                    {setting?.home?.address || "Address not available"}
                   </h6>
                 </div>
               </div>
@@ -155,7 +156,7 @@ const Invoice = ({ invoiceNo }) => {
                   {codeOrder?.cart?.map((o, i) => (
                     <tr key={i}>
                       <td>{i + 1}</td>
-                      <td className="text-nowrap">
+                      <td className="">
                         <img
                           src={o?.image[0]}
                           alt="product"
@@ -179,37 +180,37 @@ const Invoice = ({ invoiceNo }) => {
                 <tbody>
                   <tr>
                     <td>
-                      <strong className="text-dark d-block text-nowrap">
+                      <strong className="text-dark d-block">
                         Payment Method
                       </strong>
                       <span>{codeOrder?.paymentMethod}</span>
                     </td>
                     <td>
-                      <strong className="text-dark d-block text-nowrap">
+                      <strong className="text-dark d-block">
                         Shipping Cost
                       </strong>
                       <span>৳{codeOrder?.shippingCost}.00</span>
                     </td>
                     <td>
-                      <strong className="text-dark d-block text-nowrap">
+                      <strong className="text-dark d-block">
                         Discount
                       </strong>
                       <span>৳{codeOrder?.discount}.00</span>
                     </td>
                     <td>
-                      <strong className="text-dark d-block text-nowrap">
+                      <strong className="text-dark d-block">
                         Taxes
                       </strong>
                       <span>৳{codeOrder?.taxes}.00</span>
                     </td>
                     <td>
-                      <strong className="text-dark d-block text-nowrap">
+                      <strong className="text-dark d-block">
                         Total Price
                       </strong>
                       <span>৳{codeOrder?.subTotal}.00</span>
                     </td>
                     <td>
-                      <strong className="text-dark d-block text-nowrap">
+                      <strong className="text-dark d-block">
                         Total Amount
                       </strong>
                       <span className="text-primary fw-bold">

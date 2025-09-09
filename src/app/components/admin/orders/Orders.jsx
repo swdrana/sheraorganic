@@ -7,6 +7,7 @@ import { FiSearch } from "react-icons/fi";
 import LoadingSkeleton from "../loader/TableLoading";
 import useOrders from "../featch/useOrder";
 import useOrderCode from "../../store/dataFetching/useOrderCode";
+import useSetting from "../../store/dataFetching/useSetting";
 import { useRef } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -28,6 +29,7 @@ const Orders = ({ orderCode }) => {
   } = useOrderFilter(orders);
 
   const { codeOrder, codeOrderLoading } = useOrderCode(orderCode);
+  const { setting, settingLoading } = useSetting();
 
   const downloadInvoice = async () => {
     const element = invoiceRef.current;
@@ -125,14 +127,14 @@ const Orders = ({ orderCode }) => {
                     <div className="text-right">
                       <a href="#">
                         <img
-                          src="/img/logo.png"
+                          src={setting?.home?.logo || "/img/logo.png"}
                           alt="logo"
-                          className="img-fluid mx-auto"
+                          className="img-fluid ml-auto block"
+                          style={{maxWidth: '150px'}}
                         />
                       </a>
                       <h6 className="mb-0 text-gray-600 mt-4">
-                        Cecilia Chapman, 711-2880 Nulla St, Mankato Mississippi
-                        96522
+                        {setting?.home?.address || "Address not available"}
                       </h6>
                     </div>
                   </div>
@@ -173,7 +175,7 @@ const Orders = ({ orderCode }) => {
                       {codeOrder?.cart?.map((o, i) => (
                         <tr key={i} className="border-b border-gray-200">
                           <td>{i + 1}</td>
-                          <td className="flex items-center text-nowrap">
+                          <td className="flex items-center">
                             <img
                               src={o?.image[0]}
                               alt="product"
