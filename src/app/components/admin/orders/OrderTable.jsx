@@ -75,26 +75,26 @@ const OrderTable = ({ orders, pageCount, handlePageChange }) => {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {orders?.map((item, index) => (
                     <tr key={index}>
-                      <td className="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+                      <td className="py-2 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
                         #G-Store:{item?.orderCode}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2 text-xs text-gray-800">
+                      <td className="px-3 py-2 text-xs text-gray-800">
                         <div className="bg-primary-2 inline-block px-2 py-1 rounded">
                           {dayjs(item?.createdAt).format("YYYY-MM-DD")}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 pb-1 pt-5 text-sm text-gray-600 line-clamp-1 max-w-[24ch]">
+                      <td className="px-3 pb-1 pt-5 text-sm text-gray-600 line-clamp-1 max-w-[24ch]">
                         {item?.user_info?.name}
                       </td>
 
-                      <td className="whitespace-nowrap px-3 py-2 text-sm text-gray-600">
+                      <td className="px-3 py-2 text-sm text-gray-600">
                         {item?.paymentMethod}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2 text-sm text-brand">
+                      <td className="px-3 py-2 text-sm text-brand">
                         ${item?.total?.toFixed(2)}
                       </td>
 
-                      <td className="whitespace-nowrap px-3 py-2 text-xs text-gray-800">
+                      <td className="px-3 py-2 text-xs text-gray-800">
                         <div
                           className={`${
                             item.status === "Cancel" ? "bg-red-400" : ""
@@ -109,7 +109,7 @@ const OrderTable = ({ orders, pageCount, handlePageChange }) => {
                           {item?.status}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+                      <td className="px-3 py-2 text-sm text-gray-500">
                         <div className="cursor-pointer">
                           <Link href={`/admin/order/${item?.orderCode}`}>
                             <BiSolidShow className="fs-18" />
@@ -118,7 +118,7 @@ const OrderTable = ({ orders, pageCount, handlePageChange }) => {
                       </td>
 
                       {pathname === "/admin/order" && (
-                        <td className="whitespace-nowrap px-3 py-2 text-xs text-gray-800">
+                        <td className="px-3 py-2 text-xs text-gray-800">
                           <div className="bg-primary-2 inline-block px-2 py-[2px] rounded">
                             <SelectStatus order={item} />
                           </div>

@@ -71,6 +71,55 @@ const Orders = ({ orderCode }) => {
             th { background-color: #f9fafb; font-weight: 600; }
             .text-right { text-align: right; }
             .flex { display: flex; }
+            .items-center { align-items: center; }
+            .justify-between { justify-content: space-between; }
+            .gap-5 { gap: 20px; }
+            .w-full { width: 100%; }
+            .lg\:w-7\/12 { width: 58.333333%; }
+            .lg\:w-5\/12 { width: 41.666667%; }
+            .ml-2 { margin-left: 8px; }
+            .font-bold { font-weight: bold; }
+            .bg-primary-light { background-color: #dbeafe; }
+            .text-primary { color: #2563eb; }
+            .rounded-full { border-radius: 9999px; }
+            .p-4 { padding: 16px; }
+            .pt-6 { padding-top: 24px; }
+            .pb-120 { padding-bottom: 120px; }
+            @media print {
+              body { margin: 0; font-size: 12px; }
+              .invoice-section { padding: 20px !important; }
+              .container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+              .invoice-box { padding: 20px !important; box-shadow: none !important; }
+              .flex { display: flex !important; flex-wrap: wrap !important; }
+              .w-full { width: 100% !important; }
+              .lg\:w-7\/12, .lg\:w-5\/12 { width: 50% !important; }
+              table { width: 100% !important; font-size: 11px !important; }
+              th, td { padding: 6px !important; }
+              img { max-width: 120px !important; height: auto !important; }
+              .text-right, .text-end { text-align: right !important; }
+              .text-right img, .text-end img { margin-left: auto !important; display: block !important; }
+              .lg\:w-5\/12 { text-align: right !important; }
+              .lg\:w-5\/12 img { margin-left: auto !important; margin-right: 0 !important; }
+              .btn, button, .print-buttons { display: none !important; }
+              .no-print { display: none !important; }
+            }
+            @media (max-width: 768px) {
+              .invoice-section { padding: 10px !important; }
+              .container { padding: 0 10px !important; }
+              .invoice-box { padding: 15px !important; }
+              .flex { flex-direction: column !important; }
+              .w-full, .lg\:w-7\/12, .lg\:w-5\/12 { width: 100% !important; margin-bottom: 20px !important; }
+              table { font-size: 12px !important; overflow-x: auto !important; }
+              th, td { padding: 8px 4px !important; }
+              .text-right { text-align: center !important; }
+              .text-right img { margin: 0 auto !important; }
+              h3 { font-size: 20px !important; }
+              h4 { font-size: 16px !important; }
+              h6 { font-size: 12px !important; }
+            }
+            th { background-color: #f9fafb; font-weight: 600; }
+            .text-right { text-align: right; }
+            .flex { display: flex; }
             .justify-between { justify-content: space-between; }
             .gap-5 { gap: 20px; }
             .w-full { width: 100%; }
@@ -109,7 +158,7 @@ const Orders = ({ orderCode }) => {
                       <span className="badge rounded-full bg-blue-200 text-blue-600 font-medium ml-3">
                         {codeOrder?.status}
                       </span>
-                    </div>whitespace-nowrap
+                    </div>
                     <table className="invoice-table-sm w-full mt-2">
                       <tbody>
                         <tr>
@@ -197,37 +246,37 @@ const Orders = ({ orderCode }) => {
                     <tbody>
                       <tr>
                         <td>
-                          <strong className="text-dark block whitespace-nowrap">
+                          <strong className="text-dark block">
                             Payment Method
                           </strong>
                           <span>{codeOrder?.paymentMethod}</span>
                         </td>
                         <td>
-                          <strong className="text-dark block whitespace-nowrap">
+                          <strong className="text-dark block">
                             Shipping Cost
                           </strong>
                           <span>৳{codeOrder?.shippingCost}.00</span>
                         </td>
                         <td>
-                          <strong className="text-dark block whitespace-nowrap">
+                          <strong className="text-dark block">
                             Discount
                           </strong>
                           <span>৳{codeOrder?.discount}.00</span>
                         </td>
                         <td>
-                          <strong className="text-dark block whitespace-nowrap">
+                          <strong className="text-dark block">
                             Taxes
                           </strong>
                           <span>৳{codeOrder?.taxes}.00</span>
                         </td>
                         <td>
-                          <strong className="text-dark block whitespace-nowrap">
+                          <strong className="text-dark block">
                             Total Price
                           </strong>
                           <span>৳{codeOrder?.subTotal}.00</span>
                         </td>
                         <td>
-                          <strong className="text-dark block whitespace-nowrap">
+                          <strong className="text-dark block">
                             Total Amount
                           </strong>
                           <span className="text-blue-600 font-bold">
@@ -238,7 +287,7 @@ const Orders = ({ orderCode }) => {
                     </tbody>
                   </table>
                 </div>
-                <div className="flex items-center justify-between flex-wrap gap-3 mt-7">
+                <div className="flex items-center justify-between flex-wrap gap-3 mt-7 no-print">
                   <button
                     onClick={printInvoice}
                     className="btn btn-primary bg-blue-600 text-white font-semibold py-2 px-4 rounded-md"

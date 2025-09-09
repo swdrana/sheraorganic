@@ -66,8 +66,60 @@ const Invoice = ({ invoiceNo }) => {
             .pb-120 { padding-bottom: 120px; }
             strong { font-weight: bold; }
             @media print {
-              body { margin: 0; }
-              .invoice-section { padding: 0; }
+              body { margin: 0; font-size: 12px; }
+              .invoice-section { padding: 20px !important; }
+              .container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+              .invoice-box { padding: 20px !important; box-shadow: none !important; }
+              .flex { display: flex !important; flex-wrap: wrap !important; }
+              .w-full { width: 100% !important; }
+              .lg\:w-7\/12, .lg\:w-5\/12 { width: 50% !important; }
+              table { width: 100% !important; font-size: 11px !important; }
+              th, td { padding: 6px !important; }
+              img { max-width: 120px !important; height: auto !important; }
+              .text-right, .text-center.lg\:text-right { text-align: right !important; }
+              .text-right img, .text-center.lg\:text-right img { margin-left: auto !important; display: block !important; }
+              .lg\:w-5\/12, .lg\:w-5\/12 *, .lg\:w-5\/12 div, .lg\:w-5\/12 .text-right, .lg\:w-5\/12 .text-center { text-align: right !important; }
+              .lg\:w-5\/12 img, .lg\:w-5\/12 a img { margin-left: auto !important; margin-right: 0 !important; display: block !important; float: right !important; }
+              .lg\:w-5\/12 h6 { text-align: right !important; }
+              .max-w-\[150px\] { max-width: 100px !important; width: 100px !important; }
+              .btn, button, .print-buttons { display: none !important; }
+              .no-print { display: none !important; }
+              .row {
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                align-items: flex-start !important;
+              }
+              .lg\:w-7\/12 {
+                width: 58.333333% !important;
+                float: left !important;
+                text-align: left !important;
+              }
+              .lg\:w-5\/12 {
+                width: 41.666667% !important;
+                float: right !important;
+                text-align: right !important;
+              }
+              .invoice-table-sm {
+                text-align: left !important;
+              }
+              .invoice-table-sm td {
+                text-align: left !important;
+              }
+            }
+            @media (max-width: 768px) {
+              .invoice-section { padding: 10px !important; }
+              .container { padding: 0 10px !important; }
+              .invoice-box { padding: 15px !important; }
+              .row { flex-direction: column !important; }
+              .col-lg-6, .col-lg-5, .col-md-8 { width: 100% !important; margin-bottom: 20px !important; }
+              .table { font-size: 12px !important; overflow-x: auto !important; }
+              .table th, .table td { padding: 8px 4px !important; }
+              .text-end { text-align: center !important; }
+              .text-end img { margin: 0 auto !important; }
+              h3 { font-size: 20px !important; }
+              h4 { font-size: 16px !important; }
+              h6 { font-size: 12px !important; }
             }
           </style>
         </head>
@@ -83,12 +135,12 @@ const Invoice = ({ invoiceNo }) => {
   return (
     <>
       <section ref={invoiceRef} className="invoice-section pt-6 pb-120">
-        <div className="container">
-          <div className="invoice-box bg-white rounded p-4 p-sm-6">
+        <div className="container mx-auto px-4">
+          <div className="invoice-box bg-white rounded p-4 p-sm-6 shadow-sm">
             {/* Content */}
-            <div className="row g-5 justify-content-between">
-              <div className="col-lg-6">
-                <div className="invoice-title d-flex align-items-center">
+            <div className="row g-5 justify-content-between flex-column flex-lg-row">
+              <div className="w-full lg:w-7/12 md:w-4/12">
+                <div className="invoice-title flex items-center">
                   <h3>Invoice</h3>
                   <span className="badge rounded-pill bg-primary-light text-primary fw-medium ms-3">
                     {codeOrder?.status}
@@ -112,20 +164,20 @@ const Invoice = ({ invoiceNo }) => {
                   </tbody>
                 </table>
               </div>
-              <div className="col-lg-5 col-md-8">
-                <div className="text-end">
+              <div className="w-full lg:w-5/12 md:w-8/12">
+                <div className="text-right text-center lg:text-right">
                   <a href="#">
-                    <img src={setting?.home?.logo || "/img/logo.png"} alt="logo" className="img-fluid ms-auto d-block" style={{maxWidth: '150px'}} />
+                    <img src={setting?.home?.logo || "/img/logo.png"} alt="logo" className="max-w-[150px] ml-auto block mx-auto lg:mx-0 lg:ml-auto" />
                   </a>
-                  <h6 className="mb-0 text-gray mt-4">
+                  <h6 className="mb-0 text-gray-600 mt-4">
                     {setting?.home?.address || "Address not available"}
                   </h6>
                 </div>
               </div>
             </div>
             <span className="my-6 w-100 d-block border-top"></span>
-            <div className="row justify-content-between g-5">
-              <div className="col-xl-8 col-lg-7">
+            <div className="row justify-content-between g-5 flex-column flex-lg-row">
+              <div className="col-xl-8 col-lg-7 col-12">
                 <div className="welcome-message">
                   <h4 className="mb-2">Dear {codeOrder?.user_info?.name}</h4>
                   <p className="mb-0">
@@ -133,15 +185,15 @@ const Invoice = ({ invoiceNo }) => {
                   </p>
                 </div>
               </div>
-              <div className="col-xl-4 col-lg-5">
+              <div className="col-xl-4 col-lg-5 col-12">
                 <div className="shipping-address">
                   <h6 className="mb-2">Shipping Address</h6>
                   <p className="mb-0">{codeOrder?.user_info?.address}</p>
                 </div>
               </div>
             </div>
-            <div className="table-responsive mt-6">
-              <table className="table invoice-table">
+            <div className="table-responsive mt-6 overflow-x-auto">
+              <table className="table invoice-table w-100">
                 <thead>
                   <tr>
                     <th>SR.</th>
@@ -221,7 +273,7 @@ const Invoice = ({ invoiceNo }) => {
                 </tbody>
               </table>
             </div>
-            <div className="d-flex align-items-center justify-content-between flex-wrap gap-3 mt-7">
+            <div className="d-flex align-items-center justify-content-between flex-wrap gap-3 mt-7 no-print">
               <button
                 type="button"
                 onClick={printInvoice}
