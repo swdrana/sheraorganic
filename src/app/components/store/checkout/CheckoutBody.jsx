@@ -36,10 +36,7 @@ const CheckoutBody = () => {
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [selectedShipping, setSelectedShipping] = useState("");
 
-  const taxes =
-    cartTotal * 0.01 < 50
-      ? Math.floor(cartTotal * 0.01)
-      : Math.ceil(cartTotal * 0.01);
+  const taxes = 0;
 
   const grandTotal = shippingCost + taxes + cartTotal - discount;
 
