@@ -138,57 +138,58 @@ const Invoice = ({ invoiceNo }) => {
         <div className="container mx-auto px-4">
           <div className="invoice-box bg-white rounded p-4 p-sm-6 shadow-sm">
             {/* Content */}
-            <div className="row g-5 justify-content-between flex-column flex-lg-row">
-              <div className="w-full lg:w-7/12 md:w-4/12">
+            <div className="flex flex-wrap justify-between items-start gap-5">
+              <div className="flex-1 min-w-0 lg:max-w-[58%]">
                 <div className="invoice-title flex items-center">
-                  <h3>Invoice</h3>
-                  <span className="badge rounded-pill bg-primary-light text-primary fw-medium ms-3">
+                  <h3 className="text-sm text-black">Invoice</h3>
+                  <span className="badge rounded-pill bg-primary-light text-primary fw-medium ms-3 text-xs">
                     {codeOrder?.status}
                   </span>
                 </div>
                 <table className="invoice-table-sm">
                   <tbody>
                     <tr>
-                      <td>
+                      <td className="text-sm text-black">
                         <strong>Invoice No</strong>
                       </td>
-                      <td>#G-Store: {codeOrder?.orderCode}</td>
+                      <td className="text-sm text-black">#G-Store: {codeOrder?.orderCode}</td>
                     </tr>
 
                     <tr>
-                      <td>
+                      <td className="text-sm text-black">
                         <strong>Date</strong>
                       </td>
-                      <td>15 January, 2023</td>
+                      <td className="text-sm text-black">15 January, 2023</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <div className="w-full lg:w-5/12 md:w-8/12">
-                <div className="text-right text-center lg:text-right">
+              <div className="flex-shrink-0 text-right lg:max-w-[40%]">
+                <div className="text-right">
                   <a href="#">
-                    <img src={setting?.home?.logo || "/img/logo.png"} alt="logo" className="max-w-[150px] ml-auto block mx-auto lg:mx-0 lg:ml-auto" />
+                    <img src={setting?.home?.logo || "/img/logo.png"} alt="logo" className="max-w-[150px] ml-auto block" />
                   </a>
-                  <h6 className="mb-0 text-gray-600 mt-4">
-                    {setting?.home?.address || "Address not available"}
-                  </h6>
+                  <p className="mb-0 text-gray-600 mt-4 text-right text-sm">
+                    {setting?.contact?.contact_office_address_one || "Address not available"}
+                  </p>
                 </div>
               </div>
             </div>
             <span className="my-6 w-100 d-block border-top"></span>
-            <div className="row justify-content-between g-5 flex-column flex-lg-row">
-              <div className="col-xl-8 col-lg-7 col-12">
-                <div className="welcome-message">
-                  <h4 className="mb-2">Dear {codeOrder?.user_info?.name}</h4>
-                  <p className="mb-0">
-                    Here are your order details. We thank you for your purchase.
-                  </p>
-                </div>
-              </div>
-              <div className="col-xl-4 col-lg-5 col-12">
-                <div className="shipping-address">
-                  <h6 className="mb-2">Shipping Address</h6>
-                  <p className="mb-0">{codeOrder?.user_info?.address}</p>
+            <div className="row justify-content-start">
+              <div className="col-12">
+                <h6 className="mb-3 text-sm text-black">Customer Information</h6>
+                <div className="user-info">
+                  <p className="mb-1 text-sm text-black"><strong>{codeOrder?.user_info?.name}</strong></p>
+                  {codeOrder?.user_info?.email && (
+                    <p className="mb-1 text-sm text-black">{codeOrder?.user_info?.email}</p>
+                  )}
+                  {codeOrder?.user_info?.contact && (
+                    <p className="mb-1 text-sm text-black">{codeOrder?.user_info?.contact}</p>
+                  )}
+                  {codeOrder?.user_info?.address && (
+                    <p className="mb-0 text-sm text-black">{codeOrder?.user_info?.address}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -196,32 +197,31 @@ const Invoice = ({ invoiceNo }) => {
               <table className="table invoice-table w-100">
                 <thead>
                   <tr>
-                    <th>SR.</th>
-                    <th>Products</th>
-                    <th>SKU</th>
-                    <th>QTY</th>
-                    <th>Item Price</th>
-                    <th>Amount</th>
+                    <th className="text-sm">SR.</th>
+                    <th className="text-sm">Products</th>
+                    <th className="text-sm">QTY</th>
+                    <th className="text-sm">Item Price</th>
+                    <th className="text-sm">Amount</th>
                   </tr>
                 </thead>
                 <tbody>
                   {codeOrder?.cart?.map((o, i) => (
                     <tr key={i}>
-                      <td>{i + 1}</td>
+                      <td className="text-sm">{i + 1}</td>
                       <td className="">
                         <img
                           src={o?.image[0]}
                           alt="product"
                           className="img-fluid product-item"
                         />
-                        <p className="ms-2 max-w-[45ch] overflow-hidden">
+                        <p className="ms-2 max-w-[45ch] overflow-hidden text-sm">
                           {o?.name}{" "}
                         </p>
                       </td>
-                      <td>{o?.sku}</td>
-                      <td>{o?.quantity}</td>
-                      <td>৳{o?.price}.00</td>
-                      <td>৳{o?.itemTotal}.00</td>
+
+                      <td className="text-sm">{o?.quantity}</td>
+                      <td className="text-sm">৳{o?.price}.00</td>
+                      <td className="text-sm">৳{o?.itemTotal}.00</td>
                     </tr>
                   ))}
                 </tbody>
@@ -232,40 +232,35 @@ const Invoice = ({ invoiceNo }) => {
                 <tbody>
                   <tr>
                     <td>
-                      <strong className="text-dark d-block">
+                      <strong className="text-dark d-block text-sm">
                         Payment Method
                       </strong>
-                      <span>{codeOrder?.paymentMethod}</span>
+                      <span className="text-sm">{codeOrder?.paymentMethod}</span>
                     </td>
                     <td>
-                      <strong className="text-dark d-block">
+                      <strong className="text-dark d-block text-sm">
                         Shipping Cost
                       </strong>
-                      <span>৳{codeOrder?.shippingCost}.00</span>
+                      <span className="text-sm">৳{codeOrder?.shippingCost}.00</span>
                     </td>
                     <td>
-                      <strong className="text-dark d-block">
+                      <strong className="text-dark d-block text-sm">
                         Discount
                       </strong>
-                      <span>৳{codeOrder?.discount}.00</span>
+                      <span className="text-sm">৳{codeOrder?.discount}.00</span>
                     </td>
+
                     <td>
-                      <strong className="text-dark d-block">
-                        Taxes
-                      </strong>
-                      <span>৳{codeOrder?.taxes}.00</span>
-                    </td>
-                    <td>
-                      <strong className="text-dark d-block">
+                      <strong className="text-dark d-block text-sm">
                         Total Price
                       </strong>
-                      <span>৳{codeOrder?.subTotal}.00</span>
+                      <span className="text-sm">৳{codeOrder?.subTotal}.00</span>
                     </td>
                     <td>
-                      <strong className="text-dark d-block">
+                      <strong className="text-dark d-block text-sm">
                         Total Amount
                       </strong>
-                      <span className="text-primary fw-bold">
+                      <span className="text-primary fw-bold text-sm">
                         ৳{codeOrder?.total}.00
                       </span>
                     </td>
