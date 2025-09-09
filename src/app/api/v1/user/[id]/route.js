@@ -14,12 +14,12 @@ export async function PATCH(req, { params }) {
       {
         $set: {
           name: updateUserData.name,
-          contact: updateUserData.phone,
+          contact: updateUserData.contact || updateUserData.phone,
           username: updateUserData.userName,
           address: updateUserData.address,
           email: updateUserData.email,
           img: updateUserData.img,
-          birthday: new Date(updateUserData.birthday),
+          birthday: updateUserData.birthday ? new Date(updateUserData.birthday) : undefined,
         },
       }
     );

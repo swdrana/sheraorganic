@@ -10,15 +10,16 @@ import { useForm } from "react-hook-form";
 import { useCart } from "react-use-cart";
 import { getAllCoupons } from "@/app/backend/controllers/coupon.controller";
 import { InitiateCheckout, Purchase } from "@/app/utilities/facebookPixel";
+import { getUserById, updateUserProfile } from "@/app/controlers/user.controler";
 
 import dayjs from "dayjs";
 const CheckoutBody = () => {
   const [isClient, setIsClient] = useState(false);
+  const session = useSession();
+  
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  const session = useSession();
 
   const {
     register,
@@ -26,7 +27,33 @@ const CheckoutBody = () => {
     formState: { errors },
     getValues,
     trigger,
+    setValue,
   } = useForm();
+
+  // Fetch user profile data when session is available
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (session?.data?.user?.id) {
+        try {
+          const userData = await getUserById(session.data.user.id);
+          if (userData) {
+            setUserProfile(userData);
+            // Auto-populate form fields
+            setValue("name", userData.name || "");
+            setValue("email", userData.email || "");
+            setValue("phone", userData.contact || "");
+            setValue("address", userData.address || "");
+          }
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+        }
+      }
+    };
+
+    if (session?.status === "authenticated") {
+      fetchUserProfile();
+    }
+  }, [session]);
   const router = useRouter();
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const [discount, setDiscount] = useState(0);
@@ -35,10 +62,9 @@ const CheckoutBody = () => {
   const [shippingCost, setShippingCost] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [selectedShipping, setSelectedShipping] = useState("");
+  const [userProfile, setUserProfile] = useState(null);
 
-  const taxes = 0;
-
-  const grandTotal = shippingCost + taxes + cartTotal - discount;
+  const grandTotal = shippingCost + cartTotal - discount;
 
   const handleCheckoutSubmit = async () => {
     // Validate the form fields
@@ -90,7 +116,7 @@ const CheckoutBody = () => {
         user_info: userInfo,
         subTotal: cartTotal,
         shippingCost: shippingCost,
-        taxes: taxes,
+        taxes: 0,
         discount: Math.floor(discount),
         total: grandTotal,
         paymentMethod: payment,
@@ -100,6 +126,19 @@ const CheckoutBody = () => {
       const res = await createOrder(orderData);
       // console.log("res......", res);
       if (res?.message) {
+        // Update user profile with billing details if user is logged in
+        if (session?.data?.user?.id) {
+          try {
+            await updateUserProfile(session.data.user.id, {
+              name: name,
+              contact: phone,
+              address: address,
+            });
+          } catch (profileError) {
+            console.error("Error updating user profile:", profileError);
+          }
+        }
+        
         // Track Purchase event
         Purchase({
           content_ids: items.map(item => item.id),
@@ -552,10 +591,7 @@ const CheckoutBody = () => {
                             ৳{Math.floor(discount)}.00
                           </td>
                         </tr>
-                        <tr>
-                          <td>Tax:</td>
-                          <td className="text-end">৳{taxes}.00</td>
-                        </tr>
+
                       </tbody>
                     </table>
 
