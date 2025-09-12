@@ -49,7 +49,7 @@ const BannerOne = ({ setting }) => {
               </span>
             </div>
             <h3 className="mb-5"> {setting?.home?.hone_banner_one_des}</h3>
-            <Link href="/products" className="btn btn-secondary">
+            <Link href="/coupons" className="btn btn-secondary">
               Shop Now
               <span className="ms-2">
                 <i className="fas fa-arrow-right"></i>
