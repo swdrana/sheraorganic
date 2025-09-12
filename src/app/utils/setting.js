@@ -97,8 +97,8 @@ export const allSetting = {
         "https://res.cloudinary.com/dmadhbgty/image/upload/v1732688381/grostore/client-3.png",
       home_banner_two_img:
         "https://res.cloudinary.com/dmadhbgty/image/upload/v1733216697/grostore/cta-banner.jpg",
-      hone_banner_two_des: "Bigest offer this winter up to 70%",
-      hone_banner_two_title: "Winnter Offer",
+      hone_banner_two_des: "Weekend Offer",
+      hone_banner_two_title: "Get Special Discount",
       hero_facebook_link: "https://www.facebook.com/themetags",
       hero_linkdin_link: "https://www.linkedin.com/",
       hero_twitter_link: "https://x.com/",
