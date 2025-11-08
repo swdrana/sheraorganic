@@ -1,26 +1,43 @@
+// Small utility to ensure fbq is ready before attempting to track
+const isFbqReady = () => typeof window !== "undefined" && typeof window.fbq === "function";
+
 export const PageView = () => {
-  fbq("track", "PageView");
+  if (!isFbqReady()) return;
+  window.fbq("track", "PageView");
 };
 
-// Function to track AddToCart event
-export const trackAddToCart = (userId, userName, userEmail, userPhone, userAddress, productId, productName, productCategory, productPrice) => {
-  fbq('track', 'AddToCart', {
-    user_id: userId, // Include user ID
-    user_name: userName, // Include user name
-    user_email: userEmail, // Include user email
-    user_phone: userPhone, // Include user phone number
+// Track AddToCart event (supports both object payload and positional args)
+export const trackAddToCart = (...args) => {
+  if (!isFbqReady()) return;
+  if (args.length === 1 && args[0] && typeof args[0] === "object") {
+    // Already in standard Pixel format
+    window.fbq("track", "AddToCart", args[0]);
+    return;
+  }
+  const [userId, userName, userEmail, userPhone, userAddress, productId, productName, productCategory, productPrice] = args;
+  window.fbq("track", "AddToCart", {
+    user_id: userId,
+    user_name: userName,
+    user_email: userEmail,
+    user_phone: userPhone,
     user_address: userAddress,
-    content_ids: [productId],
+    content_ids: productId ? [productId] : undefined,
     content_name: productName,
     content_category: productCategory,
     value: productPrice,
-    currency: 'BDT'
-    // Include additional product information as needed
+    currency: "BDT",
   });
 };
 
-export const InitiateCheckout = (productIds, productName, totalValue) => {
-  fbq("track", "InitiateCheckout", {
+// Track InitiateCheckout (supports object payload or legacy args)
+export const InitiateCheckout = (...args) => {
+  if (!isFbqReady()) return;
+  if (args.length === 1 && args[0] && typeof args[0] === "object") {
+    window.fbq("track", "InitiateCheckout", args[0]);
+    return;
+  }
+  const [productIds, productName, totalValue] = args;
+  window.fbq("track", "InitiateCheckout", {
     content_ids: productIds,
     content_type: "product",
     content_name: productName,
@@ -29,13 +46,20 @@ export const InitiateCheckout = (productIds, productName, totalValue) => {
   });
 };
 
-export const Purchase = (userId, orderIds, totalValue, numItems) => {
-  fbq("track", "Purchase", {
+// Track Purchase (supports object payload or legacy args)
+export const Purchase = (...args) => {
+  if (!isFbqReady()) return;
+  if (args.length === 1 && args[0] && typeof args[0] === "object") {
+    window.fbq("track", "Purchase", args[0]);
+    return;
+  }
+  const [userId, orderIds, totalValue, numItems] = args;
+  window.fbq("track", "Purchase", {
     user_id: userId,
     content_ids: orderIds,
     content_type: "product",
     value: totalValue,
     num_items: numItems,
-    currency: 'BDT',
+    currency: "BDT",
   });
 };
