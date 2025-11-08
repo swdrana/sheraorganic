@@ -1,25 +1,24 @@
 "use client";
 import { usePathname } from "next/navigation"; // Import usePathname from next/navigation
-import "react-quill/dist/quill.snow.css";
-import "./globals.css";
-import "../assets/css/main.css";
 import "rc-tree/assets/index.css";
-import { ThemeProvider } from "./components/admin/context/themeContext";
-import { MainContextProvider } from "./components/admin/context/mainContext";
+import "react-loading-skeleton/dist/skeleton.css";
+import "react-quill/dist/quill.snow.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "react-loading-skeleton/dist/skeleton.css";
+import "../assets/css/main.css";
+import { MainContextProvider } from "./components/admin/context/mainContext";
+import { ThemeProvider } from "./components/admin/context/themeContext";
 import Sidebar from "./components/admin/shared/Sidebar";
-import { WishlistProvider } from "./components/store/provider/WishlistProvider";
-import { MainContextProviderStore } from "./components/store/provider/MainContextStore";
-import Offcanvas from "./components/store/common/nav/Offcanvas";
-import Navbar from "./components/store/common/nav/Navbar";
-import { AuthProvider } from "./components/store/provider/AuthProvider";
 import Footer from "./components/store/common/nav/Footer";
-import CartProviderContext from "./components/store/provider/CartProviderContex";
+import Navbar from "./components/store/common/nav/Navbar";
+import Offcanvas from "./components/store/common/nav/Offcanvas";
 import ProductModal from "./components/store/common/others/ProductModal";
 import useSetting from "./components/store/dataFetching/useSetting";
-import { useEffect, useState } from "react";
+import { AuthProvider } from "./components/store/provider/AuthProvider";
+import CartProviderContext from "./components/store/provider/CartProviderContex";
+import { MainContextProviderStore } from "./components/store/provider/MainContextStore";
+import { WishlistProvider } from "./components/store/provider/WishlistProvider";
+import "./globals.css";
 
 export default function RootLayout({ children }) {
   const pathname = usePathname(); // Use usePathname to get the current path
@@ -28,10 +27,12 @@ export default function RootLayout({ children }) {
 
   if (pathname.startsWith("/products")) {
     title = "Products - SheraOrganic Online Store";
-    description = "Browse the latest products in the SheraOrganic online store.";
+    description =
+      "Browse the latest products in the SheraOrganic online store.";
   } else if (pathname.startsWith("/about")) {
     title = "About Us - SheraOrganic Online Store";
-    description = "Learn more about the SheraOrganic online store and our mission.";
+    description =
+      "Learn more about the SheraOrganic online store and our mission.";
   } else if (pathname.startsWith("/contact")) {
     title = "Contact Us - SheraOrganic Online Store";
     description = "Get in touch with the SheraOrganic online store team.";
@@ -58,7 +59,7 @@ export default function RootLayout({ children }) {
         <meta name="description" content={description} />
 
         <link rel="icon" href={setting?.home?.favicon} />
-        
+
         {/* Meta Pixel Code */}
         <script
           dangerouslySetInnerHTML={{
@@ -76,12 +77,15 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
-        {/* End Meta Pixel Code */}
-        {/* <!-- Meta Pixel Code --> */}
-        <noscript><img height="1" width="1" style="display:none"
-        src="https://www.facebook.com/tr?id=1819870335568021&ev=PageView&noscript=1"
-        /></noscript>
-{/* <!-- End Meta Pixel Code --> */}
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=1819870335568021&ev=PageView&noscript=1"
+          />
+        </noscript>
+        {/* <!-- End Meta Pixel Code --> */}
       </head>
       <body>
         <AuthProvider>
