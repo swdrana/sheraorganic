@@ -71,11 +71,17 @@ export default function RootLayout({ children }) {
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '919697829733083');
+              fbq('init', '1819870335568021');
             `,
           }}
         />
+        {/* 919697829733083 */}
         {/* End Meta Pixel Code */}
+        {/* <!-- Meta Pixel Code --> */}
+        <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=1819870335568021&ev=PageView&noscript=1"
+        /></noscript>
+{/* <!-- End Meta Pixel Code --> */}
       </head>
       <body>
         <AuthProvider>
