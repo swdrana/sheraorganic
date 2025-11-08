@@ -82,7 +82,7 @@ const FeatureProduct = ({ products, setting }) => {
 
                   <div className="thumbnail position-relative z-1">
                     <img
-                      src="/img/pago.png"
+                      src={setting?.home?.feature_brand_banner_img}
                       alt="pago"
                       className="img-fluid p-4"
                     />
