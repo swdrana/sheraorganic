@@ -1,5 +1,6 @@
 // Small utility to ensure fbq is ready before attempting to track
-const isFbqReady = () => typeof window !== "undefined" && typeof window.fbq === "function";
+const isFbqReady = () =>
+  typeof window !== "undefined" && typeof window.fbq === "function";
 
 export const PageView = () => {
   if (!isFbqReady()) return;
@@ -14,7 +15,17 @@ export const trackAddToCart = (...args) => {
     window.fbq("track", "AddToCart", args[0]);
     return;
   }
-  const [userId, userName, userEmail, userPhone, userAddress, productId, productName, productCategory, productPrice] = args;
+  const [
+    userId,
+    userName,
+    userEmail,
+    userPhone,
+    userAddress,
+    productId,
+    productName,
+    productCategory,
+    productPrice,
+  ] = args;
   window.fbq("track", "AddToCart", {
     user_id: userId,
     user_name: userName,
