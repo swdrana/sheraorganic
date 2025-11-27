@@ -2,6 +2,10 @@ import { Schema, mongoose } from "mongoose";
 
 const orderSchema = new Schema(
   {
+    clientToken: {
+      type: String,
+      required: false,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Customer",

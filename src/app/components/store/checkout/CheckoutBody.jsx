@@ -63,14 +63,24 @@ const CheckoutBody = () => {
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [selectedShipping, setSelectedShipping] = useState("");
   const [userProfile, setUserProfile] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [clientToken] = useState(() => {
+    try {
+      return crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`;
+    } catch {
+      return `${Date.now()}-${Math.random()}`;
+    }
+  });
 
   const grandTotal = shippingCost + cartTotal - discount;
 
   const handleCheckoutSubmit = async () => {
+    if (isSubmitting) return;
     // Validate the form fields
     const isValid = await trigger();
 
     if (isValid) {
+      setIsSubmitting(true);
       const values = getValues();
       // console.log("values..", values);
       const {
@@ -121,6 +131,7 @@ const CheckoutBody = () => {
         total: grandTotal,
         paymentMethod: payment,
         status: "Pending",
+        clientToken: clientToken,
       };
 
       const res = await createOrder(orderData);
@@ -162,8 +173,9 @@ const CheckoutBody = () => {
         emptyCart();
         // Cookies.remove("couponInfo");
         // getOrderRevalidate();
-        router.push("/my-account");
+        router.push(`/thank-you/${res?.order?.orderCode}`);
       } else {
+        setIsSubmitting(false);
       }
     }
   };
@@ -606,8 +618,9 @@ const CheckoutBody = () => {
                       type="submit"
                       onClick={handleCheckoutSubmit}
                       className="btn btn-primary btn-md rounded mt-6 w-100"
+                      disabled={isSubmitting}
                     >
-                      Place Order
+                      {isSubmitting ? "Processing..." : "Place Order"}
                     </button>
                     <p className="mt-3 mb-0 fs-xs">
                       By Placing your order your agree to our company{" "}

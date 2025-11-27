@@ -30,10 +30,17 @@ export const POST = async (req) => {
   const data = await req.json();
   // console.log("product data", data);
   try {
+    if (data?.clientToken) {
+      const existingOrder = await Order.findOne({ clientToken: data.clientToken });
+      if (existingOrder) {
+        return NextResponse.json({ message: "order create successfully", order: existingOrder }, { status: 200 });
+      }
+    }
     const orderCode = await getNextOrderCode();
     // console.log("orderCode..", orderCode);
 
     const newOrder = new Order({
+      clientToken: data.clientToken,
       orderCode: orderCode,
       user: data.user,
       cart: data.cart,
@@ -48,7 +55,7 @@ export const POST = async (req) => {
       status: data.status,
     });
     await newOrder.save();
-    return NextResponse.json({ message: "order create successfully" });
+    return NextResponse.json({ message: "order create successfully", order: newOrder }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: "error", error });
   }
