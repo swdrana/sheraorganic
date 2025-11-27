@@ -61,8 +61,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href={setting?.home?.favicon} />
 
         {/* Meta Pixel Code */}
-        <script
-          dangerouslySetInnerHTML={{
+        {/* <script dangerouslySetInnerHTML={{
             __html: `
               !function(f,b,e,v,n,t,s)
               {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -84,7 +83,7 @@ export default function RootLayout({ children }) {
             style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=1819870335568021&ev=PageView&noscript=1"
           />
-        </noscript>
+        </noscript> */}
         {/* <!-- End Meta Pixel Code --> */}
 
         {/* Google Tag Manager */}
