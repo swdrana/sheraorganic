@@ -27,7 +27,9 @@ const BlogDetailsBlog = ({ id, blogs }) => {
             </span>
           </div>
           <span className="hr-line w-100 position-relative d-block my-4"></span>
-          <p>{blogDetails?.description}</p>
+          <div
+            dangerouslySetInnerHTML={{ __html: blogDetails?.description || "" }}
+          />
         </div>
       </div>
     </>
