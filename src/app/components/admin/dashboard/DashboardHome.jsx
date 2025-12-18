@@ -47,7 +47,7 @@ const DashboardHome = () => {
         getAllOrders(),
         getAllProducts(),
       ]);
-      setOrders(orderRes);
+      setOrders(orderRes?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       setProducts(productRes);
 
       setLoading(false);

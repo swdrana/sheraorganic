@@ -1,11 +1,17 @@
 "use client";
+import dayjs from "dayjs";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BiSolidShow } from "react-icons/bi";
 import SelectStatus from "../form/selectOption/SelectStatus";
 import Pagination from "../shared/Pagination";
-import dayjs from "dayjs";
-import { BiSolidShow } from "react-icons/bi";
-import Link from "next/link";
-const OrderTable = ({ orders, pageCount, handlePageChange }) => {
+const OrderTable = ({
+  orders,
+  pageCount,
+  handlePageChange,
+  itemsPerPage,
+  setItemsPerPage,
+}) => {
   // console.log('orders in order table..',orders)
   const pathname = usePathname();
   return (
@@ -129,11 +135,26 @@ const OrderTable = ({ orders, pageCount, handlePageChange }) => {
                 </tbody>
               </table>
               {/* pagination */}
-              {pathname === "/admin/orders" && (
-                <Pagination
-                  pageCount={pageCount}
-                  handlePageChange={handlePageChange}
-                />
+              {pathname === "/admin/order" && (
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-600">Show:</span>
+                    <select
+                      value={itemsPerPage}
+                      onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                      className="h-8 border-gray-300 rounded text-sm focus:ring-transparent focus:border-dark cursor-pointer outline-none"
+                    >
+                      <option value={10}>10</option>
+                      <option value={20}>20</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
+                    </select>
+                  </div>
+                  <Pagination
+                    pageCount={pageCount}
+                    handlePageChange={handlePageChange}
+                  />
+                </div>
               )}
             </div>
           </div>

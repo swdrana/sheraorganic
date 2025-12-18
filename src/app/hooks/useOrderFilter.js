@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 const useOrderFilter = (allOrder) => {
   // console.log("allOrder..", allOrder);
   const router = useRouter();
-  const [filterOrder, setFilterOrder] = useState(allOrder);
-  const itemsPerPage = 10;
-  const pageCount = Math.ceil(allOrder?.length / itemsPerPage);
+  const [filterOrder, setFilterOrder] = useState([]);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [pageCount, setPageCount] = useState(0);
 
   // console.log('attributes in product com',attribue)
   //handle shorting by category
@@ -49,6 +49,12 @@ const useOrderFilter = (allOrder) => {
       );
     }
 
+    // Sort orders by date descending (newest first)
+    updateOrder.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // Update page count based on filtered results
+    setPageCount(Math.ceil(updateOrder.length / itemsPerPage));
+
     // Slice the current page of products based on pagination
 
     // Update filtered products state
@@ -58,7 +64,7 @@ const useOrderFilter = (allOrder) => {
     const currentOrder = updateOrder?.slice(startIndex, endIndex);
 
     setFilterOrder(currentOrder);
-  }, [searchText, allOrder, status, currentPage, method]);
+  }, [searchText, allOrder, status, currentPage, method, itemsPerPage]);
 
   // handel reset filtering
   const handelResetFiltering = () => {
@@ -83,6 +89,8 @@ const useOrderFilter = (allOrder) => {
     filterOrder,
     method,
     setMethod,
+    itemsPerPage,
+    setItemsPerPage,
   };
 };
 

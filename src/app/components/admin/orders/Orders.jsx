@@ -1,16 +1,15 @@
 "use client";
 import useOrderFilter from "@/app/hooks/useOrderFilter";
-import React from "react";
-import OrderTable from "./OrderTable";
-import { GrClose } from "react-icons/gr";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { useRef } from "react";
 import { FiSearch } from "react-icons/fi";
-import LoadingSkeleton from "../loader/TableLoading";
-import useOrders from "../featch/useOrder";
+import { GrClose } from "react-icons/gr";
 import useOrderCode from "../../store/dataFetching/useOrderCode";
 import useSetting from "../../store/dataFetching/useSetting";
-import { useRef } from "react";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import useOrders from "../featch/useOrder";
+import LoadingSkeleton from "../loader/TableLoading";
+import OrderTable from "./OrderTable";
 
 const Orders = ({ orderCode }) => {
   const invoiceRef = useRef();
@@ -26,6 +25,8 @@ const Orders = ({ orderCode }) => {
     handlePageChange,
     method,
     setMethod,
+    itemsPerPage,
+    setItemsPerPage,
   } = useOrderFilter(orders);
 
   const { codeOrder, codeOrderLoading } = useOrderCode(orderCode);
@@ -51,7 +52,7 @@ const Orders = ({ orderCode }) => {
     const element = invoiceRef.current;
     if (!element) return;
 
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     printWindow.document.write(`
       <html>
         <head>
@@ -162,12 +163,18 @@ const Orders = ({ orderCode }) => {
                     <table className="invoice-table-sm w-full mt-2">
                       <tbody>
                         <tr>
-                          <td className="font-bold text-sm text-black">Invoice No</td>
-                          <td className="text-sm text-black">#G-Store: {codeOrder?.orderCode}</td>
+                          <td className="font-bold text-sm text-black">
+                            Invoice No
+                          </td>
+                          <td className="text-sm text-black">
+                            #G-Store: {codeOrder?.orderCode}
+                          </td>
                         </tr>
                         <tr>
                           <td className="font-bold text-sm text-black">Date</td>
-                          <td className="text-sm text-black">15 January, 2023</td>
+                          <td className="text-sm text-black">
+                            15 January, 2023
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -179,28 +186,39 @@ const Orders = ({ orderCode }) => {
                           src={setting?.home?.logo || "/img/logo.png"}
                           alt="logo"
                           className="img-fluid ml-auto block"
-                          style={{maxWidth: '150px'}}
+                          style={{ maxWidth: "150px" }}
                         />
                       </a>
                       <p className="mb-0 text-gray-600 mt-4 text-right text-sm">
-                        {setting?.contact?.contact_office_address_one || "Address not available"}
+                        {setting?.contact?.contact_office_address_one ||
+                          "Address not available"}
                       </p>
                     </div>
                   </div>
                 </div>
                 <span className="my-6 block border-t border-gray-300"></span>
                 <div className="w-full">
-                  <h6 className="mb-3 font-bold text-sm text-black">Customer Information</h6>
+                  <h6 className="mb-3 font-bold text-sm text-black">
+                    Customer Information
+                  </h6>
                   <div className="user-info">
-                    <p className="mb-1 text-sm text-black"><strong>{codeOrder?.user_info?.name}</strong></p>
+                    <p className="mb-1 text-sm text-black">
+                      <strong>{codeOrder?.user_info?.name}</strong>
+                    </p>
                     {codeOrder?.user_info?.email && (
-                      <p className="mb-1 text-sm text-black">{codeOrder?.user_info?.email}</p>
+                      <p className="mb-1 text-sm text-black">
+                        {codeOrder?.user_info?.email}
+                      </p>
                     )}
                     {codeOrder?.user_info?.contact && (
-                      <p className="mb-1 text-sm text-black">{codeOrder?.user_info?.contact}</p>
+                      <p className="mb-1 text-sm text-black">
+                        {codeOrder?.user_info?.contact}
+                      </p>
                     )}
                     {codeOrder?.user_info?.address && (
-                      <p className="mb-0 text-sm text-black">{codeOrder?.user_info?.address}</p>
+                      <p className="mb-0 text-sm text-black">
+                        {codeOrder?.user_info?.address}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -208,11 +226,21 @@ const Orders = ({ orderCode }) => {
                   <table className="table-auto w-full">
                     <thead>
                       <tr>
-                        <th className="border-b border-gray-300 text-sm">SR.</th>
-                        <th className="border-b border-gray-300 text-sm">Products</th>
-                        <th className="border-b border-gray-300 text-sm">QTY</th>
-                        <th className="border-b border-gray-300 text-sm">Item Price</th>
-                        <th className="border-b border-gray-300 text-sm">Amount</th>
+                        <th className="border-b border-gray-300 text-sm">
+                          SR.
+                        </th>
+                        <th className="border-b border-gray-300 text-sm">
+                          Products
+                        </th>
+                        <th className="border-b border-gray-300 text-sm">
+                          QTY
+                        </th>
+                        <th className="border-b border-gray-300 text-sm">
+                          Item Price
+                        </th>
+                        <th className="border-b border-gray-300 text-sm">
+                          Amount
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -244,26 +272,34 @@ const Orders = ({ orderCode }) => {
                           <strong className="text-dark block text-sm">
                             Payment Method
                           </strong>
-                          <span className="text-sm">{codeOrder?.paymentMethod}</span>
+                          <span className="text-sm">
+                            {codeOrder?.paymentMethod}
+                          </span>
                         </td>
                         <td>
                           <strong className="text-dark block text-sm">
                             Shipping Cost
                           </strong>
-                          <span className="text-sm">৳{codeOrder?.shippingCost}.00</span>
+                          <span className="text-sm">
+                            ৳{codeOrder?.shippingCost}.00
+                          </span>
                         </td>
                         <td>
                           <strong className="text-dark block text-sm">
                             Discount
                           </strong>
-                          <span className="text-sm">৳{codeOrder?.discount}.00</span>
+                          <span className="text-sm">
+                            ৳{codeOrder?.discount}.00
+                          </span>
                         </td>
 
                         <td>
                           <strong className="text-dark block text-sm">
                             Total Price
                           </strong>
-                          <span className="text-sm">৳{codeOrder?.subTotal}.00</span>
+                          <span className="text-sm">
+                            ৳{codeOrder?.subTotal}.00
+                          </span>
                         </td>
                         <td>
                           <strong className="text-dark block text-sm">
@@ -330,22 +366,24 @@ const Orders = ({ orderCode }) => {
               </div>
 
               <div className="basis-1/2">
-                <div className="bg-white px-3 rounded-md border border-gray-200">
-                  <select
-                    id="status"
-                    name="status"
-                    className="block w-full text-gray-900 py-2 border-0 border-transparent ring-inset ring-gray-300 focus:ring-0 focus:ring-indigo-600 sm:text-sm sm:leading-6 outline-none shadow-none"
-                    onChange={(e) => setStatus(e.target.value)}
-                    value={status}
-                  >
-                    <option value="All" defaultValue hidden>
-                      Status
-                    </option>
-                    <option>Delivered</option>
-                    <option>Pending</option>
-                    <option>Processing</option>
-                    <option>Cancel</option>
-                  </select>
+                <div className="flex gap-2 flex-wrap">
+                  {["All", "Pending", "Processing", "Delivered", "Cancel"].map(
+                    (item) => (
+                      <button
+                        key={item}
+                        onClick={() =>
+                          item === "All" ? setStatus("") : setStatus(item)
+                        }
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                          (item === "All" && status === "") || status === item
+                            ? "bg-dark text-white"
+                            : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    )
+                  )}
                 </div>
               </div>
               <div className="basis-1/2">
@@ -386,6 +424,8 @@ const Orders = ({ orderCode }) => {
                 orders={filterOrder}
                 pageCount={pageCount}
                 handlePageChange={handlePageChange}
+                itemsPerPage={itemsPerPage}
+                setItemsPerPage={setItemsPerPage}
               />
             )}
           </section>
