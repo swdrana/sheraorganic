@@ -82,7 +82,7 @@ const FeedbackSection = ({ setting }) => {
           <div className="row justify-content-center">
             <div className="col-xl-6">
               <div className="section-title text-center">
-                <h2 className="mb-6">{setting?.home?.our_client_say_title}</h2>
+                <h2 className="mb-6 fw-bold">{setting?.home?.our_client_say_title}</h2>
               </div>
             </div>
             <div className="col-xl-8">

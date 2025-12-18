@@ -80,10 +80,10 @@ const TrendingProducts = ({ products, setting }) => {
           <div className="row align-items-center">
             <div className="col-xl-5">
               <div className="section-title text-center text-xl-start">
-                <h3 className="mb-0">
+                <h2 className="mb-0 fw-bold">
                   {" "}
                   {setting?.home?.featured_trending_product_title}
-                </h3>
+                </h2>
               </div>
             </div>
             <div className="col-xl-7">

@@ -1,9 +1,5 @@
 "use client";
 import Link from "next/link";
-import React from "react";
-import useCategory from "../dataFetching/useCategory";
-import CategorySkeletonLoader from "../common/skeletonLoader/CategorySkeletonLoader";
-import useProducts from "../dataFetching/useProducts";
 
 const Category = ({ categorys, products }) => {
   // const { categorys, categoryLoading } = useCategory();
@@ -19,16 +15,16 @@ const Category = ({ categorys, products }) => {
         <div className="container">
           <div className="gshop-category-box border-secondary rounded-3 bg-white">
             <div className="text-center section-title">
-              <h4 className="d-inline-block px-2 bg-white mb-4">
+              <h2 className="d-inline-block px-2 bg-white mb-4 fw-bold">
                 Our Top Category
-              </h4>
+              </h2>
             </div>
             <div className="row justify-content-center g-4">
               {categorys?.slice(0, 6).map((category, index) => (
                 <Link
-                href={`/products/category=${category.name
-                  .replace(/\s+/g, "")
-                  .toLowerCase()}=${category._id}`}
+                  href={`/products/category=${category.name
+                    .replace(/\s+/g, "")
+                    .toLowerCase()}=${category._id}`}
                   className="col-xxl-2 col-lg-3 col-md-4 col-sm-6"
                   key={index}
                 >
@@ -44,9 +40,7 @@ const Category = ({ categorys, products }) => {
                         className="img-fluid"
                       />
                     </div>
-                    <div
-                      className="text-dark fs-sm fw-bold d-block mt-3"
-                    >
+                    <div className="text-dark fs-sm fw-bold d-block mt-3">
                       {category.name}
                     </div>
                     <span className="total-count position-relative ps-3 fs-sm fw-medium doted-primary">
@@ -60,8 +54,8 @@ const Category = ({ categorys, products }) => {
                     </span>
                     <div
                       // href={`/products/category=${category.name
-                        // .replace(/\s+/g, "")
-                        // .toLowerCase()}=${category._id}`}
+                      // .replace(/\s+/g, "")
+                      // .toLowerCase()}=${category._id}`}
                       className="explore-btn position-absolute"
                     >
                       <i className="fa-solid fa-arrow-up"></i>

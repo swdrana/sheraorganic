@@ -2,14 +2,12 @@
 import { useMemo } from "react";
 
 import Link from "next/link";
-import useProducts from "../dataFetching/useProducts";
-import WeeklyBestDealsCard from "../common/card/WeeklyBestDealsCard";
-import useAddToCart from "../hooks/useAddToCart";
-import useSetting from "../dataFetching/useSetting";
-import WeeklyBestDealsOfferTime from "./WeeklyBestDealsOfferTime";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getProductByIds } from "../../../backend/controllers/product.controller";
-import { useRouter } from "next/navigation";
+import WeeklyBestDealsCard from "../common/card/WeeklyBestDealsCard";
+import useAddToCart from "../hooks/useAddToCart";
+import WeeklyBestDealsOfferTime from "./WeeklyBestDealsOfferTime";
 const WeeklyBestDeals = ({ setting, products }) => {
   const router = useRouter();
   // const { products, productsLoading } = useProducts();
@@ -66,10 +64,10 @@ const WeeklyBestDeals = ({ setting, products }) => {
                   {setting?.home?.weekly_best_deals_sub_title}
                 </span>
 
-                <h4 className="mb-2">
+                <h2 className="mb-2 fw-bold">
                   {" "}
                   {setting?.home?.weekly_best_deals_banner_title}
-                </h4>
+                </h2>
                 <p className="fw-medium mb-5">
                   {setting?.home?.weekly_best_deals_offer_title}
                 </p>
@@ -90,10 +88,10 @@ const WeeklyBestDeals = ({ setting, products }) => {
             </div>
             <div className="col-xxl-8 order-1 order-xxl-2">
               <div className="timing-box d-flex align-items-center justify-content-center justify-content-sm-between rounded-3 flex-wrap gap-3">
-                <h4 className="mb-0">
+                <h2 className="mb-0 fw-bold">
                   {" "}
                   {setting?.home?.weekly_best_deals_title}
-                </h4>
+                </h2>
                 <ul className="timing-countdown countdown-timer d-flex align-items-center gap-2">
                   {setting?.home?.weekly_best_deals_end_time && (
                     <WeeklyBestDealsOfferTime

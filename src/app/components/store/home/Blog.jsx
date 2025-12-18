@@ -1,7 +1,6 @@
 "use client";
-import Link from "next/link";
-import useBlog from "../dataFetching/useBlog";
 import dayjs from "dayjs";
+import Link from "next/link";
 const Blog = ({ blogs }) => {
   // const { blogs, blogLoading } = useBlog();
   // console.log("blogs", blogs);
@@ -22,7 +21,7 @@ const Blog = ({ blogs }) => {
           <div className="row justify-content-center">
             <div className="col-xl-5 col-md-8">
               <div className="section-title text-center">
-                <h2 className="mb-3">Browse Recent Post</h2>
+                <h2 className="mb-3 fw-bold">Browse Recent Post</h2>
                 <p className="mb-0">
                   Interactivel product distinctive paradigms whereas one-to-one
                   intellectual capital. resource sucking services.
@@ -57,10 +56,10 @@ const Blog = ({ blogs }) => {
                       </span>
                     </div>
                     <Link href={`/blog-details/${blog._id}`}>
-                      <h4 className="mb-3">{blog?.title}</h4>
+                      <h4 className="mb-3 fw-bold">{blog?.title}</h4>
                     </Link>
                     <p className="mb-5 overflow-hidden text-ellipsis   max-h-[10ch]">
-                      {blog?.description?.replace(/<[^>]*>?/gm, '')}
+                      {blog?.description?.replace(/<[^>]*>?/gm, "")}
                     </p>
                     <Link
                       href={`/blog-details/${blog._id}`}

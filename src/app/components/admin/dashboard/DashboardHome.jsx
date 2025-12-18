@@ -2,6 +2,7 @@
 import { getAllOrders } from "@/app/backend/controllers/order.controller";
 import { getAllProducts } from "@/app/backend/controllers/product.controller";
 import useProductFilter from "@/app/hooks/useProductFilter";
+import useOrderFilter from "@/app/hooks/useOrderFilter";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FiCheck, FiRefreshCw, FiShoppingCart, FiTruck } from "react-icons/fi";
@@ -19,6 +20,15 @@ const DashboardHome = () => {
   const { productDetails, updateProduct, updateOrderStatus } = useMainContext();
   const { filteredProducts, pageCount, handlePageChange } =
     useProductFilter(products);
+
+  const {
+    filterOrder,
+    pageCount: orderPageCount,
+    handlePageChange: handleOrderPageChange,
+    itemsPerPage,
+    setItemsPerPage,
+  } = useOrderFilter(orders);
+
   const totalOrder = Math.floor(orders?.reduce((a, b) => a + b.total, 0));
   const totalOrderCount = orders?.length;
   const pendingOrder = orders?.filter((order) => order.status === "Pending");
@@ -108,7 +118,14 @@ const DashboardHome = () => {
             <TableLoading />{" "}
           </>
         ) : (
-          <OrderTable orders={orders?.slice(0, 10)} showAction={true} />
+          <OrderTable
+            orders={filterOrder}
+            showAction={true}
+            pageCount={orderPageCount}
+            handlePageChange={handleOrderPageChange}
+            itemsPerPage={itemsPerPage}
+            setItemsPerPage={setItemsPerPage}
+          />
         )}
       </section>
       {loading ? (

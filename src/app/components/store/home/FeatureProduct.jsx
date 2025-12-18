@@ -1,12 +1,8 @@
 "use client";
 import Link from "next/link";
-import useProducts from "../dataFetching/useProducts";
 import FeatureBrandProductCard from "../common/card/FeatureBrandProductCard";
-import useSetting from "../dataFetching/useSetting";
-import Loading from "../common/others/Loading";
 
 import "react-loading-skeleton/dist/skeleton.css";
-import FeaturedBrandProductLoader from "../common/skeletonLoader/FeaturedBrandProductLoader";
 const FeatureProduct = ({ products, setting }) => {
   // const { products, productsLoading } = useProducts();
   // const { setting, settingLoading } = useSetting();
@@ -42,7 +38,9 @@ const FeatureProduct = ({ products, setting }) => {
           <div className="row justify-content-center">
             <div className="col-xl-6">
               <div className="section-title text-center mb-4">
-                <h3 className="mb-2">{setting?.home?.featured_brand_title}</h3>
+                <h2 className="mb-2 fw-bold">
+                  {setting?.home?.featured_brand_title}
+                </h2>
                 <p className="mb-0">
                   {setting?.home?.featured_brand_description}
                 </p>
