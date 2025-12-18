@@ -60,7 +60,7 @@ const Blog = ({ blogs }) => {
                       <h4 className="mb-3">{blog?.title}</h4>
                     </Link>
                     <p className="mb-5 overflow-hidden text-ellipsis   max-h-[10ch]">
-                      {blog?.description}
+                      {blog?.description?.replace(/<[^>]*>?/gm, '')}
                     </p>
                     <Link
                       href={`/blog-details/${blog._id}`}

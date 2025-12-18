@@ -88,7 +88,7 @@ const BlogTable = ({ handlePageChange, pageCount, blogs }) => {
                         {blog?.title}
                       </td>
                       <td className="whitespace-nowrap px-3 py-2 text-sm text-gray-600 overflow-hidden text-ellipsis   max-w-[24ch]">
-                        {blog?.description}
+                        {blog?.description?.replace(/<[^>]*>?/gm, '')}
                       </td>
 
                       <td className="whitespace-nowrap px-3 py-2 text-sm text-gray-500">

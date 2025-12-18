@@ -34,7 +34,7 @@ const BlogListingBlog = ({ blogs }) => {
                   <h3 className="mb-3">{post.title}</h3>
                 </Link>
                 <p className="mb-5 overflow-hidden text-ellipsis   max-h-[10ch]">
-                  {post.description}
+                  {post.description?.replace(/<[^>]*>?/gm, '')}
                 </p>
                 <Link
                   href={`/blog-details/${post._id}`}

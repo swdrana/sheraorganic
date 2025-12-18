@@ -11,6 +11,7 @@ const useBlogSubmit = () => {
     handleSubmit,
     reset,
     setValue,
+    control,
     formState: { errors },
   } = useForm();
 
@@ -145,6 +146,7 @@ const useBlogSubmit = () => {
     setImageUrl,
     setCategory,
     category,
+    control,
   };
 };
 

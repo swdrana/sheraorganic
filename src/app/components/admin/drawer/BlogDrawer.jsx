@@ -10,6 +10,9 @@ import Uploader from "../imageUploader/Uploader";
 import useBlogSubmit from "../../../hooks/useBlogSubmit";
 import useCategory from "../../store/dataFetching/useCategory";
 
+import { Controller } from "react-hook-form";
+import RichTextEditor from "../shared/RichTextEditor";
+
 const BlogDrawer = () => {
   const { isOpenBlogDrawer, setIsOpenBlogDrawer, blogDetails, submitting } =
     useMainContext();
@@ -22,6 +25,7 @@ const BlogDrawer = () => {
     setImageUrl,
     setCategory,
     category,
+    control,
   } = useBlogSubmit();
   const { categorys, categoryLoading } = useCategory();
 
@@ -124,11 +128,17 @@ const BlogDrawer = () => {
                             </label>
                           </div>
                           <div className="sm:col-span-2">
-                            <textarea
-                              // defaultValue={blogDetails?.des}
-                              rows={3}
-                              className="w-full rounded-lg bg-slate-500 bg-opacity-5 border border-gray-400 px-4 py-3 focus:ring-0 outline-none"
-                              {...register("description", { required: true })}
+                            <Controller
+                              name="description"
+                              control={control}
+                              rules={{ required: true }}
+                              render={({ field }) => (
+                                <RichTextEditor
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                  placeholder="Write blog description here..."
+                                />
+                              )}
                             />
                             {errors.description?.type === "required" && (
                               <p className="text-red-400 font-bold mt-1">
