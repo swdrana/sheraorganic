@@ -1,4 +1,5 @@
 "use client";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useCart } from "react-use-cart";
@@ -6,6 +7,7 @@ import { Controller } from "swiper"; // Import Controller from modules in Swiper
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { getAllAttributes } from "../../../backend/controllers/attribute.controller";
+import { trackAddToCart } from "../../../utilities/facebookPixel";
 import PreLoader from "../common/others/PreLoader";
 import StarRating from "../common/others/StartRating";
 import usebrands from "../dataFetching/useBrand";
@@ -15,8 +17,6 @@ import Price from "./Price";
 import ProductDetailsSidebar from "./ProductDetailsSidebar";
 import ProductDetailsTab from "./ProductDetailsTab";
 import VariantList from "./VariantList";
-import { trackAddToCart } from "../../../utilities/facebookPixel";
-import { useSession } from "next-auth/react";
 
 const ProductDetailsBody = ({ id }) => {
   const [firstSwiper, setFirstSwiper] = useState(null);
@@ -203,7 +203,7 @@ const ProductDetailsBody = ({ id }) => {
       };
       // console.log("newitem for add to cart.......", newItem);
       handelAddItem(newItem);
-      
+
       // Facebook Pixel tracking
       trackAddToCart(
         session?.user?._id || null,
@@ -247,21 +247,25 @@ const ProductDetailsBody = ({ id }) => {
                               loop={true}
                               loopedSlides={6}
                             >
-                              {product?.image.map((img, i) =>{
+                              {product?.image.map((img, i) => {
                                 return (
-                                  <SwiperSlide className="swiper-slide text-center" key={i}>
+                                  <SwiperSlide
+                                    className="swiper-slide text-center"
+                                    key={i}
+                                  >
                                     <img
                                       src={img}
                                       alt={img}
                                       className="img-fluid"
                                     />
                                   </SwiperSlide>
-                                )})}
+                                );
+                              })}
                             </Swiper>
                           </div>
 
                           {/* Thumbnail Slider */}
-                          <div className="product-thumbnail-slider mt-80">
+                          <div className="product-thumbnail-slider mt-2">
                             <Swiper
                               modules={[Controller]}
                               onSwiper={setSecondSwiper} // Set the swiper instance
@@ -279,17 +283,21 @@ const ProductDetailsBody = ({ id }) => {
                                 576: { slidesPerView: 4 },
                               }}
                             >
-                              {product?.image.map((img, i) =>{
+                              {product?.image.map((img, i) => {
                                 // console.log(img)
                                 return (
-                                  <SwiperSlide className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center" key={i}>
+                                  <SwiperSlide
+                                    className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center"
+                                    key={i}
+                                  >
                                     <img
                                       src={img}
                                       alt={img}
                                       className="img-fluid"
                                     />
                                   </SwiperSlide>
-                                )})}
+                                );
+                              })}
                             </Swiper>
                           </div>
                         </div>
