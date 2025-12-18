@@ -146,6 +146,7 @@ const useBlogSubmit = () => {
     setImageUrl,
     setCategory,
     category,
+    control,
   };
 };
 
