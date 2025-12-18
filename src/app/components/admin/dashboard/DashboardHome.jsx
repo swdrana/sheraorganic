@@ -1,22 +1,22 @@
 "use client";
-import CardItemTwo from "./CardItemTwo";
-import { FiShoppingCart, FiTruck, FiRefreshCw, FiCheck } from "react-icons/fi";
-import ProductTable from "./../products/ProductTable";
-import DeleteModal from "../modal/DeleteModal";
-import { useMainContext } from "../context/mainContext";
-import useProductFilter from "@/app/hooks/useProductFilter";
-import { useEffect, useState } from "react";
 import { getAllOrders } from "@/app/backend/controllers/order.controller";
 import { getAllProducts } from "@/app/backend/controllers/product.controller";
-import TableLoading from "../loader/TableLoading";
-import OrderTable from "../orders/OrderTable";
+import useProductFilter from "@/app/hooks/useProductFilter";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { FiCheck, FiRefreshCw, FiShoppingCart, FiTruck } from "react-icons/fi";
+import { useMainContext } from "../context/mainContext";
+import TableLoading from "../loader/TableLoading";
+import DeleteModal from "../modal/DeleteModal";
+import OrderTable from "../orders/OrderTable";
+import ProductTable from "./../products/ProductTable";
+import CardItemTwo from "./CardItemTwo";
 
 const DashboardHome = () => {
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
-  const { productDetails, updateProduct, updateOrder } = useMainContext();
+  const { productDetails, updateProduct, updateOrderStatus } = useMainContext();
   const { filteredProducts, pageCount, handlePageChange } =
     useProductFilter(products);
   const totalOrder = Math.floor(orders?.reduce((a, b) => a + b.total, 0));
@@ -47,14 +47,16 @@ const DashboardHome = () => {
         getAllOrders(),
         getAllProducts(),
       ]);
-      setOrders(orderRes?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+      setOrders(
+        orderRes?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      );
       setProducts(productRes);
 
       setLoading(false);
     };
 
     fetchData();
-  }, [updateProduct, updateOrder]);
+  }, [updateProduct, updateOrderStatus]);
   return (
     <>
       <DeleteModal productId={productDetails._id} />
@@ -106,7 +108,7 @@ const DashboardHome = () => {
             <TableLoading />{" "}
           </>
         ) : (
-          <OrderTable orders={orders?.slice(0, 10)} />
+          <OrderTable orders={orders?.slice(0, 10)} showAction={true} />
         )}
       </section>
       {loading ? (

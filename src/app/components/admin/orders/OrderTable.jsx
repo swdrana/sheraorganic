@@ -11,6 +11,7 @@ const OrderTable = ({
   handlePageChange,
   itemsPerPage,
   setItemsPerPage,
+  showAction = false,
 }) => {
   // console.log('orders in order table..',orders)
   const pathname = usePathname();
@@ -68,7 +69,7 @@ const OrderTable = ({
                       VIEW
                     </th>
 
-                    {pathname === "/admin/order" && (
+                    {(pathname === "/admin/order" || showAction) && (
                       <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-dark"
@@ -123,7 +124,7 @@ const OrderTable = ({
                         </div>
                       </td>
 
-                      {pathname === "/admin/order" && (
+                      {(pathname === "/admin/order" || showAction) && (
                         <td className="px-3 py-2 text-xs text-gray-800">
                           <div className="bg-primary-2 inline-block px-2 py-[2px] rounded">
                             <SelectStatus order={item} />
