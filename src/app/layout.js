@@ -48,9 +48,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://res.cloudinary.com" />
         {/* Preload LCP image — starts downloading before CSS blocks */}
         <link rel="preload" as="image" href="/img/shapes/hero-circle-lg.webp" />
         {/* Google Fonts — non-render-blocking using print media trick */}

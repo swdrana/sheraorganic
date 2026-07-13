@@ -1,16 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/swiper-bundle.min.css";
-import "swiper/swiper.min.css";
+
 import { Autoplay, Pagination } from "swiper";
 import usebrands from "../dataFetching/useBrand";
+import { loadStylesheet } from "@/app/utils/loadStylesheet";
 
 const AboutBrandSlider = ({ setting, brands }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    loadStylesheet("/css/swiper-bundle.min.css");
   }, []);
 
   return (

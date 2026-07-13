@@ -2,9 +2,13 @@
 import React from 'react';
 import { Autoplay, Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/swiper-bundle.css'; // Make sure to import Swiper styles
+import { loadStylesheet } from "@/app/utils/loadStylesheet";
+import { useEffect } from "react";
 
 const BlogGridCarousel = () => {
+  useEffect(() => {
+    loadStylesheet("/css/swiper-bundle.min.css");
+  }, []);
   const blogPosts = [
     {
       id: 1,
