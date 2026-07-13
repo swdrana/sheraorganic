@@ -12,7 +12,6 @@ import useCategory from "../../dataFetching/useCategory";
 import { useMainContext } from "../../provider/MainContextStore";
 import { useRouter } from "next/navigation";
 import useSetting from "../../dataFetching/useSetting";
-import Skeleton from "react-loading-skeleton";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 const ShoppingBegHoverContent = dynamic(
@@ -157,9 +156,7 @@ const Navbar = () => {
                       fetchpriority="high"
                     />
                   ) : (
-                    <>
-                      <Skeleton width={250} height={30} />
-                    </>
+                    <div style={{ width: 160, height: 40 }} />
                   )}
                 </Link>
               </div>
@@ -426,11 +423,7 @@ const Navbar = () => {
                           Phone & Telephone
                         </span>
                         <h6 className="mb-0 mt-1 fs-sm">
-                          {setting?.home?.phone ? (
-                            setting.home.phone
-                          ) : (
-                            <Skeleton width={150} height={20} />
-                          )}
+                          {setting?.home?.phone || "+9123891222"}
                         </h6>
                       </div>
                     </a>

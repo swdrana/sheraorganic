@@ -1,8 +1,5 @@
 "use client";
-
 import useSetting from "../../dataFetching/useSetting";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css"; // Import skeleton CSS if needed
 
 const NavbarTop = () => {
   const { setting, settingLoading } = useSetting();
@@ -15,11 +12,7 @@ const NavbarTop = () => {
             <div className="col-xxl-4 col-xl-3">
               <div className="topbar-info d-none d-xl-block">
                 <p className="text-white fs-sm fw-medium mb-0">
-                  {setting?.home?.store_title ? (
-                    setting.home.store_title
-                  ) : (
-                    <Skeleton width={150} height={20} />
-                  )}
+                  {setting?.home?.store_title || "Welcome to our Organic store"}
                 </p>
               </div>
             </div>
@@ -44,11 +37,7 @@ const NavbarTop = () => {
                         />
                       </svg>
                     </span>
-                    {setting?.home?.gmail ? (
-                      setting.home.gmail
-                    ) : (
-                      <Skeleton width={150} height={20} />
-                    )}
+                    {setting?.home?.gmail || "groshop@support.com"}
                   </a>
                 </li>
                 <li className="nav-item d-flex align-items-center gap-1">
@@ -58,7 +47,7 @@ const NavbarTop = () => {
                       height="17"
                       viewBox="0 0 12 17"
                       fill="none"
-                      xmlns="http:/www.w3.org/2000/svg"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
                         d="M6.00011 8.16427C7.44543 8.16427 8.62131 6.98781 8.62131 5.54175C8.62131 4.09569 7.44543 2.91925 6.00011 2.91925C4.55478 2.91925 3.37891 4.09569 3.37891 5.54175C3.37891 6.98781 4.55478 8.16427 6.00011 8.16427ZM6.00011 3.85662C6.92883 3.85662 7.68441 4.61259 7.68441 5.54175C7.68441 6.47093 6.92886 7.2269 6.00011 7.2269C5.07136 7.2269 4.31581 6.47093 4.31581 5.54175C4.31581 4.61259 5.07139 3.85662 6.00011 3.85662Z"
@@ -80,11 +69,7 @@ const NavbarTop = () => {
                       />
                     </svg>
                   </span>
-                  {setting?.home?.address ? (
-                    setting.home.address
-                  ) : (
-                    <Skeleton width={150} height={20} />
-                  )}
+                  {setting?.home?.address || "Washington, New York, USA - 254230"}
                 </li>
               </ul>
             </div>

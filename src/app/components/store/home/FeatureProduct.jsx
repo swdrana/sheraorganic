@@ -3,7 +3,7 @@ import Link from "next/link";
 import FeatureBrandProductCard from "../common/card/FeatureBrandProductCard";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
-import "react-loading-skeleton/dist/skeleton.css";
+
 const FeatureProduct = ({ products, setting }) => {
   // const { products, productsLoading } = useProducts();
   // const { setting, settingLoading } = useSetting();
