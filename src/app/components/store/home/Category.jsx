@@ -9,7 +9,7 @@ const Category = ({ categorys, products }) => {
     <>
       <section className="gshop-category-section bg-white pt-120 position-relative z-1 overflow-hidden">
         <img
-          src="/img/shapes/bg-shape.png"
+          src="/img/shapes/bg-shape.webp"
           alt="bg shape"
           className="position-absolute bottom-0 start-0 w-100 z--1"
         />

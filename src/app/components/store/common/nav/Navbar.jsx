@@ -13,6 +13,7 @@ import { useMainContext } from "../../provider/MainContextStore";
 import { useRouter } from "next/navigation";
 import useSetting from "../../dataFetching/useSetting";
 import Skeleton from "react-loading-skeleton";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 const ShoppingBegHoverContent = dynamic(
   () => import("./ShoppingBegHoverContent"),
@@ -203,9 +204,12 @@ const Navbar = () => {
                             >
                               <div className="me-2 avatar-icon">
                                 <img
-                                  src={category.icon}
-                                  alt="vegetables"
+                                  src={optimizeCloudinaryUrl(category.icon, 48)}
+                                  alt={category.name}
                                   className="w-100 h-100 rounded-circle"
+                                  width="48"
+                                  height="48"
+                                  loading="lazy"
                                 />
                               </div>
                               <span>{category.name}</span>

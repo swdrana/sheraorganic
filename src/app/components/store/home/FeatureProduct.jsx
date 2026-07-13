@@ -106,7 +106,7 @@ const FeatureProduct = ({ products, setting }) => {
         </div>
 
         <img
-          src="/img/shapes/bg-shape-2.png"
+          src="/img/shapes/bg-shape-2.webp"
           alt="bg shape"
           className="position-absolute start-0 bottom-0 w-100 z--1"
         />

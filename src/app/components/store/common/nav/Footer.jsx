@@ -259,6 +259,9 @@ const Footer = () => {
                       src={setting?.home?.footer_logo}
                       alt="logo"
                       className="img-fluid"
+                      width="200"
+                      height="50"
+                      loading="lazy"
                     />
                   </Link>
                 </div>
