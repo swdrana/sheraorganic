@@ -1,6 +1,7 @@
 "use client";
 import Multiselect from "multiselect-react-dropdown";
 import Tree from "rc-tree";
+import "rc-tree/assets/index.css";
 import { toast } from "react-toastify";
 
 const ParentCategory = ({

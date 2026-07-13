@@ -1,6 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { MainContextProvider } from "./components/admin/context/mainContext";
 import { ThemeProvider } from "./components/admin/context/themeContext";
 import Sidebar from "./components/admin/shared/Sidebar";

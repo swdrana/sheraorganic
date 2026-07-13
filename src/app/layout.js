@@ -1,7 +1,3 @@
-import "rc-tree/assets/index.css";
-import "react-loading-skeleton/dist/skeleton.css";
-import "react-quill/dist/quill.snow.css";
-import "react-toastify/dist/ReactToastify.css";
 import "../assets/css/main.css";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
