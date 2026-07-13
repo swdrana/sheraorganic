@@ -62,6 +62,7 @@ const TrendingProductCard = ({ product }) => {
                 .replace(/\s+/g, "")
                 .toLowerCase()}=${product._id}`}
               className="mb-2 d-inline-block text-secondary fw-semibold fs-xxs"
+              style={{ display: "inline-block", padding: "6px 12px 6px 0", minWidth: "48px" }}
             >
               {product.brand}
             </Link>

@@ -112,11 +112,14 @@ const FeedbackSection = ({ setting }) => {
                   >
                     {feedbacks.map((feedback, index) => (
                       <SwiperSlide key={index} className="control-thumb">
-                        <img
-                          src={feedback.image}
-                          alt="clients"
-                          className="img-fluid rounded-circle"
-                        />
+                      <img
+                        src={feedback.image}
+                        alt="clients"
+                        className="img-fluid rounded-circle"
+                        width="80"
+                        height="80"
+                        loading="lazy"
+                      />
                       </SwiperSlide>
                     ))}
                   </Swiper>

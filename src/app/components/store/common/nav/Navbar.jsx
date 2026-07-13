@@ -152,6 +152,9 @@ const Navbar = () => {
                       src={setting?.home?.logo}
                       alt="logo"
                       className="img-fluid"
+                      width="160"
+                      height="40"
+                      fetchpriority="high"
                     />
                   ) : (
                     <>

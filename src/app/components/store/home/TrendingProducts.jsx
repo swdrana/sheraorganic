@@ -89,6 +89,7 @@ const TrendingProducts = ({ products, setting }) => {
             <div className="col-xl-7">
               <div className="filter-btns gshop-filter-btn-group text-center text-xl-end mt-4 mt-xl-0">
                 <button
+                  style={{ minWidth: "48px", minHeight: "48px", padding: "10px 20px", margin: "6px" }}
                   className={`${
                     activeTrendingProduct === "all products" ? "active" : ""
                   }`}
@@ -97,6 +98,7 @@ const TrendingProducts = ({ products, setting }) => {
                   All Products
                 </button>
                 <button
+                  style={{ minWidth: "48px", minHeight: "48px", padding: "10px 20px", margin: "6px" }}
                   className={`${
                     activeTrendingProduct ===
                     `${setting?.home?.featured_category_one
@@ -116,6 +118,7 @@ const TrendingProducts = ({ products, setting }) => {
                   {setting?.home?.featured_category_one}
                 </button>
                 <button
+                  style={{ minWidth: "48px", minHeight: "48px", padding: "10px 20px", margin: "6px" }}
                   className={`${
                     activeTrendingProduct ===
                     `${setting?.home?.featured_category_two
@@ -135,6 +138,7 @@ const TrendingProducts = ({ products, setting }) => {
                   {setting?.home?.featured_category_two}
                 </button>
                 <button
+                  style={{ minWidth: "48px", minHeight: "48px", padding: "10px 20px", margin: "6px" }}
                   className={`${
                     activeTrendingProduct ===
                     `${setting?.home?.featured_category_three
@@ -154,6 +158,7 @@ const TrendingProducts = ({ products, setting }) => {
                   {setting?.home?.featured_category_three}
                 </button>
                 <button
+                  style={{ minWidth: "48px", minHeight: "48px", padding: "10px 20px", margin: "6px" }}
                   className={`${
                     activeTrendingProduct ===
                     `${setting?.home?.featured_category_four
@@ -173,6 +178,7 @@ const TrendingProducts = ({ products, setting }) => {
                   {setting?.home?.featured_category_four}
                 </button>
                 <button
+                  style={{ minWidth: "48px", minHeight: "48px", padding: "10px 20px", margin: "6px" }}
                   className={`${
                     activeTrendingProduct ===
                     `${setting?.home?.featured_category_five

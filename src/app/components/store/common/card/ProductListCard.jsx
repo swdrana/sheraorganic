@@ -47,6 +47,7 @@ const ProductListCard = ({ product }) => {
                   .replace(/\s+/g, "")
                   .toLowerCase()}=${product._id}`}
                 className="d-inline-block text-muted fs-xxs"
+                style={{ display: "inline-block", padding: "6px 12px 6px 0", minWidth: "48px" }}
               >
                 {product.brand}
               </Link>

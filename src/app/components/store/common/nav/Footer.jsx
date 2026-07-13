@@ -274,6 +274,9 @@ const Footer = () => {
                         src={setting?.home?.footer_payment_incon_one}
                         alt="visa"
                         className="img-fluid"
+                        width="40"
+                        height="25"
+                        loading="lazy"
                       />
                     </div>
                   )}
@@ -284,6 +287,9 @@ const Footer = () => {
                         src={setting?.home?.footer_payment_incon_two}
                         alt="visa"
                         className="img-fluid"
+                        width="40"
+                        height="25"
+                        loading="lazy"
                       />
                     </div>
                   )}
@@ -293,6 +299,9 @@ const Footer = () => {
                         src={setting?.home?.footer_payment_incon_three}
                         alt="visa"
                         className="img-fluid"
+                        width="40"
+                        height="25"
+                        loading="lazy"
                       />
                     </div>
                   )}
@@ -302,6 +311,9 @@ const Footer = () => {
                         src={setting?.home?.footer_payment_incon_four}
                         alt="visa"
                         className="img-fluid"
+                        width="40"
+                        height="25"
+                        loading="lazy"
                       />
                     </div>
                   )}
