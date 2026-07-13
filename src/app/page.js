@@ -1,7 +1,3 @@
-"use client";
-import useProducts from "./components/admin/featch/useProducts";
-import useCategory from "./components/store/dataFetching/useCategory";
-import useSetting from "./components/store/dataFetching/useSetting";
 import BannerOne from "./components/store/home/BannerOne";
 import BannerTwo from "./components/store/home/BannerTwo";
 import Blog from "./components/store/home/Blog";
@@ -11,26 +7,30 @@ import FeedbackSection from "./components/store/home/FeedbackSection";
 import Hero from "./components/store/home/Hero";
 import TrendingProducts from "./components/store/home/TrendingProducts";
 import WeeklyBestDeals from "./components/store/home/WeeklyBestDeals";
-import { useEffect } from "react";
-import useBlog from "./components/store/dataFetching/useBlog";
-import { PageView } from "./utilities/facebookPixel";
+import FacebookPixelTracker from "./components/store/common/others/FacebookPixelTracker";
+import {
+  getCachedSettings,
+  getCachedProducts,
+  getCachedCategories,
+  getCachedBlogs,
+} from "./data/cachedData";
 
-const page = () => {
-  const { setting } = useSetting();
-  const { products } = useProducts();
-  const { categorys } = useCategory();
-  const { blogs } = useBlog();
-
-  // Facebook Pixel PageView tracking
-  useEffect(() => {
-    PageView();
-  }, []);
+const page = async () => {
+  // Fetch all initial data directly on the server with 60s cache revalidation
+  const [setting, products, categorys, blogs] = await Promise.all([
+    getCachedSettings(),
+    getCachedProducts(),
+    getCachedCategories(),
+    getCachedBlogs(),
+  ]);
 
   return (
     <>
-      {/* Hero renders immediately — has its own skeleton while setting loads */}
+      {/* Track client-side Facebook Pixel PageView */}
+      <FacebookPixelTracker />
+
+      {/* Render all sections immediately with server-side data (No client-side skeleton blocks on load!) */}
       <Hero setting={setting} />
-      {/* Each section handles its own loading state */}
       <Category categorys={categorys || []} products={products || []} />
       <FeatureProduct products={products || []} setting={setting || {}} />
       <TrendingProducts products={products || []} setting={setting || {}} />
