@@ -1,62 +1,37 @@
-"use client";
-import { usePathname } from "next/navigation"; // Import usePathname from next/navigation
 import "rc-tree/assets/index.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import "react-quill/dist/quill.snow.css";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../assets/css/main.css";
-import { MainContextProvider } from "./components/admin/context/mainContext";
-import { ThemeProvider } from "./components/admin/context/themeContext";
-import Sidebar from "./components/admin/shared/Sidebar";
-import Footer from "./components/store/common/nav/Footer";
-import Navbar from "./components/store/common/nav/Navbar";
-import Offcanvas from "./components/store/common/nav/Offcanvas";
-import ProductModal from "./components/store/common/others/ProductModal";
-import useSetting from "./components/store/dataFetching/useSetting";
-import { AuthProvider } from "./components/store/provider/AuthProvider";
-import CartProviderContext from "./components/store/provider/CartProviderContex";
-import { MainContextProviderStore } from "./components/store/provider/MainContextStore";
-import { WishlistProvider } from "./components/store/provider/WishlistProvider";
 import "./globals.css";
+import ClientLayout from "./ClientLayout";
+import { getStoreCustomizationSetting } from "./backend/controllers/storecustomize.controller";
 
-export default function RootLayout({ children }) {
-  const pathname = usePathname(); // Use usePathname to get the current path
-  let title = "Home- SheraOrganic Online Store";
-  let description = "Welcome to my Next.js application!";
-
-  if (pathname.startsWith("/products")) {
-    title = "Products - SheraOrganic Online Store";
-    description =
-      "Browse the latest products in the SheraOrganic online store.";
-  } else if (pathname.startsWith("/about")) {
-    title = "About Us - SheraOrganic Online Store";
-    description =
-      "Learn more about the SheraOrganic online store and our mission.";
-  } else if (pathname.startsWith("/contact")) {
-    title = "Contact Us - SheraOrganic Online Store";
-    description = "Get in touch with the SheraOrganic online store team.";
-  } else if (pathname.startsWith("/coupons")) {
-    title = "Coupons - SheraOrganic Online Store";
-    description = "Get in touch with the SheraOrganic online store team.";
-  } else if (pathname.startsWith("/blog")) {
-    title = "Blog - SheraOrganic Online Store";
-    description = "Get in touch with the SheraOrganic online store team.";
-  } else if (pathname.startsWith("/terms-condition")) {
-    title = "Terms - SheraOrganic Online Store";
-    description = "Get in touch with the SheraOrganic online store team.";
-  } else if (pathname.startsWith("/product-details")) {
-    title = "Product Details - SheraOrganic Online Store";
-    description = "Get in touch with the SheraOrganic online store team.";
+export async function generateMetadata() {
+  let favicon = "/favicon.ico";
+  try {
+    const res = await getStoreCustomizationSetting();
+    const setting = res?.storeCustomizationSetting?.setting;
+    if (setting?.home?.favicon) {
+      favicon = setting.home.favicon;
+    }
+  } catch (e) {
+    console.error("Error loading settings for metadata:", e);
   }
 
-  const { setting, settingLoading } = useSetting();
+  return {
+    title: "SheraOrganic Online Store",
+    description: "Welcome to SheraOrganic - Safe and Organic Food Store",
+    icons: {
+      icon: favicon,
+    },
+  };
+}
 
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <title>{title}</title>
-        <meta name="description" content={description} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://res.cloudinary.com" />
@@ -86,34 +61,6 @@ export default function RootLayout({ children }) {
           onLoad="this.media='all'"
         />
 
-        <link rel="icon" href={setting?.home?.favicon} />
-
-        {/* Meta Pixel Code */}
-        {/* <script dangerouslySetInnerHTML={{
-            __html: `
-              !function(f,b,e,v,n,t,s)
-              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-              n.queue=[];t=b.createElement(e);t.async=!0;
-              t.src=v;s=b.getElementsByTagName(e)[0];
-              s.parentNode.insertBefore(t,s)}(window, document,'script',
-              'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '1819870335568021');
-              fbq('track', 'PageView');
-            `,
-          }}
-        />
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: "none" }}
-            src="https://www.facebook.com/tr?id=1819870335568021&ev=PageView&noscript=1"
-          />
-        </noscript> */}
-        {/* <!-- End Meta Pixel Code --> */}
-
         {/* Google Tag Manager */}
         <script
           dangerouslySetInnerHTML={{
@@ -128,7 +75,6 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
-        {/* End Google Tag Manager */}
       </head>
       <body>
         {/* Google Tag Manager (noscript) */}
@@ -140,60 +86,7 @@ export default function RootLayout({ children }) {
             style={{ display: "none", visibility: "hidden" }}
           ></iframe>
         </noscript>
-        {/* End Google Tag Manager (noscript) */}
-        <AuthProvider>
-          <CartProviderContext>
-            <ToastContainer />
-            <ThemeProvider>
-              <WishlistProvider>
-                <MainContextProvider>
-                  <MainContextProviderStore>
-                    {(pathname === "/" ||
-                      pathname.startsWith("/products") ||
-                      pathname.startsWith("/product-details") ||
-                      pathname.startsWith("/invoice") ||
-                      pathname.startsWith("/blog-details") ||
-                      pathname === "/products" ||
-                      pathname === "/checkout" ||
-                      pathname === "/cart" ||
-                      pathname === "/about" ||
-                      pathname === "/contact" ||
-                      pathname === "/blog" ||
-                      pathname === "/my-account" ||
-                      pathname === "/terms-condition" ||
-                      pathname === "/coupons") && (
-                      <>
-                        <Offcanvas />
-                        <Navbar />
-                      </>
-                    )}
-                    {pathname.startsWith("/admin") && <Sidebar />}
-                    <main id="main-content">{children}</main>
-                    {(pathname === "/" ||
-                      pathname.startsWith("/products") ||
-                      pathname.startsWith("/product-details") ||
-                      pathname.startsWith("/invoice") ||
-                      pathname === "/products" ||
-                      pathname === "/about" ||
-                      pathname === "/contact" ||
-                      pathname === "/blog" ||
-                      pathname === "/cart" ||
-                      pathname === "/checkout" ||
-                      pathname === "/my-account" ||
-                      pathname === "/terms-condition" ||
-                      pathname.startsWith("/blog-details") ||
-                      pathname === "/coupons") && (
-                      <>
-                        <Footer />
-                      </>
-                    )}
-                    <ProductModal />
-                  </MainContextProviderStore>
-                </MainContextProvider>
-              </WishlistProvider>
-            </ThemeProvider>
-          </CartProviderContext>
-        </AuthProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
