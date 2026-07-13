@@ -4,7 +4,9 @@ const nextConfig = {
     domains: ["res.cloudinary.com", "https:/i.postimg.cc"],
   },
   productionBrowserSourceMaps: false,
-
+  experimental: {
+    optimizeCss: true,
+  },
   async headers() {
     return [
       {
