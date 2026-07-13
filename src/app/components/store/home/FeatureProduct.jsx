@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import FeatureBrandProductCard from "../common/card/FeatureBrandProductCard";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 import "react-loading-skeleton/dist/skeleton.css";
 const FeatureProduct = ({ products, setting }) => {
@@ -80,9 +81,12 @@ const FeatureProduct = ({ products, setting }) => {
 
                   <div className="thumbnail position-relative z-1">
                     <img
-                      src={setting?.home?.feature_brand_banner_img}
+                      src={optimizeCloudinaryUrl(setting?.home?.feature_brand_banner_img, 400)}
                       alt="pago"
                       className="img-fluid p-4"
+                      width="336"
+                      height="218"
+                      loading="lazy"
                     />
                     <img
                       src="/img/shapes/circle-md.png"
