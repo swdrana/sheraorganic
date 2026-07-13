@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.min.css"; // Import Swiper styles
 import { Autoplay, EffectCoverflow, Navigation, Controller } from "swiper";
 import useSetting from "../dataFetching/useSetting";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 const FeedbackSection = ({ setting }) => {
   // const { setting, settingLoading } = useSetting();
@@ -113,7 +114,7 @@ const FeedbackSection = ({ setting }) => {
                     {feedbacks.map((feedback, index) => (
                       <SwiperSlide key={index} className="control-thumb">
                       <img
-                        src={feedback.image}
+                        src={optimizeCloudinaryUrl(feedback.image, 80)}
                         alt="clients"
                         className="img-fluid rounded-circle"
                         width="80"

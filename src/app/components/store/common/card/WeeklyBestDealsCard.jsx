@@ -19,7 +19,7 @@ const WeeklyBestDealsCard = ({ product }) => {
           <div className="thumbnail position-relative rounded-2">
             <a href={`/product-details/${product._id}`}>
               <img
-                src={optimizeCloudinaryUrl(product?.image[0], 400)}
+                src={optimizeCloudinaryUrl(product?.image[0], 200)}
                 alt={product?.name || "product"}
                 className="img-fluid"
                 width="200"

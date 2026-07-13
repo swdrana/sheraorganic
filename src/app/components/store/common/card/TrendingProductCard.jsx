@@ -19,11 +19,11 @@ const TrendingProductCard = ({ product }) => {
           <div className="thumbnail position-relative text-center p-4 overflow-hidden">
             <Link href={`/product-details/${product._id}`}>
               <img
-                src={optimizeCloudinaryUrl(product.image[0], 400)}
+                src={optimizeCloudinaryUrl(product.image[0], 200)}
                 alt={product.name || "product"}
                 className="img-fluid"
-                width="364"
-                height="364"
+                width="200"
+                height="200"
                 loading="lazy"
               />{" "}
             </Link>

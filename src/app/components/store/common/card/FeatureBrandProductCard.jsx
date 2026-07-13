@@ -20,7 +20,7 @@ const FeatureBrandProductCard = ({ product, i }) => {
         <div className="thumbnail position-relative rounded-2">
           <Link href="/product-details">
             <img
-              src={optimizeCloudinaryUrl(product.image[0], 400)}
+              src={optimizeCloudinaryUrl(product.image[0], 200)}
               alt={product.name || "product"}
               className="img-fluid"
               width="200"
