@@ -7,6 +7,9 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+  compiler: {
+    removeConsole: true,
+  },
   async headers() {
     return [
       {
