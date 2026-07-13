@@ -6,7 +6,13 @@ import { Autoplay, EffectFade, Navigation, Pagination, Parallax } from "swiper";
 import Link from "next/link";
 import useSetting from "../dataFetching/useSetting";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
+import { loadStylesheet } from "@/app/utils/loadStylesheet";
+import { useEffect } from "react";
+
 const Hero = ({ setting }) => {
+  useEffect(() => {
+    loadStylesheet("/css/swiper-bundle.min.css");
+  }, []);
   // const session = useSession();
   // console.log("session...", session);
   // const { setting, settingLoading } = useSetting();

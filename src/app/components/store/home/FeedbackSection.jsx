@@ -1,12 +1,15 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/swiper-bundle.min.css"; // Import Swiper styles
 import { Autoplay, EffectCoverflow, Navigation, Controller } from "swiper";
 import useSetting from "../dataFetching/useSetting";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
+import { loadStylesheet } from "@/app/utils/loadStylesheet";
 
 const FeedbackSection = ({ setting }) => {
+  useEffect(() => {
+    loadStylesheet("/css/swiper-bundle.min.css");
+  }, []);
   // const { setting, settingLoading } = useSetting();
   //   console.log("setting", setting);
   const feedbacks = [
