@@ -60,13 +60,30 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://res.cloudinary.com" />
+        {/* Preload LCP image — starts downloading before CSS blocks */}
+        <link rel="preload" as="image" href="/img/shapes/hero-circle-lg.webp" />
+        {/* Google Fonts — non-render-blocking using print media trick */}
         <link
+          rel="preload"
+          as="style"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=optional"
-          rel="stylesheet"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Oleo+Script&display=optional"
           rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=optional"
+          media="print"
+          onLoad="this.media='all'"
+        />
+        <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=Oleo+Script&display=optional"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Oleo+Script&display=optional"
+          media="print"
+          onLoad="this.media='all'"
         />
 
         <link rel="icon" href={setting?.home?.favicon} />

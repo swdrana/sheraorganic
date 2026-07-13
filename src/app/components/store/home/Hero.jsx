@@ -262,7 +262,7 @@ const Hero = ({ setting }) => {
                         loading="lazy"
                       />
                       <img
-                        src="/img/shapes/hero-circle-lg.png"
+                        src="/img/shapes/hero-circle-lg.webp"
                         alt="circle shape"
                         className="img-fluid hero-circle"
                         width="400"
@@ -337,7 +337,7 @@ const Hero = ({ setting }) => {
                         loading="lazy"
                       />
                       <img
-                        src="/img/shapes/hero-circle-lg.png"
+                        src="/img/shapes/hero-circle-lg.webp"
                         alt="circle shape"
                         className="img-fluid hero-circle"
                         width="400"
