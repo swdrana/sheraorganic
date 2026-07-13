@@ -431,6 +431,7 @@ const Navbar = () => {
                   <button
                     onClick={() => setOpenOffcanvas(true)}
                     className="gshop-offcanvas-btn offcanvas-toggle ms-3 mr-0"
+                    aria-label="Toggle Mobile Navigation Menu"
                   >
                     <svg
                       width="30"
@@ -493,6 +494,7 @@ const Navbar = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="block"
+            aria-label="Chat on WhatsApp"
           >
             <svg
               width="40"
@@ -511,6 +513,7 @@ const Navbar = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="block"
+            aria-label="Chat on Facebook Messenger"
           >
             <svg
               width="40"
@@ -533,7 +536,7 @@ const Navbar = () => {
             : "opacity-0 translate-y-4 scale-95 pointer-events-none"
         }`}
       >
-        <button onClick={scrollToTop} className="block w-10 h-10 bg-orange-500 hover:bg-orange-600 text-white rounded transition-colors">
+        <button onClick={scrollToTop} className="block w-10 h-10 bg-orange-500 hover:bg-orange-600 text-white rounded transition-colors" aria-label="Scroll to Top">
           <i className="fa-regular fa-hand-pointer"></i>
         </button>
       </div>

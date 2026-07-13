@@ -18,17 +18,26 @@ const Hero = ({ setting }) => {
           src="/img/shapes/leaf-shadow.png"
           alt="leaf"
           className="position-absolute leaf-shape z--1 rounded-circle"
+          width="200"
+          height="200"
+          loading="lazy"
         />
         <img
           src="/img/shapes/mango.png"
           alt="mango"
           className="position-absolute mango z--1"
           data-parallax='{"y": -120}'
+          width="120"
+          height="120"
+          loading="lazy"
         />
         <img
           src="/img/shapes/hero-circle-sm.png"
           alt="circle"
           className="position-absolute hero-circle circle-sm z--1"
+          width="200"
+          height="200"
+          loading="lazy"
         />
 
         <div className="container">
@@ -91,26 +100,41 @@ const Hero = ({ setting }) => {
                             src={setting?.home?.slider_one_img}
                             alt="fruits"
                             className="img-fluid position-absolute end-0 top-50 hero-img"
+                            width="500"
+                            height="400"
+                            fetchpriority="high"
                           />
                           <img
                             src="/img/shapes/tree.png"
                             alt="tree"
                             className="img-fluid position-absolute tree z-1"
+                            width="120"
+                            height="200"
+                            loading="lazy"
                           />
                           <img
                             src="/img/shapes/orange-1.png"
                             alt="orange"
                             className="position-absolute orange-1 z-1"
+                            width="80"
+                            height="80"
+                            loading="lazy"
                           />
                           <img
                             src="/img/shapes/orange-2.png"
                             alt="orange"
                             className="position-absolute orange-2 z-1"
+                            width="80"
+                            height="80"
+                            loading="lazy"
                           />
                           <img
                             src="/img/shapes/hero-circle-lg.png"
                             alt="circle shape"
                             className="img-fluid hero-circle"
+                            width="400"
+                            height="400"
+                            fetchpriority="high"
                           />
                         </div>
                       </div>
@@ -208,26 +232,41 @@ const Hero = ({ setting }) => {
                         src={setting?.home?.slider_two_img}
                         alt="fruits"
                         className="img-fluid position-absolute end-0 top-50 hero-img"
+                        width="500"
+                        height="400"
+                        loading="lazy"
                       />
                       <img
                         src="/img/shapes/tree.png"
                         alt="tree"
                         className="img-fluid position-absolute tree z-1"
+                        width="120"
+                        height="200"
+                        loading="lazy"
                       />
                       <img
                         src="/img/shapes/orange-1.png"
                         alt="orange"
                         className="position-absolute orange-1 z-1"
+                        width="80"
+                        height="80"
+                        loading="lazy"
                       />
                       <img
                         src="/img/shapes/orange-2.png"
                         alt="orange"
                         className="position-absolute orange-2 z-1"
+                        width="80"
+                        height="80"
+                        loading="lazy"
                       />
                       <img
                         src="/img/shapes/hero-circle-lg.png"
                         alt="circle shape"
                         className="img-fluid hero-circle"
+                        width="400"
+                        height="400"
+                        loading="lazy"
                       />
                     </div>
                   </div>
@@ -268,26 +307,41 @@ const Hero = ({ setting }) => {
                         src={setting?.home?.slider_three_img}
                         alt="fruits"
                         className="img-fluid position-absolute end-0 top-50 hero-img"
+                        width="500"
+                        height="400"
+                        loading="lazy"
                       />
                       <img
                         src="/img/shapes/tree.png"
                         alt="tree"
                         className="img-fluid position-absolute tree z-1"
+                        width="120"
+                        height="200"
+                        loading="lazy"
                       />
                       <img
                         src="/img/shapes/orange-1.png"
                         alt="orange"
                         className="position-absolute orange-1 z-1"
+                        width="80"
+                        height="80"
+                        loading="lazy"
                       />
                       <img
                         src="/img/shapes/orange-2.png"
                         alt="orange"
                         className="position-absolute orange-2 z-1"
+                        width="80"
+                        height="80"
+                        loading="lazy"
                       />
                       <img
                         src="/img/shapes/hero-circle-lg.png"
                         alt="circle shape"
                         className="img-fluid hero-circle"
+                        width="400"
+                        height="400"
+                        loading="lazy"
                       />
                     </div>
                   </div>

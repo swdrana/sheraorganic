@@ -24,6 +24,24 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: "/:all*(svg|jpg|jpeg|png|gif|ico|webp|woff2)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
     ];
   },
 };

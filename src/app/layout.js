@@ -57,6 +57,9 @@ export default function RootLayout({ children }) {
       <head>
         <title>{title}</title>
         <meta name="description" content={description} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://res.cloudinary.com" />
 
         <link rel="icon" href={setting?.home?.favicon} />
 
@@ -140,7 +143,7 @@ export default function RootLayout({ children }) {
                       </>
                     )}
                     {pathname.startsWith("/admin") && <Sidebar />}
-                    {children}
+                    <main id="main-content">{children}</main>
                     {(pathname === "/" ||
                       pathname.startsWith("/products") ||
                       pathname.startsWith("/product-details") ||

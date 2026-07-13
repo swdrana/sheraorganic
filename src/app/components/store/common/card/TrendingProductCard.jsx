@@ -1,5 +1,6 @@
 import Link from "next/link";
 import StarRating from "../others/StartRating";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 import { RiDeleteBack2Line } from "react-icons/ri";
 
@@ -17,7 +18,14 @@ const TrendingProductCard = ({ product }) => {
         <div className="vertical-product-card trend_style rounded-2 position-relative h-100">
           <div className="thumbnail position-relative text-center p-4 overflow-hidden">
             <Link href={`/product-details/${product._id}`}>
-              <img src={product.image[0]} alt="apple" className="img-fluid" />{" "}
+              <img
+                src={optimizeCloudinaryUrl(product.image[0], 400)}
+                alt={product.name || "product"}
+                className="img-fluid"
+                width="364"
+                height="364"
+                loading="lazy"
+              />{" "}
             </Link>
             {product.discount && (
               <span className="offer-badge text-white fw-bold fs-xxs bg-danger position-absolute start-0 top-0">

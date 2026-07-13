@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 const Category = ({ categorys, products }) => {
   // const { categorys, categoryLoading } = useCategory();
@@ -35,9 +36,12 @@ const Category = ({ categorys, products }) => {
                   >
                     <div className="animated-icon d-inline-flex align-items-center justify-content-center rounded-circle position-relative">
                       <img
-                        src={category.icon}
+                        src={optimizeCloudinaryUrl(category.icon, 80)}
                         alt={category.name}
                         className="img-fluid"
+                        width="62"
+                        height="62"
+                        loading="lazy"
                       />
                     </div>
                     <div className="text-dark fs-sm fw-bold d-block mt-3">

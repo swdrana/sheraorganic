@@ -55,6 +55,7 @@ const Offcanvas = () => {
           <button
             onClick={() => setOpenOffcanvas(false)}
             className="offcanvas-close"
+            aria-label="Close Navigation Menu"
           >
             <i className="fa-solid fa-xmark"></i>
           </button>
@@ -122,6 +123,7 @@ const Offcanvas = () => {
           <button
             onClick={() => setOpenOffcanvas(false)}
             className="offcanvas-close"
+            aria-label="Close Navigation Menu"
           >
             <i className="fa-solid fa-xmark"></i>
           </button>

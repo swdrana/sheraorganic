@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import StarRating from "../others/StartRating";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 import useAddWishlist from "../../hooks/useAddWishlist";
 import { useMainContext } from "../../provider/MainContextStore";
@@ -18,7 +19,14 @@ const FeatureBrandProductCard = ({ product, i }) => {
       >
         <div className="thumbnail position-relative rounded-2">
           <Link href="/product-details">
-            <img src={product.image[0]} alt="product" className="img-fluid" />{" "}
+            <img
+              src={optimizeCloudinaryUrl(product.image[0], 400)}
+              alt={product.name || "product"}
+              className="img-fluid"
+              width="200"
+              height="200"
+              loading="lazy"
+            />{" "}
           </Link>
           <div className="product-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center gap-2 rounded-2">
             <a
