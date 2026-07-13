@@ -70,6 +70,7 @@
     "swiper": "^8.4.4"
   },
   "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^8.0.0",
     "@types/node": "20.11.24",
     "@types/react": "18.2.62",
     "autoprefixer": "^10.0.1",

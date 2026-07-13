@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import useProducts from "./components/admin/featch/useProducts";
 import useCategory from "./components/store/dataFetching/useCategory";
 import useSetting from "./components/store/dataFetching/useSetting";
@@ -14,42 +13,32 @@ import TrendingProducts from "./components/store/home/TrendingProducts";
 import WeeklyBestDeals from "./components/store/home/WeeklyBestDeals";
 import { useEffect } from "react";
 import useBlog from "./components/store/dataFetching/useBlog";
-import PreLoader from "./components/store/common/others/PreLoader";
 import { PageView } from "./utilities/facebookPixel";
 
 const page = () => {
-  const { setting, settingLoading } = useSetting();
-  const { products, productloading } = useProducts();
-  const { categorys, categoryLoading } = useCategory();
-  const { blogs, blogLoading } = useBlog();
-  console.log(
-    "productsLoading",
-    productloading,
-    settingLoading,
-    categoryLoading
-  );
+  const { setting } = useSetting();
+  const { products } = useProducts();
+  const { categorys } = useCategory();
+  const { blogs } = useBlog();
 
   // Facebook Pixel PageView tracking
   useEffect(() => {
     PageView();
   }, []);
+
   return (
     <>
-      {settingLoading || categoryLoading || productloading ? (
-        <PreLoader />
-      ) : (
-        <>
-          <Hero setting={setting} />
-          <Category categorys={categorys} products={products} />
-          <FeatureProduct products={products} setting={setting} />
-          <TrendingProducts products={products} setting={setting} />
-          <BannerOne setting={setting} />
-          <WeeklyBestDeals products={products} setting={setting} />
-          <BannerTwo setting={setting} />
-          <FeedbackSection setting={setting} />
-          <Blog blogs={blogs} />
-        </>
-      )}
+      {/* Hero renders immediately — has its own skeleton while setting loads */}
+      <Hero setting={setting} />
+      {/* Each section handles its own loading state */}
+      <Category categorys={categorys || []} products={products || []} />
+      <FeatureProduct products={products || []} setting={setting || {}} />
+      <TrendingProducts products={products || []} setting={setting || {}} />
+      <BannerOne setting={setting || {}} />
+      <WeeklyBestDeals products={products || []} setting={setting || {}} />
+      <BannerTwo setting={setting || {}} />
+      <FeedbackSection setting={setting || {}} />
+      <Blog blogs={blogs || []} />
     </>
   );
 };
