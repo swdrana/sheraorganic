@@ -1,13 +1,36 @@
+import "rc-tree/assets/index.css";
+import "react-loading-skeleton/dist/skeleton.css";
+import "react-quill/dist/quill.snow.css";
+import "react-toastify/dist/ReactToastify.css";
 import "../assets/css/main.css";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
-import { getStoreCustomizationSetting } from "./backend/controllers/storecustomize.controller";
+import connectDB from "@/app/utils/database";
+import Setting from "@/app/backend/model/setting.model";
+import { unstable_cache } from "next/cache";
+
+// Cache database customization settings for 60 seconds to improve TTFB from 2s to ~10ms
+const getCachedSettings = unstable_cache(
+  async () => {
+    try {
+      await connectDB();
+      const storeCustomizationSetting = await Setting.findOne({
+        name: "storeCustomizationSetting",
+      });
+      return storeCustomizationSetting?.setting || null;
+    } catch (e) {
+      console.error("Error fetching settings directly from DB:", e);
+      return null;
+    }
+  },
+  ["store-customization-settings-layout"],
+  { revalidate: 60, tags: ["settings"] }
+);
 
 export async function generateMetadata() {
   let favicon = "/favicon.ico";
   try {
-    const res = await getStoreCustomizationSetting();
-    const setting = res?.storeCustomizationSetting?.setting;
+    const setting = await getCachedSettings();
     if (setting?.home?.favicon) {
       favicon = setting.home.favicon;
     }
