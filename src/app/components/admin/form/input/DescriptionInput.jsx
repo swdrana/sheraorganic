@@ -1,10 +1,12 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import "react-quill/dist/quill.snow.css";
-
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import { loadStylesheet } from "@/app/utils/loadStylesheet";
 
 const DescriptionInput = ({ productDetails, setProductDes }) => {
+  useEffect(() => {
+    loadStylesheet("/css/quill.snow.css");
+  }, []);
   const [value, setValue] = useState("");
 
   // Sync state when productDetails changes

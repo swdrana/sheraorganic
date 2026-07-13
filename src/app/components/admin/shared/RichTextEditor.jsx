@@ -1,11 +1,14 @@
 "use client";
 import React from 'react';
 import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
-
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import { loadStylesheet } from "@/app/utils/loadStylesheet";
+import { useEffect } from "react";
 
 const RichTextEditor = ({ value, onChange, placeholder }) => {
+  useEffect(() => {
+    loadStylesheet("/css/quill.snow.css");
+  }, []);
   const modules = {
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],

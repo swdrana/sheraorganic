@@ -1,8 +1,9 @@
 "use client";
 import Multiselect from "multiselect-react-dropdown";
 import Tree from "rc-tree";
-import "rc-tree/assets/index.css";
 import { toast } from "react-toastify";
+import { loadStylesheet } from "@/app/utils/loadStylesheet";
+import { useEffect } from "react";
 
 const ParentCategory = ({
   selectedCategory,
@@ -10,6 +11,9 @@ const ParentCategory = ({
   setDefaultCategory,
   categoryList,
 }) => {
+  useEffect(() => {
+    loadStylesheet("/css/rc-tree.css");
+  }, []);
   //   const { data, loading } = useAsync(CategoryServices?.getAllCategory);
   //   const { showingTranslateValue } = useUtilsFunction();
 

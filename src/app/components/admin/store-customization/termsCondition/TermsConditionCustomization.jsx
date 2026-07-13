@@ -1,13 +1,16 @@
 "use client";
-import "react-quill/dist/quill.snow.css";
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { updateStoreCustomizationSetting } from "../../../../backend/controllers/storecustomize.controller";
 import useSetting from "../../../store/dataFetching/useSetting";
 import { toast } from "react-toastify";
+import { loadStylesheet } from "@/app/utils/loadStylesheet";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const TermsConditionCustomization = () => {
+  useEffect(() => {
+    loadStylesheet("/css/quill.snow.css");
+  }, []);
   const { setting, settingLoading } = useSetting();
   useEffect(() => {
     if (setting?.terms?.value) {

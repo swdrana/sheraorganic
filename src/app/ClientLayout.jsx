@@ -1,7 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 import { MainContextProvider } from "./components/admin/context/mainContext";
 import { ThemeProvider } from "./components/admin/context/themeContext";
 import dynamic from "next/dynamic";
@@ -14,8 +14,13 @@ import { AuthProvider } from "./components/store/provider/AuthProvider";
 import CartProviderContext from "./components/store/provider/CartProviderContex";
 import { MainContextProviderStore } from "./components/store/provider/MainContextStore";
 import { WishlistProvider } from "./components/store/provider/WishlistProvider";
+import { loadStylesheet } from "./utils/loadStylesheet";
+import { useEffect } from "react";
 
 export default function ClientLayout({ children }) {
+  useEffect(() => {
+    loadStylesheet("/css/react-toastify.css");
+  }, []);
   const pathname = usePathname() || "";
 
   const isStorePage =
