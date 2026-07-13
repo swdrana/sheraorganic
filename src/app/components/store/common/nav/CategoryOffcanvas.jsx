@@ -41,6 +41,7 @@ const CategoryOffcanvas = ({
           <button
             onClick={() => setCategoryOffcanvas(false)}
             className="offcanvas-close"
+            aria-label="Close Categories Menu"
           >
             <i className="fa-solid fa-xmark"></i>
           </button>

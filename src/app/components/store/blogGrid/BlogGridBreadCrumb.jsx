@@ -10,7 +10,7 @@ const BlogGridBreadCrumb = () => {
             <img src="/img/shapes/leaf.svg" alt="leaf" className="position-absolute z--1 leaf vector-shape" />
             <img src="/img/shapes/garlic-white.png" alt="garlic" className="position-absolute z--1 garlic vector-shape" />
             <img src="/img/shapes/roll-1.png" alt="roll" className="position-absolute z--1 roll vector-shape" />
-            <img src="/img/shapes/roll-2.png" alt="roll" className="position-absolute z--1 roll-2 vector-shape" />
+            <img src="/img/shapes/roll-2.webp" alt="roll" className="position-absolute z--1 roll-2 vector-shape" width="100" height="100" loading="lazy" />
             <img src="/img/shapes/pata-xs.svg" alt="roll" className="position-absolute z--1 pata-xs-2 vector-shape" />
             <img src="/img/shapes/tomato-half.svg" alt="tomato" className="position-absolute z--1 tomato-half vector-shape" />
             <img src="/img/shapes/tomato-slice.svg" alt="tomato" className="position-absolute z--1 tomato-slice vector-shape" />

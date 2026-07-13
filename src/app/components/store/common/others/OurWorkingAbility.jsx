@@ -37,7 +37,7 @@ const OurWorkingAbility = ({ orders, products, users }) => {
     <>
       <section className="about-section bg-shade position-relative z-1">
         <img
-          src="/img/shapes/bg-shape-5.png"
+          src="/img/shapes/bg-shape-5.webp"
           alt="bg shape"
           className="position-absolute start-0 bottom-0 z--1 w-100"
         />

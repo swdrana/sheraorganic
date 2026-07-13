@@ -19,9 +19,12 @@ const page = () => {
             className="position-absolute frame z--1 d-none d-sm-block"
           />
           <img
-            src="/img/shapes/roll-2.png"
+            src="/img/shapes/roll-2.webp"
             alt="roll"
             className="position-absolute roll-2 z--1"
+            width="100"
+            height="100"
+            loading="lazy"
           />
           <img
             src="/img/shapes/pata-xs.svg"

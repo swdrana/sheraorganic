@@ -29,10 +29,13 @@ const FeatureProduct = ({ products, setting }) => {
           data-parallax='{"y": -120}'
         />
         <img
-          src="/img/shapes/roll-2.png"
+          src="/img/shapes/roll-2.webp"
           alt="roll"
           className="position-absolute roll-2 z--1"
           data-parallax='{"y": 120}'
+          width="100"
+          height="100"
+          loading="lazy"
         />
 
         <div className="container">
@@ -81,7 +84,7 @@ const FeatureProduct = ({ products, setting }) => {
 
                   <div className="thumbnail position-relative z-1">
                     <img
-                      src={optimizeCloudinaryUrl(setting?.home?.feature_brand_banner_img, 400)}
+                      src={optimizeCloudinaryUrl(setting?.home?.feature_brand_banner_img, 300)}
                       alt="pago"
                       className="img-fluid p-4"
                       width="336"
@@ -89,9 +92,12 @@ const FeatureProduct = ({ products, setting }) => {
                       loading="lazy"
                     />
                     <img
-                      src="/img/shapes/circle-md.png"
+                      src="/img/shapes/circle-md.webp"
                       alt="circle"
                       className="position-absolute end-0 bottom-0 z--1 d-none d-sm-block"
+                      width="150"
+                      height="150"
+                      loading="lazy"
                     />
                   </div>
                 </div>

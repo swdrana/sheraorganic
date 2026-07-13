@@ -1,6 +1,8 @@
 "use client";
 import dayjs from "dayjs";
 import Link from "next/link";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
+
 const Blog = ({ blogs }) => {
   // const { blogs, blogLoading } = useBlog();
   // console.log("blogs", blogs);
@@ -36,9 +38,12 @@ const Blog = ({ blogs }) => {
                   <div className="thumbnail overflow-hidden">
                     <Link href={`/blog-details/${blog._id}`}>
                       <img
-                        src={blog?.img}
+                        src={optimizeCloudinaryUrl(blog?.img, 400)}
                         alt="blog thumb"
                         className="img-fluid"
+                        width="400"
+                        height="235"
+                        loading="lazy"
                       />
                     </Link>
                   </div>

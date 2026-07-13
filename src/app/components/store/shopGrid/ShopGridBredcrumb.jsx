@@ -39,9 +39,12 @@ const ShopGridBredcrumb = () => {
         className="position-absolute z--1 roll vector-shape"
       />
       <img
-        src="/img/shapes/roll-2.png"
+        src="/img/shapes/roll-2.webp"
         alt="roll"
         className="position-absolute z--1 roll-2 vector-shape"
+        width="100"
+        height="100"
+        loading="lazy"
       />
       <img
         src="/img/shapes/pata-xs.svg"

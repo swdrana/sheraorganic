@@ -36,7 +36,7 @@ const AboutTeam = () => {
 
   return (
     <section className="grostore-team-section pt-6 bg-shade position-relative z-1 overflow-hidden">
-      <img src="/img/shapes/bg-shape-5.png" alt="bg shape" className="position-absolute start-0 bottom-0 z--1 w-100" />
+      <img src="/img/shapes/bg-shape-5.webp" alt="bg shape" className="position-absolute start-0 bottom-0 z--1 w-100" />
       <div className="container">
         <div className="row align-items-center g-3">
           <div className="col-xl-3">

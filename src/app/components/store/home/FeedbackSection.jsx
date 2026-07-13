@@ -43,22 +43,22 @@ const FeedbackSection = ({ setting }) => {
     <>
       <section className="ptb-120 bg-shade position-relative overflow-hidden z-1 feedback-section">
         <img
-          src="/img/shapes/bg-shape-5.png"
+          src="/img/shapes/bg-shape-5.webp"
           alt="bg shape"
           className="position-absolute start-0 bottom-0 z--1 w-100"
         />
         <img
-          src="/img/shapes/map-bg.png"
+          src="/img/shapes/map-bg.webp"
           alt="map"
           className="position-absolute start-50 top-50 translate-middle z--1"
         />
         <img
-          src="/img/shapes/fd-1.png"
+          src="/img/shapes/fd-1.webp"
           alt="shape"
           className="position-absolute z--1 fd-1"
         />
         <img
-          src="/img/shapes/fd-2.png"
+          src="/img/shapes/fd-2.webp"
           alt="shape"
           className="position-absolute z--1 fd-2"
         />
@@ -73,7 +73,7 @@ const FeedbackSection = ({ setting }) => {
           className="position-absolute z--1 fd-4"
         />
         <img
-          src="/img/shapes/fd-5.png"
+          src="/img/shapes/fd-5.webp"
           alt="shape"
           className="position-absolute z--1 fd-5"
         />

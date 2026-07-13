@@ -10,7 +10,7 @@ const BannerOne = ({ setting }) => {
     <>
       <section className="banner-section position-relative z-1 overflow-hidden bg-white pt-2">
         <img
-          src="/img/shapes/bg-shape-3.png"
+          src="/img/shapes/bg-shape-3.webp"
           alt="bg shape"
           className="position-absolute start-0 bottom-0 z--1 w-100"
         />

@@ -79,9 +79,12 @@ const WeeklyBestDeals = ({ setting, products }) => {
                 </Link>
                 <div className="banner-img-wrapper d-flex justify-content-end mt--40">
                   <img
-                    src="/img/banner/vegetables.png"
+                    src="/img/banner/vegetables.webp"
                     alt="vegetables"
                     className=""
+                    width="400"
+                    height="400"
+                    loading="lazy"
                   />
                 </div>
               </div>
