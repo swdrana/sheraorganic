@@ -8,6 +8,7 @@ import ClientLayout from "./ClientLayout";
 import connectDB from "@/app/utils/database";
 import Setting from "@/app/backend/model/setting.model";
 import { unstable_cache } from "next/cache";
+import Script from "next/script";
 
 // Cache database customization settings for 60 seconds to improve TTFB from 2s to ~10ms
 const getCachedSettings = unstable_cache(
@@ -80,8 +81,11 @@ export default function RootLayout({ children }) {
           onLoad="this.media='all'"
         />
 
-        {/* Google Tag Manager */}
-        <script
+      </head>
+      <body>
+        <Script
+          id="gtm"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               (function(w,d,s,l,i){
@@ -94,8 +98,6 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
-      </head>
-      <body>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
