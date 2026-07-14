@@ -9,7 +9,7 @@ import Loading from "../common/others/Loading";
 
 const TrendingProducts = ({ products, setting }) => {
   const [hasMore, setHasMore] = useState(true);
-  const [endSlice, setEndSlice] = useState(8);
+  const [endSlice, setEndSlice] = useState(15);
   const [activeTrendingProduct, setActiveTrendingProduct] =
     useState("all products");
   // const { products, productsLoading } = useProducts();
