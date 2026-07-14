@@ -2,17 +2,8 @@
 import PreLoader from "../common/others/PreLoader";
 import useProducts from "../dataFetching/useProducts";
 import useProductFilter from "../hooks/useProductsFilter";
-import dynamic from 'next/dynamic';
-
-// Dynamically load heavy components without SSR
-const ShopGridProduct = dynamic(() => import('@/app/components/store/shopGrid/ShopGridProduct'), {
-  ssr: false,
-  loading: () => <p>Loading products...</p>,
-});
-const ShopGridSidebar = dynamic(() => import('@/app/components/store/shopGrid/ShopGridSidebar'), {
-  ssr: false,
-  loading: () => <p>Loading sidebar...</p>,
-});
+import ShopGridProduct from "./ShopGridProduct";
+import ShopGridSidebar from "./ShopGridSidebar";
 
 const ShopGridBody = ({ categoryOrBrand }) => {
   const { products, productsLoading } = useProducts();
