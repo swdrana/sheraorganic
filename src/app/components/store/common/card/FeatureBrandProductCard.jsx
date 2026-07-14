@@ -17,7 +17,7 @@ const FeatureBrandProductCard = ({ product, i }) => {
           i !== 0 && "mt-4"
         }`}
       >
-        <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} />
+        <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} aria-label={product.name || "View product details"} />
         <div className="thumbnail position-relative rounded-2">
           <Link href="/product-details">
             <img
@@ -30,26 +30,28 @@ const FeatureBrandProductCard = ({ product, i }) => {
             />{" "}
           </Link>
           <div className="product-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center gap-2 rounded-2" style={{ zIndex: 2 }}>
-            <a
+            <button
               type="button"
               onClick={() => handleWishlist(product)}
               className="rounded-btn"
+              aria-label="Add to wishlist"
             >
               {wishlist?.some((item) => item._id === product._id) ? (
                 <i className="fa-solid fa-heart"></i>
               ) : (
                 <i className="fa-regular fa-heart"></i>
               )}
-            </a>
-            <a
+            </button>
+            <button
               type="button"
               onClick={() => {
-                setOpenProductModal(true), setProductDetails(product);
+                setOpenProductModal(true); setProductDetails(product);
               }}
               className="rounded-btn"
+              aria-label="Quick view"
             >
               <i className="fa-solid fa-eye"></i>
-            </a>
+            </button>
           </div>
         </div>
         <Link href={`/product-details/${product._id}`} className="card-content mt-4 mt-sm-0">

@@ -42,7 +42,7 @@ const ProductCard = ({ product }) => {
       <div className="col-xxl-3 col-lg-4 col-md-6 col-sm-10 group">
         <div className="vertical-product-card trend_style rounded-2 position-relative border-0 bg-white">
           {/* Absolute Link covering the entire card for fast native routing */}
-          <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} />
+          <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} aria-label={product.name || "View product details"} />
 
           {product.prices.discount >= 1 && (
             <span className="offer-badge text-white fw-bold fs-xxs bg-danger position-absolute start-0 top-0">
@@ -60,27 +60,29 @@ const ProductCard = ({ product }) => {
             </Link>
 
             <div className="product-btns position-absolute d-flex gap-2 flex-column" style={{ zIndex: 2 }}>
-              <a
+              <button
                 type="button"
                 onClick={() => handleWishlist(product)}
                 className="rounded-btn"
+                aria-label="Add to wishlist"
               >
                 {wishlist?.some((item) => item._id === product._id) ? (
                   <i className="fa-solid fa-heart"></i>
                 ) : (
                   <i className="fa-regular fa-heart"></i>
                 )}
-              </a>
+              </button>
 
-              <a
+              <button
                 type="button"
                 onClick={() => {
-                  setOpenProductModal(true), setProductDetails(product);
+                  setOpenProductModal(true); setProductDetails(product);
                 }}
                 className="rounded-btn"
+                aria-label="Quick view"
               >
                 <i className="fa-regular fa-eye"></i>
-              </a>
+              </button>
             </div>
           </div>
           <div className="card-content">

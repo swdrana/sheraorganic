@@ -16,7 +16,7 @@ const TrendingProductCard = ({ product }) => {
     <>
       <div className="col-lg-4 col-md-6 col-sm-10 filter_item beans_peas">
         <div className="vertical-product-card trend_style rounded-2 position-relative h-100">
-          <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} />
+          <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} aria-label={product.name || "View product details"} />
           <div className="thumbnail position-relative text-center p-4 overflow-hidden">
             <Link href={`/product-details/${product._id}`}>
               <img
@@ -34,27 +34,29 @@ const TrendingProductCard = ({ product }) => {
               </span>
             )}
             <div className="product-btns position-absolute d-flex gap-2 flex-column" style={{ zIndex: 2 }}>
-              <a
+              <button
                 type="button"
                 onClick={() => handleWishlist(product)}
                 className="rounded-btn"
+                aria-label="Add to wishlist"
               >
                 {wishlist?.some((item) => item._id === product._id) ? (
                   <i className="fa-solid fa-heart"></i>
                 ) : (
                   <i className="fa-regular fa-heart"></i>
                 )}
-              </a>
+              </button>
 
-              <a
+              <button
                 type="button"
                 onClick={() => {
-                  setOpenProductModal(true), setProductDetails(product);
+                  setOpenProductModal(true); setProductDetails(product);
                 }}
                 className="rounded-btn"
+                aria-label="Quick view"
               >
                 <i className="fa-regular fa-eye"></i>{" "}
-              </a>
+              </button>
             </div>
           </div>
           <div className="card-content">
@@ -93,14 +95,14 @@ const TrendingProductCard = ({ product }) => {
             </div>
           </div>
           <div className="card-btn bg-white">
-            <a
+            <button
               type="button"
               onClick={() => handelAddItem({ ...product, id: product._id })}
               className="btn btn-secondary d-block btn-md rounded-1 position-relative"
               style={{ zIndex: 2 }}
             >
               Add to Cart{" "}
-            </a>
+            </button>
           </div>
         </div>
       </div>
