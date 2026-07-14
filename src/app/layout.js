@@ -79,6 +79,8 @@ export default function RootLayout({ children }) {
 
         {/* Preload LCP image — starts downloading before CSS blocks */}
         <link rel="preload" as="image" href="/img/shapes/hero-circle-lg.webp" fetchpriority="high" />
+        {/* Preload Swiper bundle CSS */}
+        <link rel="preload" as="style" href="/css/swiper-bundle.min.css" />
         {/* Google Fonts — non-render-blocking using print media trick */}
         <link
           rel="preload"

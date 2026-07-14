@@ -3,8 +3,6 @@ import { useMemo } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { getProductByIds } from "../../../backend/controllers/product.controller";
 import WeeklyBestDealsCard from "../common/card/WeeklyBestDealsCard";
 import useAddToCart from "../hooks/useAddToCart";
 import WeeklyBestDealsOfferTime from "./WeeklyBestDealsOfferTime";
@@ -18,40 +16,17 @@ const WeeklyBestDeals = ({ setting, products }) => {
   //   console.log("products..", products, "bestWeeklyDeals", bestWeeklyDeals);
   const { handelAddItem, addToCardLoading } = useAddToCart();
   // console.log("addToLoading..", addToCardLoading);
-  const weeklyBestDealsProductIds = useMemo(
-    () => [
+  const weeklyBestProducts = useMemo(() => {
+    const validIds = [
       `${setting?.home?.weekly_best_delas_product_one?.id}`,
       `${setting?.home?.weekly_best_delas_product_two?.id}`,
       `${setting?.home?.weekly_best_delas_product_three?.id}`,
       `${setting?.home?.weekly_best_delas_product_four?.id}`,
-    ],
-    [setting]
-  );
-  // console.log("weeklyBestDealsProductIds", weeklyBestDealsProductIds);
-  const [weeklyBestProducts, setWeeklyBestProducts] = useState([]);
+    ].filter((id) => id && id !== "undefined");
 
-  useEffect(() => {
-    // Filter out invalid IDs (undefined or empty strings)
-    const validIds = weeklyBestDealsProductIds.filter(
-      (id) => id && id !== "undefined"
-    );
-
-    if (validIds.length === 0) {
-      return; // If no valid IDs, don't make a request
-    }
-
-    const fetchData = async () => {
-      try {
-        const res = await getProductByIds(validIds);
-        // console.log("Fetched weekly best deals products:", res);
-        setWeeklyBestProducts(res?.products); // Set the fetched products
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchData();
-  }, [weeklyBestDealsProductIds]); // Use the actual array as a dependency
+    if (!products) return [];
+    return products.filter((product) => validIds.includes(product._id));
+  }, [products, setting]);
 
   return (
     <>
