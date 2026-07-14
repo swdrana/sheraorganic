@@ -37,33 +37,16 @@ module.exports = {
                 "d-flex",
               ],
               deep: [
-                // Bootstrap JS components
+                // Bootstrap JS components dynamic classes
                 /^offcanvas/,
                 /^modal/,
                 /^tooltip/,
                 /^popover/,
                 /^dropdown/,
                 /^collapse/,
-                /^navbar/,
-                /^carousel/,
-                /^tab/,
-                /^nav/,
-                /^btn/,
-                /^form/,
-                /^alert/,
-                /^badge/,
-                /^toast/,
-                /^spinner/,
-                /^placeholder/,
-                // Swiper classes (all dynamically added by JS)
+                // Swiper classes (dynamically added by Swiper JS)
                 /^swiper/,
-                // Custom shop classes
-                /^gshop/,
-                /^hero/,
-                /^product/,
-                /^cart/,
-                /^footer/,
-                /^header/,
+                // Keep preloader if it's dynamic
                 /^preloader/,
                 // Animation and transition classes
                 /^animate/,

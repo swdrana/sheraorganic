@@ -41,6 +41,9 @@ const ProductCard = ({ product }) => {
     <>
       <div className="col-xxl-3 col-lg-4 col-md-6 col-sm-10 group">
         <div className="vertical-product-card trend_style rounded-2 position-relative border-0 bg-white">
+          {/* Absolute Link covering the entire card for fast native routing */}
+          <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} />
+
           {product.prices.discount >= 1 && (
             <span className="offer-badge text-white fw-bold fs-xxs bg-danger position-absolute start-0 top-0">
               {product.prices.discount.toFixed(0)}% OFF
@@ -56,7 +59,7 @@ const ProductCard = ({ product }) => {
               />
             </Link>
 
-            <div className="product-btns position-absolute d-flex gap-2 flex-column">
+            <div className="product-btns position-absolute d-flex gap-2 flex-column" style={{ zIndex: 2 }}>
               <a
                 type="button"
                 onClick={() => handleWishlist(product)}
@@ -111,7 +114,8 @@ const ProductCard = ({ product }) => {
             <a
               // type="button"
               onClick={() => handleAddToCartWithTracking(product)}
-              className="btn btn-outline-secondary d-block btn-md hover:cursor-auto"
+              className="btn btn-outline-secondary d-block btn-md hover:cursor-auto position-relative"
+              style={{ zIndex: 2 }}
             >
               Add to Cart
             </a>

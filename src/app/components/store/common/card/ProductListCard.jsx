@@ -33,6 +33,7 @@ const ProductListCard = ({ product }) => {
     <>
       <div className="col-xl-12">
         <div className="vertical-product-card rounded-2 position-relative d-md-flex align-items-center bg-white hr-product">
+          <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} />
           <div className="thumbnail position-relative text-center p-4 flex-shrink-0">
             <img
               src={product.image[0]}
@@ -46,8 +47,8 @@ const ProductListCard = ({ product }) => {
                 href={`/products/brands=${product.brand
                   .replace(/\s+/g, "")
                   .toLowerCase()}=${product._id}`}
-                className="d-inline-block text-muted fs-xxs"
-                style={{ display: "inline-block", padding: "6px 12px 6px 0", minWidth: "48px" }}
+                className="d-inline-block text-muted fs-xxs position-relative"
+                style={{ display: "inline-block", padding: "6px 12px 6px 0", minWidth: "48px", zIndex: 2 }}
               >
                 {product.brand}
               </Link>
@@ -75,7 +76,8 @@ const ProductListCard = ({ product }) => {
               <a
                 type="button"
                 onClick={() => handleAddToCartWithTracking(product)}
-                className="btn btn-outline-secondary btn-sm border-secondary mt-4 direct-add-to-cart-btn add-to-cart-text"
+                className="btn btn-outline-secondary btn-sm border-secondary mt-4 direct-add-to-cart-btn add-to-cart-text position-relative"
+                style={{ zIndex: 2 }}
               >
                 Add to Cart
               </a>

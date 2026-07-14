@@ -49,7 +49,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         {/* Preload LCP image — starts downloading before CSS blocks */}
-        <link rel="preload" as="image" href="/img/shapes/hero-circle-lg.webp" />
+        <link rel="preload" as="image" href="/img/shapes/hero-circle-lg.webp" fetchpriority="high" />
         {/* Google Fonts — non-render-blocking using print media trick */}
         <link
           rel="preload"

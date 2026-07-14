@@ -13,10 +13,11 @@ const FeatureBrandProductCard = ({ product, i }) => {
   return (
     <>
       <div
-        className={`horizontal-product-card next_style d-sm-flex align-items-center p-3 bg-white rounded-2 gap-4  ${
+        className={`horizontal-product-card next_style d-sm-flex align-items-center p-3 bg-white rounded-2 gap-4 position-relative ${
           i !== 0 && "mt-4"
         }`}
       >
+        <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} />
         <div className="thumbnail position-relative rounded-2">
           <Link href="/product-details">
             <img
@@ -28,7 +29,7 @@ const FeatureBrandProductCard = ({ product, i }) => {
               loading="lazy"
             />{" "}
           </Link>
-          <div className="product-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center gap-2 rounded-2">
+          <div className="product-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center gap-2 rounded-2" style={{ zIndex: 2 }}>
             <a
               type="button"
               onClick={() => handleWishlist(product)}

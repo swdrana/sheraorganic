@@ -15,7 +15,8 @@ const WeeklyBestDealsCard = ({ product }) => {
   return (
     <>
       <div key={product._id} className="col-lg-6">
-        <div className="horizontal-product-card next_style d-sm-flex align-items-center p-3 bg-white rounded-2 shadow gap-4">
+        <div className="horizontal-product-card next_style d-sm-flex align-items-center p-3 bg-white rounded-2 shadow gap-4 position-relative">
+          <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} />
           <div className="thumbnail position-relative rounded-2">
             <a href={`/product-details/${product._id}`}>
               <img
@@ -27,7 +28,7 @@ const WeeklyBestDealsCard = ({ product }) => {
                 loading="lazy"
               />
             </a>
-            <div className="product-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center gap-2 rounded-2">
+            <div className="product-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center gap-2 rounded-2" style={{ zIndex: 2 }}>
               <a
                 type="button"
                 onClick={() => handleWishlist(product)}
@@ -74,7 +75,8 @@ const WeeklyBestDealsCard = ({ product }) => {
             <a
               type="button"
               onClick={() => handelAddItem({ ...product, id: product._id })}
-              className="fs-xs fw-bold mt-3 d-inline-block explore-btn"
+              className="fs-xs fw-bold mt-3 d-inline-block explore-btn position-relative"
+              style={{ zIndex: 2 }}
             >
               Shop Now
               <span className="ms-1">

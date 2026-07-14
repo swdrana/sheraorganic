@@ -151,12 +151,12 @@ const Navbar = () => {
                       src={setting?.home?.logo}
                       alt="logo"
                       className="img-fluid"
-                      width="160"
-                      height="40"
+                      width="200"
+                      height="30"
                       fetchpriority="high"
                     />
                   ) : (
-                    <div style={{ width: 160, height: 40 }} />
+                    <div style={{ width: 200, height: 30 }} />
                   )}
                 </Link>
               </div>

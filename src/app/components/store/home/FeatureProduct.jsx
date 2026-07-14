@@ -95,7 +95,7 @@ const FeatureProduct = ({ products, setting }) => {
                       src="/img/shapes/circle-md.webp"
                       alt="circle"
                       className="position-absolute end-0 bottom-0 z--1 d-none d-sm-block"
-                      width="150"
+                      width="141"
                       height="150"
                       loading="lazy"
                     />

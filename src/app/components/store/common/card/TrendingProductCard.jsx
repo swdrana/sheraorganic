@@ -16,6 +16,7 @@ const TrendingProductCard = ({ product }) => {
     <>
       <div className="col-lg-4 col-md-6 col-sm-10 filter_item beans_peas">
         <div className="vertical-product-card trend_style rounded-2 position-relative h-100">
+          <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} />
           <div className="thumbnail position-relative text-center p-4 overflow-hidden">
             <Link href={`/product-details/${product._id}`}>
               <img
@@ -32,7 +33,7 @@ const TrendingProductCard = ({ product }) => {
                 {product.discount} OFF
               </span>
             )}
-            <div className="product-btns position-absolute d-flex gap-2 flex-column">
+            <div className="product-btns position-absolute d-flex gap-2 flex-column" style={{ zIndex: 2 }}>
               <a
                 type="button"
                 onClick={() => handleWishlist(product)}
@@ -61,8 +62,8 @@ const TrendingProductCard = ({ product }) => {
               href={`/products/brands=${product.brand
                 .replace(/\s+/g, "")
                 .toLowerCase()}=${product._id}`}
-              className="mb-2 d-inline-block text-secondary fw-semibold fs-xxs"
-              style={{ display: "inline-block", padding: "6px 12px 6px 0", minWidth: "48px" }}
+              className="mb-2 d-inline-block text-secondary fw-semibold fs-xxs position-relative"
+              style={{ display: "inline-block", padding: "6px 12px 6px 0", minWidth: "48px", zIndex: 2 }}
             >
               {product.brand}
             </Link>
@@ -95,7 +96,8 @@ const TrendingProductCard = ({ product }) => {
             <a
               type="button"
               onClick={() => handelAddItem({ ...product, id: product._id })}
-              className="btn btn-secondary d-block btn-md rounded-1"
+              className="btn btn-secondary d-block btn-md rounded-1 position-relative"
+              style={{ zIndex: 2 }}
             >
               Add to Cart{" "}
             </a>

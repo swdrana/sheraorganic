@@ -3,11 +3,13 @@ import BannerTwo from "./components/store/home/BannerTwo";
 import Blog from "./components/store/home/Blog";
 import Category from "./components/store/home/Category";
 import FeatureProduct from "./components/store/home/FeatureProduct";
-import FeedbackSection from "./components/store/home/FeedbackSection";
-import Hero from "./components/store/home/Hero";
 import TrendingProducts from "./components/store/home/TrendingProducts";
 import WeeklyBestDeals from "./components/store/home/WeeklyBestDeals";
 import FacebookPixelTracker from "./components/store/common/others/FacebookPixelTracker";
+import dynamic from "next/dynamic";
+
+const Hero = dynamic(() => import("./components/store/home/Hero"), { ssr: false });
+const FeedbackSection = dynamic(() => import("./components/store/home/FeedbackSection"), { ssr: false });
 import {
   getCachedSettings,
   getCachedProducts,

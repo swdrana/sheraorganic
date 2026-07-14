@@ -26,7 +26,7 @@ const Hero = ({ setting }) => {
           alt="leaf"
           className="position-absolute leaf-shape z--1 rounded-circle"
           width="200"
-          height="200"
+          height="197"
           loading="lazy"
         />
         <img
@@ -34,16 +34,16 @@ const Hero = ({ setting }) => {
           alt="mango"
           className="position-absolute mango z--1"
           data-parallax='{"y": -120}'
-          width="120"
-          height="120"
+          width="114"
+          height="114"
           loading="lazy"
         />
         <img
           src="/img/shapes/hero-circle-sm.png"
           alt="circle"
           className="position-absolute hero-circle circle-sm z--1"
-          width="200"
-          height="200"
+          width="134"
+          height="133"
           loading="lazy"
         />
 
@@ -115,8 +115,8 @@ const Hero = ({ setting }) => {
                             src="/img/shapes/tree.png"
                             alt="tree"
                             className="img-fluid position-absolute tree z-1"
-                            width="120"
-                            height="200"
+                            width="80"
+                            height="411"
                             loading="lazy"
                           />
                           <img
@@ -131,8 +131,8 @@ const Hero = ({ setting }) => {
                             src="/img/shapes/orange-2.png"
                             alt="orange"
                             className="position-absolute orange-2 z-1"
-                            width="80"
-                            height="80"
+                            width="133"
+                            height="81"
                             loading="lazy"
                           />
                           <img
@@ -247,8 +247,8 @@ const Hero = ({ setting }) => {
                         src="/img/shapes/tree.png"
                         alt="tree"
                         className="img-fluid position-absolute tree z-1"
-                        width="120"
-                        height="200"
+                        width="80"
+                        height="411"
                         loading="lazy"
                       />
                       <img
@@ -263,8 +263,8 @@ const Hero = ({ setting }) => {
                         src="/img/shapes/orange-2.png"
                         alt="orange"
                         className="position-absolute orange-2 z-1"
-                        width="80"
-                        height="80"
+                        width="133"
+                        height="81"
                         loading="lazy"
                       />
                       <img
@@ -273,7 +273,7 @@ const Hero = ({ setting }) => {
                         className="img-fluid hero-circle"
                         width="400"
                         height="400"
-                        loading="lazy"
+                        fetchpriority="high"
                       />
                     </div>
                   </div>
@@ -322,8 +322,8 @@ const Hero = ({ setting }) => {
                         src="/img/shapes/tree.png"
                         alt="tree"
                         className="img-fluid position-absolute tree z-1"
-                        width="120"
-                        height="200"
+                        width="80"
+                        height="411"
                         loading="lazy"
                       />
                       <img
@@ -338,8 +338,8 @@ const Hero = ({ setting }) => {
                         src="/img/shapes/orange-2.png"
                         alt="orange"
                         className="position-absolute orange-2 z-1"
-                        width="80"
-                        height="80"
+                        width="133"
+                        height="81"
                         loading="lazy"
                       />
                       <img
@@ -348,7 +348,7 @@ const Hero = ({ setting }) => {
                         className="img-fluid hero-circle"
                         width="400"
                         height="400"
-                        loading="lazy"
+                        fetchpriority="high"
                       />
                     </div>
                   </div>

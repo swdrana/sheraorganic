@@ -60,7 +60,7 @@ const Offcanvas = () => {
             <i className="fa-solid fa-xmark"></i>
           </button>
           <Link href="/" className="logo-wrapper d-inline-block mb-5">
-            <img src={setting?.home?.logo} alt="logo" width="160" height="40" loading="lazy" />
+            <img src={setting?.home?.logo} alt="logo" width="200" height="30" loading="lazy" />
           </Link>
           <div className="offcanvas-content">
             <h4 className="mb-4">About Us</h4>
@@ -128,7 +128,7 @@ const Offcanvas = () => {
             <i className="fa-solid fa-xmark"></i>
           </button>
           <a href="#" className="d-inline-block mb-5">
-            <img src={setting?.home?.logo} alt="logo" width="160" height="40" loading="lazy" />
+            <img src={setting?.home?.logo} alt="logo" width="200" height="30" loading="lazy" />
           </a>
           <nav className="mobile-menu-wrapper mt-4">
             <ul>
