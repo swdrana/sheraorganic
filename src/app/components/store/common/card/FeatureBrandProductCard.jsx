@@ -3,21 +3,31 @@
 import Link from "next/link";
 import StarRating from "../others/StartRating";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
+import { useRouter } from "next/navigation";
 
 import useAddWishlist from "../../hooks/useAddWishlist";
 import { useMainContext } from "../../provider/MainContextStore";
 
 const FeatureBrandProductCard = ({ product, i }) => {
+  const router = useRouter();
   const { handleWishlist, wishlist } = useAddWishlist();
   const { setOpenProductModal, setProductDetails } = useMainContext();
+
+  const handleCardClick = (e) => {
+    if (e.target.closest("button") || e.target.closest("a") && e.target.getAttribute("href") !== `/product-details/${product._id}`) {
+      return;
+    }
+    router.push(`/product-details/${product._id}`);
+  };
+
   return (
     <>
       <div
-        className={`horizontal-product-card next_style d-sm-flex align-items-center p-3 bg-white rounded-2 gap-4 position-relative ${
+        className={`horizontal-product-card next_style d-sm-flex align-items-center p-3 bg-white rounded-2 gap-4 position-relative cursor-pointer ${
           i !== 0 && "mt-4"
         }`}
+        onClick={handleCardClick}
       >
-        <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} aria-label={product.name || "View product details"} />
         <div className="thumbnail position-relative rounded-2">
           <Link href="/product-details">
             <img

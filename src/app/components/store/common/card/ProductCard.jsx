@@ -3,6 +3,7 @@
 import Link from "next/link";
 import StarRating from "../others/StartRating";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 import useAddToCart from "../../hooks/useAddToCart";
 import useAddWishlist from "../../hooks/useAddWishlist";
@@ -10,6 +11,7 @@ import { useMainContext } from "../../provider/MainContextStore";
 import { trackAddToCart } from "@/app/utilities/facebookPixel";
 
 const ProductCard = ({ product }) => {
+  const router = useRouter();
   const { handelAddItem } = useAddToCart();
   const { data: session } = useSession();
 
@@ -37,12 +39,22 @@ const ProductCard = ({ product }) => {
     // Add to cart
     handelAddItem({ ...product, id: product._id });
   };
+
+  const handleCardClick = (e) => {
+    // Avoid routing if user clicked a button or active link (like wishlist, add to cart)
+    if (e.target.closest("button") || e.target.closest("a") && e.target.getAttribute("href") !== `/product-details/${product._id}`) {
+      return;
+    }
+    router.push(`/product-details/${product._id}`);
+  };
+
   return (
     <>
-      <div className="col-xxl-3 col-lg-4 col-md-6 col-sm-10 group">
+      <div 
+        className="col-xxl-3 col-lg-4 col-md-6 col-sm-10 group cursor-pointer"
+        onClick={handleCardClick}
+      >
         <div className="vertical-product-card trend_style rounded-2 position-relative border-0 bg-white">
-          {/* Absolute Link covering the entire card for fast native routing */}
-          <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} aria-label={product.name || "View product details"} />
 
           {product.prices.discount >= 1 && (
             <span className="offer-badge text-white fw-bold fs-xxs bg-danger position-absolute start-0 top-0">

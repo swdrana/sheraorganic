@@ -1,6 +1,7 @@
 import Link from "next/link";
 import StarRating from "../others/StartRating";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
+import { useRouter } from "next/navigation";
 
 import { RiDeleteBack2Line } from "react-icons/ri";
 
@@ -9,14 +10,25 @@ import useAddToCart from "../../hooks/useAddToCart";
 import { useMainContext } from "../../provider/MainContextStore";
 
 const TrendingProductCard = ({ product }) => {
+  const router = useRouter();
   const { handleWishlist, wishlist } = useWishlist();
   const { handelAddItem } = useAddToCart();
   const { setOpenProductModal, setProductDetails } = useMainContext();
+
+  const handleCardClick = (e) => {
+    if (e.target.closest("button") || e.target.closest("a") && e.target.getAttribute("href") !== `/product-details/${product._id}`) {
+      return;
+    }
+    router.push(`/product-details/${product._id}`);
+  };
+
   return (
     <>
-      <div className="col-lg-4 col-md-6 col-sm-10 filter_item beans_peas">
+      <div 
+        className="col-lg-4 col-md-6 col-sm-10 filter_item beans_peas cursor-pointer"
+        onClick={handleCardClick}
+      >
         <div className="vertical-product-card trend_style rounded-2 position-relative h-100">
-          <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} aria-label={product.name || "View product details"} />
           <div className="thumbnail position-relative text-center p-4 overflow-hidden">
             <Link href={`/product-details/${product._id}`}>
               <img
