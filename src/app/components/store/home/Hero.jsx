@@ -104,7 +104,7 @@ const Hero = ({ setting }) => {
                       <div className="col-xl-6 col-lg-7">
                         <div className="hero-right text-center position-relative z-1 mt-8 mt-xl-0">
                           <img
-                            src={optimizeCloudinaryUrl(setting?.home?.slider_one_img, 400)}
+                            src={optimizeCloudinaryUrl(setting?.home?.slider_one_img, 400, 60)}
                             alt="fruits"
                             className="img-fluid position-absolute end-0 top-50 hero-img"
                             width="500"
@@ -236,7 +236,7 @@ const Hero = ({ setting }) => {
                   <div className="col-xl-6 col-lg-7">
                     <div className="hero-right text-center position-relative z-1 mt-8 mt-xl-0">
                       <img
-                        src={optimizeCloudinaryUrl(setting?.home?.slider_two_img, 400)}
+                        src={optimizeCloudinaryUrl(setting?.home?.slider_two_img, 400, 60)}
                         alt="fruits"
                         className="img-fluid position-absolute end-0 top-50 hero-img"
                         width="500"
@@ -311,7 +311,7 @@ const Hero = ({ setting }) => {
                   <div className="col-xl-6 col-lg-7">
                     <div className="hero-right text-center position-relative z-1 mt-8 mt-xl-0">
                       <img
-                        src={optimizeCloudinaryUrl(setting?.home?.slider_three_img, 400)}
+                        src={optimizeCloudinaryUrl(setting?.home?.slider_three_img, 400, 60)}
                         alt="fruits"
                         className="img-fluid position-absolute end-0 top-50 hero-img"
                         width="500"

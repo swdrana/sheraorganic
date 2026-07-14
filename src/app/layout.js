@@ -48,6 +48,35 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        {/* DNS prefetch + preconnect for Cloudinary */}
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+
+        {/* Preconnect for Google Fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+
+        {/* Preconnect for Facebook (async / lazyOnload anyway) */}
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+
+        {/* Preload FontAwesome fonts to avoid render blocking critical chain */}
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          href="/_next/static/media/fa-solid-900.71ed02b4.woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          type="font/woff2"
+          href="/_next/static/media/fa-regular-400.0c4a336f.woff2"
+          crossOrigin="anonymous"
+        />
+
         {/* Preload LCP image — starts downloading before CSS blocks */}
         <link rel="preload" as="image" href="/img/shapes/hero-circle-lg.webp" fetchpriority="high" />
         {/* Google Fonts — non-render-blocking using print media trick */}
