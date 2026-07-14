@@ -18,12 +18,12 @@ import ProductDetailsSidebar from "./ProductDetailsSidebar";
 import ProductDetailsTab from "./ProductDetailsTab";
 import VariantList from "./VariantList";
 
-const ProductDetailsBody = ({ id }) => {
+const ProductDetailsBody = ({ id, initialProduct }) => {
   const [firstSwiper, setFirstSwiper] = useState(null);
   const [secondSwiper, setSecondSwiper] = useState(null);
   const [loadingHuteiThak, set] = useState(true);
 
-  const { product, productLoading } = useSingleProduct(id);
+  const { product, productLoading } = useSingleProduct(id, initialProduct);
   const { data: session } = useSession();
 
   const { brands } = usebrands();
