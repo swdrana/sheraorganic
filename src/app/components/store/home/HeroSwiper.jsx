@@ -59,7 +59,7 @@ const HeroSwiper = ({ setting }) => {
               <img src="/img/shapes/orange-1.png" alt="orange" className="position-absolute orange-1 z-1" width="80" height="80" loading="lazy" />
               <img src="/img/shapes/orange-2.png" alt="orange" className="position-absolute orange-2 z-1" width="133" height="81" loading="lazy" />
               {/* LCP element — rendered as part of static shell, this duplicate is hidden */}
-              <img src="/img/shapes/hero-circle-lg.webp" alt="" className="img-fluid hero-circle" width="400" height="400" aria-hidden="true" loading="lazy" />
+              <img src="/img/shapes/hero-circle-lg.webp" alt="" className="img-fluid hero-circle" width="400" height="400" aria-hidden="true" fetchpriority="high" loading="eager" />
             </div>
           </div>
         </div>
@@ -91,7 +91,7 @@ const HeroSwiper = ({ setting }) => {
               <img src="/img/shapes/tree.png" alt="tree" className="img-fluid position-absolute tree z-1" width="80" height="411" loading="lazy" />
               <img src="/img/shapes/orange-1.png" alt="orange" className="position-absolute orange-1 z-1" width="80" height="80" loading="lazy" />
               <img src="/img/shapes/orange-2.png" alt="orange" className="position-absolute orange-2 z-1" width="133" height="81" loading="lazy" />
-              <img src="/img/shapes/hero-circle-lg.webp" alt="" className="img-fluid hero-circle" width="400" height="400" aria-hidden="true" loading="lazy" />
+              <img src="/img/shapes/hero-circle-lg.webp" alt="" className="img-fluid hero-circle" width="400" height="400" aria-hidden="true" fetchpriority="high" loading="eager" />
             </div>
           </div>
         </div>
@@ -123,7 +123,7 @@ const HeroSwiper = ({ setting }) => {
               <img src="/img/shapes/tree.png" alt="tree" className="img-fluid position-absolute tree z-1" width="80" height="411" loading="lazy" />
               <img src="/img/shapes/orange-1.png" alt="orange" className="position-absolute orange-1 z-1" width="80" height="80" loading="lazy" />
               <img src="/img/shapes/orange-2.png" alt="orange" className="position-absolute orange-2 z-1" width="133" height="81" loading="lazy" />
-              <img src="/img/shapes/hero-circle-lg.webp" alt="" className="img-fluid hero-circle" width="400" height="400" aria-hidden="true" loading="lazy" />
+              <img src="/img/shapes/hero-circle-lg.webp" alt="" className="img-fluid hero-circle" width="400" height="400" aria-hidden="true" fetchpriority="high" loading="eager" />
             </div>
           </div>
         </div>
