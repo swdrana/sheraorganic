@@ -1,48 +1,6 @@
 "use client";
-import dynamic from "next/dynamic";
+import HeroSwiper from "./HeroSwiper";
 import Link from "next/link";
-import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
-
-// Dynamically import HeroSwiper — Swiper JS does NOT load on initial render
-// This removes ~200 KiB from the initial JS bundle, drastically improving LCP
-const HeroSwiper = dynamic(() => import("./HeroSwiper"), {
-  ssr: false,
-  loading: () => (
-    // Static first-slide placeholder shown while Swiper loads
-    // Renders immediately without any JS — critical for LCP
-    <div className="swiper-wrapper">
-      <div className="swiper-slide gshop-hero-single">
-        <div className="row align-items-center justify-content-between">
-          <div className="col-xl-5 col-lg-8">
-            <div className="hero-left-content">
-              <div className="pulse rounded mb-2" style={{ width: "180px", height: "24px", marginBottom: "16px" }}></div>
-              <div className="pulse rounded mb-3" style={{ width: "60%", height: "48px", marginBottom: "16px" }}></div>
-              <div className="pulse rounded mb-4" style={{ width: "80%", height: "20px", marginBottom: "32px" }}></div>
-              <div className="d-flex align-items-center gap-3 gap-sm-5 flex-wrap">
-                <div className="pulse rounded" style={{ width: "130px", height: "44px" }}></div>
-                <div className="pulse rounded" style={{ width: "130px", height: "44px" }}></div>
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-6 col-lg-7">
-            <div className="hero-right text-center position-relative z-1 mt-8 mt-xl-0">
-              {/* Circle is always visible immediately — this is the LCP element */}
-              <img
-                src="/img/shapes/hero-circle-lg.webp"
-                alt="circle shape"
-                className="img-fluid hero-circle"
-                width="400"
-                height="400"
-                fetchpriority="high"
-                loading="eager"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  ),
-});
 
 const Hero = ({ setting }) => {
   return (
@@ -86,22 +44,22 @@ const Hero = ({ setting }) => {
         <div className="gs-hero-social">
           <ul className="list-unstyled">
             <li>
-              <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_facebook_link || "#"}>
+              <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_facebook_link || "#"} aria-label="Facebook">
                 <i className="fab fa-facebook-f"></i>
               </Link>
             </li>
             <li>
-              <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_twitter_link || "#"}>
+              <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_twitter_link || "#"} aria-label="Twitter">
                 <i className="fab fa-twitter"></i>
               </Link>
             </li>
             <li>
-              <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_linkdin_link || "#"}>
+              <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_linkdin_link || "#"} aria-label="LinkedIn">
                 <i className="fab fa-linkedin-in"></i>
               </Link>
             </li>
             <li>
-              <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_youtube_link || "#"}>
+              <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_youtube_link || "#"} aria-label="YouTube">
                 <i className="fab fa-youtube"></i>
               </Link>
             </li>

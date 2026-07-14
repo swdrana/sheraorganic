@@ -254,6 +254,7 @@ const Navbar = () => {
                         onClick={() => setShowSearchBar(true)}
                         className="header-icon"
                         data-bs-toggle="dropdown"
+                        aria-label="Search Products"
                       >
                         <svg
                           width="18"
@@ -299,7 +300,7 @@ const Navbar = () => {
                     </div>
 
                     <div className="gshop-header-user position-relative">
-                      <button type="button" className="header-icon">
+                      <button type="button" className="header-icon" aria-label="User Menu">
                         <svg
                           width="18"
                           height="25"

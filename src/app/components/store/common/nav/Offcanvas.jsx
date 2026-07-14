@@ -92,6 +92,7 @@ const Offcanvas = () => {
               target="_blank"
               rel="noopener noreferrer"
               href={setting?.home?.hero_facebook_link || "#"}
+              aria-label="Facebook"
             >
               <i className="fab fa-facebook-f"></i>
             </Link>
@@ -100,6 +101,7 @@ const Offcanvas = () => {
               target="_blank"
               rel="noopener noreferrer"
               href={setting?.home?.hero_linkdin_link || "#"}
+              aria-label="LinkedIn"
             >
               <i className="fab fa-linkedin-in"></i>
             </Link>
@@ -107,6 +109,7 @@ const Offcanvas = () => {
               target="_blank"
               rel="noopener noreferrer"
               href={setting?.home?.hero_twitter_link || "#"}
+              aria-label="Twitter"
             >
               <i className="fab fa-twitter"></i>
             </Link>
@@ -114,6 +117,7 @@ const Offcanvas = () => {
               target="_blank"
               rel="noopener noreferrer"
               href={setting?.home?.hero_youtube_link || "#"}
+              aria-label="YouTube"
             >
               <i className="fab fa-youtube"></i>
             </Link>
