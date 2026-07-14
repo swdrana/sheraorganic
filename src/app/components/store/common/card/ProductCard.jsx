@@ -3,7 +3,6 @@
 import Link from "next/link";
 import StarRating from "../others/StartRating";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 import useAddToCart from "../../hooks/useAddToCart";
 import useAddWishlist from "../../hooks/useAddWishlist";
@@ -11,7 +10,6 @@ import { useMainContext } from "../../provider/MainContextStore";
 import { trackAddToCart } from "@/app/utilities/facebookPixel";
 
 const ProductCard = ({ product }) => {
-  const router = useRouter();
   const { handelAddItem } = useAddToCart();
   const { data: session } = useSession();
 
@@ -40,76 +38,37 @@ const ProductCard = ({ product }) => {
     handelAddItem({ ...product, id: product._id });
   };
 
-  const handleCardClick = (e) => {
-    // If the user clicked on a button, an anchor, or any of their descendants, let the browser/React handle it natively.
-    if (e.target.closest("button") || e.target.closest("a")) {
-      return;
-    }
-    router.push(`/product-details/${String(product._id)}`);
-  };
-
   return (
     <>
-      <div 
-        className="col-xxl-3 col-lg-4 col-md-6 col-sm-10 group cursor-pointer"
-        onClick={handleCardClick}
-      >
-        <div className="vertical-product-card trend_style rounded-2 position-relative border-0 bg-white">
+      <div className="col-xxl-3 col-lg-4 col-md-6 col-sm-10 group">
+        <div className="vertical-product-card trend_style rounded-2 position-relative border-0 bg-white d-flex flex-column h-100">
+          <Link href={`/product-details/${product._id}`} className="d-block text-decoration-none flex-grow-1 text-dark">
+            {product.prices.discount >= 1 && (
+              <span className="offer-badge text-white fw-bold fs-xxs bg-danger position-absolute start-0 top-0" style={{ zIndex: 5 }}>
+                {product.prices.discount.toFixed(0)}% OFF
+              </span>
+            )}
 
-          {product.prices.discount >= 1 && (
-            <span className="offer-badge text-white fw-bold fs-xxs bg-danger position-absolute start-0 top-0">
-              {product.prices.discount.toFixed(0)}% OFF
-            </span>
-          )}
-
-          <div className="thumbnail position-relative text-center p-4 overflow-hidden">
-            <Link href={`/product-details/${product._id}`}>
+            <div className="thumbnail position-relative text-center p-4 overflow-hidden">
               <img
                 src={product.image[0]}
-                alt="apple"
+                alt={product.name}
                 className="img-fluid group-hover:scale-105 transition-all ease-in-out transition-duration-500"
               />
-            </Link>
-
-            <div className="product-btns position-absolute d-flex gap-2 flex-column" style={{ zIndex: 2 }}>
-              <button
-                type="button"
-                onClick={() => handleWishlist(product)}
-                className="rounded-btn"
-                aria-label="Add to wishlist"
-              >
-                {wishlist?.some((item) => item._id === product._id) ? (
-                  <i className="fa-solid fa-heart"></i>
-                ) : (
-                  <i className="fa-regular fa-heart"></i>
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setOpenProductModal(true); setProductDetails(product);
-                }}
-                className="rounded-btn"
-                aria-label="Quick view"
-              >
-                <i className="fa-regular fa-eye"></i>
-              </button>
             </div>
-          </div>
-          <div className="card-content">
-            <Link href={`/product-details/${product._id}`}>
+
+            <div className="card-content">
               <div className="mb-2 tt-category tt-line-clamp tt-clamp-1">
-                <a href="#" className="d-inline-block text-muted fs-xxs">
+                <span className="d-inline-block text-muted fs-xxs">
                   {product.category}
-                </a>
+                </span>
               </div>
-              <div className="card-title fw-medium d-block mb-2 tt-line-clamp tt-clamp-2">
+              <div className="card-title fw-medium d-block mb-2 tt-line-clamp tt-clamp-2 text-dark">
                 {product.name}
               </div>
               <div className="d-flex align-items-center flex-nowrap star-rating fs-xxs mb-2">
                 <StarRating rating={product?.averageRating} />
-                <span className="flex-shrink-0">
+                <span className="flex-shrink-0 text-muted">
                   ({product.ratings?.length} Reviews)
                 </span>
               </div>
@@ -123,13 +82,40 @@ const ProductCard = ({ product }) => {
                   </h6>
                 )}
               </div>
-            </Link>
+            </div>
+          </Link>
+
+          {/* Action buttons kept outside the main link to avoid nested interactive elements */}
+          <div className="product-btns position-absolute d-flex gap-2 flex-column" style={{ zIndex: 10 }}>
+            <button
+              type="button"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleWishlist(product); }}
+              className="rounded-btn"
+              aria-label="Add to wishlist"
+            >
+              {wishlist?.some((item) => item._id === product._id) ? (
+                <i className="fa-solid fa-heart"></i>
+              ) : (
+                <i className="fa-regular fa-heart"></i>
+              )}
+            </button>
 
             <button
               type="button"
-              onClick={() => handleAddToCartWithTracking(product)}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpenProductModal(true); setProductDetails(product); }}
+              className="rounded-btn"
+              aria-label="Quick view"
+            >
+              <i className="fa-regular fa-eye"></i>
+            </button>
+          </div>
+
+          <div className="card-btn bg-white" style={{ zIndex: 10 }}>
+            <button
+              type="button"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCartWithTracking(product); }}
               className="btn btn-outline-secondary d-block btn-md hover:cursor-auto position-relative w-100"
-              style={{ zIndex: 2, minHeight: "48px" }}
+              style={{ minHeight: "48px" }}
               aria-label={`Add ${product.name} to cart`}
             >
               Add to Cart
