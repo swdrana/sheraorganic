@@ -20,8 +20,8 @@ const FooterNav = ({ setCategoryOffcanvas, categoryOffcanvas }) => {
             </span>
             <span className="text-xs text-gray-600 leading-tight">Home</span>
           </Link>
-          <a
-            className="flex flex-col items-center justify-center py-2 px-1 flex-1 text-center cursor-pointer"
+          <button
+            className="flex flex-col items-center justify-center py-2 px-1 flex-1 text-center cursor-pointer bg-transparent border-0"
             type="button"
             onClick={() => setCategoryOffcanvas(true)}
           >
@@ -29,7 +29,7 @@ const FooterNav = ({ setCategoryOffcanvas, categoryOffcanvas }) => {
               <i className="fas fa-bars text-gray-600 text-sm"></i>
             </span>
             <span className="text-xs text-gray-600 leading-tight">Category</span>
-          </a>
+          </button>
           <Link className="flex flex-col items-center justify-center py-2 px-1 flex-1 text-center" href="/my-account">
             <span className="flex items-center justify-center mb-1">
               <svg

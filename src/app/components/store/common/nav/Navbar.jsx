@@ -163,7 +163,7 @@ const Navbar = () => {
               <div className="col-xxl-10 col-xl-9 col-md-9 col-7">
                 <div className="gshop-navbar-right d-flex align-items-center justify-content-end position-relative pr-0">
                   <div className="category-dropdown position-relative d-none d-md-inline-block">
-                    <a
+                    <button
                       type="button"
                       onClick={() =>
                         setBrowserCategory((pre) =>
@@ -176,9 +176,9 @@ const Navbar = () => {
                       <span className="ms-1">
                         <i className="fa-solid fa-angle-down"></i>
                       </span>
-                    </a>
-                    <a
-                      href="#"
+                    </button>
+                    <button
+                      type="button"
                       onClick={handleClick}
                       className="category-dropdown-btn fw-bold d-sm-none"
                     >
@@ -186,7 +186,7 @@ const Navbar = () => {
                       <span className="ms-1">
                         <i className="fa-solid fa-angle-down"></i>
                       </span>
-                    </a>
+                    </button>
                     <div
                       ref={browserCategoryRef}
                       className={`category-dropdown-box scrollbar ${
