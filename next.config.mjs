@@ -4,8 +4,11 @@ const nextConfig = {
     domains: ["res.cloudinary.com", "https:/i.postimg.cc"],
   },
   productionBrowserSourceMaps: false,
+  // Prevent server-only packages from leaking into the client bundle
+  serverExternalPackages: ['mongoose', 'mongodb', 'bson'],
   experimental: {
     optimizeCss: true,
+    optimizePackageImports: ['react-icons'],
   },
   compiler: {
     removeConsole: true,

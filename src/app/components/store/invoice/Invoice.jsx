@@ -1,10 +1,8 @@
 "use client";
-
+import { useRef } from "react";
 import useOrderCode from "../dataFetching/useOrderCode";
 import useSetting from "../dataFetching/useSetting";
-import { useRef } from "react";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+
 const Invoice = ({ invoiceNo }) => {
   const invoiceRef = useRef();
   // console.log("invoiceNo..", invoiceNo);
@@ -15,6 +13,12 @@ const Invoice = ({ invoiceNo }) => {
   const downloadInvoice = async () => {
     const element = invoiceRef.current;
     if (!element) return;
+
+    // Dynamically import heavy libraries only when user clicks download
+    const [html2canvas, { default: jsPDF }] = await Promise.all([
+      import("html2canvas").then((m) => m.default),
+      import("jspdf"),
+    ]);
 
     const canvas = await html2canvas(element);
     const imgData = canvas.toDataURL("image/png");
