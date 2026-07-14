@@ -46,7 +46,7 @@ const CategoryOffcanvas = ({
             <i className="fa-solid fa-xmark"></i>
           </button>
           <Link href="/" className="d-inline-block mb-5">
-            <img src={setting?.home?.logo} alt="logo" />
+            <img src={setting?.home?.logo} alt="logo" width="200" height="30" loading="lazy" />
           </Link>
           <nav className="mobile-menu-wrapper scrollbar">
             <ul>

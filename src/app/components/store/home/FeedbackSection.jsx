@@ -7,9 +7,6 @@ import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 import { loadStylesheet } from "@/app/utils/loadStylesheet";
 
 const FeedbackSection = ({ setting }) => {
-  useEffect(() => {
-    loadStylesheet("/css/swiper-bundle.min.css");
-  }, []);
   // const { setting, settingLoading } = useSetting();
   //   console.log("setting", setting);
   const feedbacks = [

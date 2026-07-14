@@ -7,10 +7,6 @@ import { useEffect } from "react";
 import { loadStylesheet } from "@/app/utils/loadStylesheet";
 
 const HeroSwiper = ({ setting }) => {
-  useEffect(() => {
-    loadStylesheet("/css/swiper-bundle.min.css");
-  }, []);
-
   return (
     <Swiper
       modules={[Autoplay, EffectFade, Pagination]}

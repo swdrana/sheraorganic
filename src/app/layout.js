@@ -79,8 +79,8 @@ export default function RootLayout({ children }) {
 
         {/* Preload LCP image — starts downloading before CSS blocks */}
         <link rel="preload" as="image" href="/img/shapes/hero-circle-lg.webp" fetchpriority="high" />
-        {/* Preload Swiper bundle CSS */}
-        <link rel="preload" as="style" href="/css/swiper-bundle.min.css" />
+        {/* Global Swiper bundle CSS loaded synchronously to prevent style shifts */}
+        <link rel="stylesheet" href="/css/swiper-bundle.min.css" />
         {/* Google Fonts — non-render-blocking using print media trick */}
         <link
           rel="preload"
@@ -107,30 +107,7 @@ export default function RootLayout({ children }) {
 
       </head>
       <body>
-        <Script
-          id="gtm"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(w,d,s,l,i){
-                w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
-                var f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;
-                j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
-                f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','GTM-MMLFB63S');
-            `,
-          }}
-        />
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-MMLFB63S"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          ></iframe>
-        </noscript>
+
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

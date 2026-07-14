@@ -6,9 +6,6 @@ import { loadStylesheet } from "@/app/utils/loadStylesheet";
 import { useEffect } from "react";
 
 const BlogGridCarousel = () => {
-  useEffect(() => {
-    loadStylesheet("/css/swiper-bundle.min.css");
-  }, []);
   const blogPosts = [
     {
       id: 1,

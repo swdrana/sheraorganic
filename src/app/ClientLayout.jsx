@@ -15,6 +15,7 @@ import CartProviderContext from "./components/store/provider/CartProviderContex"
 import { MainContextProviderStore } from "./components/store/provider/MainContextStore";
 import { WishlistProvider } from "./components/store/provider/WishlistProvider";
 import { loadStylesheet } from "./utils/loadStylesheet";
+import AnalyticsLoader from "./components/store/common/others/AnalyticsLoader";
 import { useEffect } from "react";
 
 export default function ClientLayout({ children }) {
@@ -46,6 +47,7 @@ export default function ClientLayout({ children }) {
           <WishlistProvider>
             <MainContextProvider>
               <MainContextProviderStore>
+                <AnalyticsLoader />
                 {isStorePage && (
                   <>
                     <Offcanvas />

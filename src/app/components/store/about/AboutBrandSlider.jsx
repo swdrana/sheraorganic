@@ -11,7 +11,6 @@ const AboutBrandSlider = ({ setting, brands }) => {
 
   useEffect(() => {
     setIsClient(true);
-    loadStylesheet("/css/swiper-bundle.min.css");
   }, []);
 
   return (
