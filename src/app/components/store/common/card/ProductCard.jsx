@@ -113,14 +113,15 @@ const ProductCard = ({ product }) => {
               </div>
             </Link>
 
-            <a
-              // type="button"
+            <button
+              type="button"
               onClick={() => handleAddToCartWithTracking(product)}
-              className="btn btn-outline-secondary d-block btn-md hover:cursor-auto position-relative"
-              style={{ zIndex: 2 }}
+              className="btn btn-outline-secondary d-block btn-md hover:cursor-auto position-relative w-100"
+              style={{ zIndex: 2, minHeight: "48px" }}
+              aria-label={`Add ${product.name} to cart`}
             >
               Add to Cart
-            </a>
+            </button>
           </div>
         </div>
       </div>

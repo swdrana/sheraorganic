@@ -48,7 +48,7 @@ const HeroSwiper = ({ setting }) => {
           <div className="col-xl-6 col-lg-7">
             <div className="hero-right text-center position-relative z-1 mt-8 mt-xl-0">
               <img
-                src={optimizeCloudinaryUrl(setting?.home?.slider_one_img, 400, 60)}
+                src={optimizeCloudinaryUrl(setting?.home?.slider_one_img, 600, 80)}
                 alt="fruits"
                 className="img-fluid position-absolute end-0 top-50 hero-img"
                 width="500"
@@ -87,7 +87,7 @@ const HeroSwiper = ({ setting }) => {
           </div>
           <div className="col-xl-6 col-lg-7">
             <div className="hero-right text-center position-relative z-1 mt-8 mt-xl-0">
-              <img src={optimizeCloudinaryUrl(setting?.home?.slider_two_img, 400, 60)} alt="fruits" className="img-fluid position-absolute end-0 top-50 hero-img" width="500" height="400" loading="lazy" />
+              <img src={optimizeCloudinaryUrl(setting?.home?.slider_two_img, 600, 80)} alt="fruits" className="img-fluid position-absolute end-0 top-50 hero-img" width="500" height="400" loading="lazy" />
               <img src="/img/shapes/tree.png" alt="tree" className="img-fluid position-absolute tree z-1" width="80" height="411" loading="lazy" />
               <img src="/img/shapes/orange-1.png" alt="orange" className="position-absolute orange-1 z-1" width="80" height="80" loading="lazy" />
               <img src="/img/shapes/orange-2.png" alt="orange" className="position-absolute orange-2 z-1" width="133" height="81" loading="lazy" />
@@ -119,7 +119,7 @@ const HeroSwiper = ({ setting }) => {
           </div>
           <div className="col-xl-6 col-lg-7">
             <div className="hero-right text-center position-relative z-1 mt-8 mt-xl-0">
-              <img src={optimizeCloudinaryUrl(setting?.home?.slider_three_img, 400, 60)} alt="fruits" className="img-fluid position-absolute end-0 top-50 hero-img" width="500" height="400" loading="lazy" />
+              <img src={optimizeCloudinaryUrl(setting?.home?.slider_three_img, 600, 80)} alt="fruits" className="img-fluid position-absolute end-0 top-50 hero-img" width="500" height="400" loading="lazy" />
               <img src="/img/shapes/tree.png" alt="tree" className="img-fluid position-absolute tree z-1" width="80" height="411" loading="lazy" />
               <img src="/img/shapes/orange-1.png" alt="orange" className="position-absolute orange-1 z-1" width="80" height="80" loading="lazy" />
               <img src="/img/shapes/orange-2.png" alt="orange" className="position-absolute orange-2 z-1" width="133" height="81" loading="lazy" />
