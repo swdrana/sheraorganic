@@ -41,11 +41,11 @@ const ProductCard = ({ product }) => {
   };
 
   const handleCardClick = (e) => {
-    // Avoid routing if user clicked a button or active link (like wishlist, add to cart)
-    if (e.target.closest("button") || e.target.closest("a") && e.target.getAttribute("href") !== `/product-details/${product._id}`) {
+    // If the user clicked on a button, an anchor, or any of their descendants, let the browser/React handle it natively.
+    if (e.target.closest("button") || e.target.closest("a")) {
       return;
     }
-    router.push(`/product-details/${product._id}`);
+    router.push(`/product-details/${String(product._id)}`);
   };
 
   return (
