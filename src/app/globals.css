@@ -154,3 +154,15 @@
     @apply !bg-brand !rounded-lg !text-white
 }
   /* Tab */
+
+@media (max-width: 991px) {
+  /* Disable hover product overlay and action buttons on mobile to allow direct navigation */
+  .horizontal-product-card .thumbnail .product-overlay,
+  .vertical-product-card .product-btns,
+  .horizontal-product-card .product-overlay {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
