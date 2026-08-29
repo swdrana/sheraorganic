@@ -35,8 +35,13 @@ const Offcanvas = () => {
 
   return (
     <>
-      {openOffcanvas && <div className="offcanvas-backdrop" onClick={closeOffcanvas} />}
-      <div ref={offcanvasRef} className={`offcanvas_menu position-fixed ${openOffcanvas ? "active" : ""}`}>
+      {openOffcanvas && (
+        <div
+          onClick={closeOffcanvas}
+          style={{ position: "fixed", inset: 0, background: "rgba(0, 0, 0, 0.5)", zIndex: 1090 }}
+        />
+      )}
+      <div ref={offcanvasRef} style={{ zIndex: 1100 }} className={`offcanvas_menu position-fixed ${openOffcanvas ? "active" : ""}`}>
         <div className="mobile-menu d-block">
           <button onClick={closeOffcanvas} className="offcanvas-close" aria-label="Close Navigation Menu"><i className="fa-solid fa-xmark"></i></button>
           <Link href="/" onClick={closeOffcanvas} className="d-inline-block mb-4">

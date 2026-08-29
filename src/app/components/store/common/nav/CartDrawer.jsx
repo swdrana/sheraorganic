@@ -26,14 +26,20 @@ const CartDrawer = () => {
     <>
       {openCartDrawer && (
         <div
-          className="offcanvas-backdrop"
           onClick={() => setOpenCartDrawer(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1090,
+          }}
         />
       )}
       <div
         className={`offcanvas_menu position-fixed ${
           openCartDrawer ? "active" : ""
         }`}
+        style={{ zIndex: 1100 }}
         aria-hidden={!openCartDrawer}
       >
         <button
