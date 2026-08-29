@@ -1,6 +1,34 @@
 import Setting from "@/app/backend/model/setting.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
+
+const homeImageKeys = [
+  "logo",
+  "footer_logo",
+  "footer_payment_incon_one",
+  "footer_payment_incon_two",
+  "footer_payment_incon_three",
+  "footer_payment_incon_four",
+  "slider_one_img",
+  "slider_two_img",
+  "slider_three_img",
+  "feature_brand_banner_img",
+  "home_banner_one_img",
+  "home_banner_two_img",
+  "weekly_best_deals_img",
+  "client_one_img",
+  "client_two_img",
+  "client_three_img",
+  "client_four_img",
+  "client_five_img",
+];
+const aboutImageKeys = [
+  "about_top_img",
+  "our_work_ability_img",
+  "why_choose_img",
+  "about_banner_img",
+];
 
 // get all orders
 export const GET = async () => {
@@ -40,8 +68,10 @@ export const PATCH = async (req) => {
   connectDB();
   const data = await req.json();
   const { setting } = data;
-  console.log("setting in store route=========", setting);
   try {
+    const previousSetting = await Setting.findOne({
+      name: "storeCustomizationSetting",
+    });
     const storeCustomizationSetting = await Setting.findOneAndUpdate(
       {
         name: "storeCustomizationSetting",
@@ -153,6 +183,12 @@ export const PATCH = async (req) => {
             setting?.home?.slider_one_subtitle,
           "setting.home.slider_one_title": setting?.home?.slider_one_title,
           "setting.home.slider_one_img": setting?.home?.slider_one_img,
+          "setting.home.slider_one_btn_one_text": setting?.home?.slider_one_btn_one_text,
+          "setting.home.slider_one_btn_one_link": setting?.home?.slider_one_btn_one_link,
+          "setting.home.slider_one_btn_one_show": setting?.home?.slider_one_btn_one_show,
+          "setting.home.slider_one_btn_two_text": setting?.home?.slider_one_btn_two_text,
+          "setting.home.slider_one_btn_two_link": setting?.home?.slider_one_btn_two_link,
+          "setting.home.slider_one_btn_two_show": setting?.home?.slider_one_btn_two_show,
 
           "setting.home.slider_two_description":
             setting?.home?.slider_two_description,
@@ -160,6 +196,12 @@ export const PATCH = async (req) => {
             setting?.home?.slider_two_subtitle,
           "setting.home.slider_two_title": setting?.home?.slider_two_title,
           "setting.home.slider_two_img": setting?.home?.slider_two_img,
+          "setting.home.slider_two_btn_one_text": setting?.home?.slider_two_btn_one_text,
+          "setting.home.slider_two_btn_one_link": setting?.home?.slider_two_btn_one_link,
+          "setting.home.slider_two_btn_one_show": setting?.home?.slider_two_btn_one_show,
+          "setting.home.slider_two_btn_two_text": setting?.home?.slider_two_btn_two_text,
+          "setting.home.slider_two_btn_two_link": setting?.home?.slider_two_btn_two_link,
+          "setting.home.slider_two_btn_two_show": setting?.home?.slider_two_btn_two_show,
 
           "setting.home.slider_three_description":
             setting?.home?.slider_three_description,
@@ -167,6 +209,12 @@ export const PATCH = async (req) => {
             setting?.home?.slider_three_subtitle,
           "setting.home.slider_three_title": setting?.home?.slider_three_title,
           "setting.home.slider_three_img": setting?.home?.slider_three_img,
+          "setting.home.slider_three_btn_one_text": setting?.home?.slider_three_btn_one_text,
+          "setting.home.slider_three_btn_one_link": setting?.home?.slider_three_btn_one_link,
+          "setting.home.slider_three_btn_one_show": setting?.home?.slider_three_btn_one_show,
+          "setting.home.slider_three_btn_two_text": setting?.home?.slider_three_btn_two_text,
+          "setting.home.slider_three_btn_two_link": setting?.home?.slider_three_btn_two_link,
+          "setting.home.slider_three_btn_two_show": setting?.home?.slider_three_btn_two_show,
 
           // Featured brand
           "setting.home.featured_brand_title":
@@ -263,6 +311,25 @@ export const PATCH = async (req) => {
         new: true,
       }
     );
+    const removedImages = [
+      ...homeImageKeys.flatMap((key) =>
+        diffRemoved(
+          previousSetting?.setting?.home?.[key],
+          setting?.home?.[key]
+        )
+      ),
+      ...aboutImageKeys.flatMap((key) =>
+        diffRemoved(
+          previousSetting?.setting?.about?.[key],
+          setting?.about?.[key]
+        )
+      ),
+      ...diffRemoved(
+        previousSetting?.setting?.home?.favicon,
+        setting?.home?.favIcon
+      ),
+    ];
+    void destroyImages(removedImages);
     return NextResponse.json({
       message: "store customization update successfully-2",
     });

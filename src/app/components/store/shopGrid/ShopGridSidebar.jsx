@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import useCategory from "../dataFetching/useCategory";
 import usebrands from "../dataFetching/useBrand";
 const ShopGridSidebar = ({
@@ -12,9 +13,18 @@ const ShopGridSidebar = ({
   setSearchText,
   searchText,
   products,
+  priceBounds,
+  setPriceTouched,
 }) => {
   const { categorys } = useCategory();
   const { brands } = usebrands();
+  const [minDraft, setMinDraft] = useState(filterMinPrice);
+  const [maxDraft, setMaxDraft] = useState(filterMaxPrice);
+
+  useEffect(() => {
+    setMinDraft(filterMinPrice);
+    setMaxDraft(filterMaxPrice);
+  }, [filterMinPrice, filterMaxPrice]);
   // console.log("brands..", brands);
   // console.log("maxprice..", filterMaxPrice, "minprice", filterMinPrice);
 
@@ -88,21 +98,46 @@ const ShopGridSidebar = ({
                 <div className="price-filter-range"></div>
                 <div className="d-flex align-items-center mt-3">
                   <input
-                    onChange={(e) => setFilterMinPrice(Number(e.target.value))}
-                    type="text"
+                    onChange={(e) => setMinDraft(e.target.value)}
+                    type="number"
+                    min={priceBounds.min}
+                    max={priceBounds.max}
+                    step="1"
                     className="min_price price-range-field price-input"
-                    value={filterMinPrice}
+                    value={minDraft}
                   />
                   <span className="d-inline-block ms-2 me-2 fw-bold">-</span>
                   <input
-                    type="text"
-                    onChange={(e) => setFilterMaxPrice(Number(e.target.value))}
+                    type="number"
+                    min={priceBounds.min}
+                    max={priceBounds.max}
+                    step="1"
+                    onChange={(e) => setMaxDraft(e.target.value)}
                     className="max_price price-range-field price-input"
-                    value={filterMaxPrice}
+                    value={maxDraft}
                   />
                 </div>
                 <button
-                  onClick={() => resetFilters()}
+                  onClick={() => {
+                    setFilterMinPrice(
+                      minDraft === "" ? priceBounds.min : Number(minDraft)
+                    );
+                    setFilterMaxPrice(
+                      maxDraft === "" ? priceBounds.max : Number(maxDraft)
+                    );
+                    setPriceTouched(true);
+                  }}
+                  type="button"
+                  className="btn btn-secondary btn-sm mt-3 me-2"
+                >
+                  Apply
+                </button>
+                <button
+                  onClick={() => {
+                    resetFilters();
+                    setMinDraft(priceBounds.min);
+                    setMaxDraft(priceBounds.max);
+                  }}
                   type="button"
                   className="btn btn-primary btn-sm mt-3"
                 >

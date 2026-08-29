@@ -2,6 +2,7 @@
 import connectDB from "@/app/utils/database";
 import Product from "../model/product.model";
 import mongoose from "mongoose";
+import { destroyImages, diffRemoved } from "../utils/cloudinaryServer";
 
 // category update
 export async function productUpdate(id, updateProductData) {
@@ -12,6 +13,10 @@ export async function productUpdate(id, updateProductData) {
     // console.log("product", product);
 
     if (product) {
+      const previousImages = [
+        ...(product.image || []),
+        ...(product.variants || []).map((variant) => variant?.image).filter(Boolean),
+      ];
       product.name = updateProductData.name;
       product.description = updateProductData.description;
 
@@ -33,6 +38,13 @@ export async function productUpdate(id, updateProductData) {
       product.flashSale = updateProductData.flashSale;
 
       await product.save();
+      const nextImages = [
+        ...(updateProductData.image || []),
+        ...(updateProductData.variants || [])
+          .map((variant) => variant?.image)
+          .filter(Boolean),
+      ];
+      void destroyImages(diffRemoved(previousImages, nextImages));
 
       return { message: "product update successfully-2" };
     } else {

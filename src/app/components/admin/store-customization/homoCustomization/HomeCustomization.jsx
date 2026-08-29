@@ -68,6 +68,18 @@ const HomeCustomization = () => {
     setSliderImageTwo,
     sliderImageThree,
     setSliderImageThree,
+    sliderOneBtnOneShow,
+    setSliderOneBtnOneShow,
+    sliderOneBtnTwoShow,
+    setSliderOneBtnTwoShow,
+    sliderTwoBtnOneShow,
+    setSliderTwoBtnOneShow,
+    sliderTwoBtnTwoShow,
+    setSliderTwoBtnTwoShow,
+    sliderThreeBtnOneShow,
+    setSliderThreeBtnOneShow,
+    sliderThreeBtnTwoShow,
+    setSliderThreeBtnTwoShow,
 
     // client say
     clientOneImg,
@@ -260,6 +272,18 @@ const HomeCustomization = () => {
                   errors={errors}
                   errorMessage="slider description is required"
                 />
+                <InputLabel labelText="Button 1 Text" />
+                <TextInput register={register} name="slider_one_btn_one_text" placeholder="Shop Now" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 1 Link" />
+                <TextInput register={register} name="slider_one_btn_one_link" placeholder="/products" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 1 Show" />
+                <div className="col-span-12 xl:col-span-10"><SwitchToggle handleProcess={setSliderOneBtnOneShow} processOption={sliderOneBtnOneShow} /></div>
+                <InputLabel labelText="Button 2 Text" />
+                <TextInput register={register} name="slider_one_btn_two_text" placeholder="About Us" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 2 Link" />
+                <TextInput register={register} name="slider_one_btn_two_link" placeholder="/about" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 2 Show" />
+                <div className="col-span-12 xl:col-span-10"><SwitchToggle handleProcess={setSliderOneBtnTwoShow} processOption={sliderOneBtnTwoShow} /></div>
               </div>
             </TabPanel>
             <TabPanel>
@@ -295,6 +319,18 @@ const HomeCustomization = () => {
                   errors={errors}
                   errorMessage="slider description is required"
                 />
+                <InputLabel labelText="Button 1 Text" />
+                <TextInput register={register} name="slider_two_btn_one_text" placeholder="Shop Now" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 1 Link" />
+                <TextInput register={register} name="slider_two_btn_one_link" placeholder="/products" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 1 Show" />
+                <div className="col-span-12 xl:col-span-10"><SwitchToggle handleProcess={setSliderTwoBtnOneShow} processOption={sliderTwoBtnOneShow} /></div>
+                <InputLabel labelText="Button 2 Text" />
+                <TextInput register={register} name="slider_two_btn_two_text" placeholder="About Us" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 2 Link" />
+                <TextInput register={register} name="slider_two_btn_two_link" placeholder="/about" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 2 Show" />
+                <div className="col-span-12 xl:col-span-10"><SwitchToggle handleProcess={setSliderTwoBtnTwoShow} processOption={sliderTwoBtnTwoShow} /></div>
               </div>
             </TabPanel>
             <TabPanel>
@@ -330,6 +366,18 @@ const HomeCustomization = () => {
                   errors={errors}
                   errorMessage="slider description is required"
                 />
+                <InputLabel labelText="Button 1 Text" />
+                <TextInput register={register} name="slider_three_btn_one_text" placeholder="Shop Now" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 1 Link" />
+                <TextInput register={register} name="slider_three_btn_one_link" placeholder="/products" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 1 Show" />
+                <div className="col-span-12 xl:col-span-10"><SwitchToggle handleProcess={setSliderThreeBtnOneShow} processOption={sliderThreeBtnOneShow} /></div>
+                <InputLabel labelText="Button 2 Text" />
+                <TextInput register={register} name="slider_three_btn_two_text" placeholder="About Us" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 2 Link" />
+                <TextInput register={register} name="slider_three_btn_two_link" placeholder="/about" errors={errors} isRequired={false} />
+                <InputLabel labelText="Button 2 Show" />
+                <div className="col-span-12 xl:col-span-10"><SwitchToggle handleProcess={setSliderThreeBtnTwoShow} processOption={sliderThreeBtnTwoShow} /></div>
               </div>
             </TabPanel>
           </Tabs>

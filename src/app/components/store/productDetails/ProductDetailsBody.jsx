@@ -1,8 +1,10 @@
 "use client";
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useCart } from "react-use-cart";
+import { toast } from "react-toastify";
 import { Controller } from "swiper"; // Import Controller from modules in Swiper 8.4.0
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -17,6 +19,16 @@ import Price from "./Price";
 import ProductDetailsSidebar from "./ProductDetailsSidebar";
 import ProductDetailsTab from "./ProductDetailsTab";
 import VariantList from "./VariantList";
+
+const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
+
+const getYtThumb = (url) => {
+  if (!url || typeof url !== "string") return null;
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/
+  );
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
+};
 
 const ProductDetailsBody = ({ id, initialProduct }) => {
   const [firstSwiper, setFirstSwiper] = useState(null);
@@ -37,6 +49,11 @@ const ProductDetailsBody = ({ id, initialProduct }) => {
         Product Not Found
       </div>
     );
+  }
+  const images = Array.isArray(product?.image) ? product.image : [];
+  const media = images.map((src) => ({ type: "image", src }));
+  if (product?.videoUrl) {
+    media.splice(1, 0, { type: "video", src: product.videoUrl });
   }
   const [attributes, setAttributes] = useState([]);
   useEffect(() => {
@@ -244,23 +261,34 @@ const ProductDetailsBody = ({ id, initialProduct }) => {
                               slidesPerView={1}
                               centeredSlides={true}
                               speed={700}
-                              loop={true}
-                              loopedSlides={6}
+                              loop={media.length > 1}
+                              loopedSlides={Math.min(6, media.length)}
                             >
-                              {product?.image.map((img, i) => {
-                                return (
-                                  <SwiperSlide
-                                    className="swiper-slide text-center"
-                                    key={i}
-                                  >
+                              {media.map((item, i) => (
+                                <SwiperSlide
+                                  className="swiper-slide text-center"
+                                  key={`${item.type}-${item.src}-${i}`}
+                                >
+                                  {item.type === "image" ? (
                                     <img
-                                      src={img}
-                                      alt={img}
+                                      src={item.src}
+                                      alt={product.name}
                                       className="img-fluid"
                                     />
-                                  </SwiperSlide>
-                                );
-                              })}
+                                  ) : (
+                                    <div className="ratio ratio-16x9">
+                                      <ReactPlayer
+                                        url={item.src}
+                                        width="100%"
+                                        height="100%"
+                                        controls
+                                        light
+                                        playing
+                                      />
+                                    </div>
+                                  )}
+                                </SwiperSlide>
+                              ))}
                             </Swiper>
                           </div>
 
@@ -272,10 +300,10 @@ const ProductDetailsBody = ({ id, initialProduct }) => {
                               controller={{ control: firstSwiper }} // Connect the two sliders
                               slidesPerView={4}
                               speed={700}
-                              loop={true}
+                              loop={media.length > 1}
                               spaceBetween={20}
                               slideToClickedSlide={true}
-                              loopedSlides={6}
+                              loopedSlides={Math.min(6, media.length)}
                               centeredSlides={true}
                               breakpoints={{
                                 0: { slidesPerView: 2 },
@@ -283,21 +311,36 @@ const ProductDetailsBody = ({ id, initialProduct }) => {
                                 576: { slidesPerView: 4 },
                               }}
                             >
-                              {product?.image.map((img, i) => {
-                                // console.log(img)
-                                return (
-                                  <SwiperSlide
-                                    className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center"
-                                    key={i}
-                                  >
+                              {media.map((item, i) => (
+                                <SwiperSlide
+                                  className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center"
+                                  key={`${item.type}-${item.src}-${i}`}
+                                >
+                                  {item.type === "image" ? (
                                     <img
-                                      src={img}
-                                      alt={img}
+                                      src={item.src}
+                                      alt={product.name}
                                       className="img-fluid"
                                     />
-                                  </SwiperSlide>
-                                );
-                              })}
+                                  ) : (
+                                    <div className="position-relative w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-10">
+                                      {getYtThumb(item.src) && (
+                                        <img
+                                          src={getYtThumb(item.src)}
+                                          alt="video"
+                                          className="img-fluid"
+                                          onError={(event) => {
+                                            event.currentTarget.style.visibility = "hidden";
+                                          }}
+                                        />
+                                      )}
+                                      <span className="position-absolute">
+                                        <i className="fa-solid fa-play fa-2x text-danger"></i>
+                                      </span>
+                                    </div>
+                                  )}
+                                </SwiperSlide>
+                              ))}
                             </Swiper>
                           </div>
                         </div>

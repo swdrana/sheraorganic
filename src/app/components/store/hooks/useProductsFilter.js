@@ -1,21 +1,36 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 
 const useProductFilter = (allProducts, categoryOrBrand) => {
-  const router = useRouter();
   // console.log("categoryOrBrand..", categoryOrBrand);
 
   // State for filtering, sorting, and pagination
   const [filteredProducts, setFilteredProducts] = useState(allProducts);
   const [filterMinPrice, setFilterMinPrice] = useState(0);
   const [filterMaxPrice, setFilterMaxPrice] = useState(10000);
+  const [priceTouched, setPriceTouched] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [searchText, setSearchText] = useState("");
   // const [category, setCategory] = useState("");
   const [sortValue, setSortValue] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
+
+  const priceBounds = useMemo(() => {
+    const nums = (allProducts || [])
+      .map((product) => Number(product?.prices?.price))
+      .filter(Number.isFinite);
+    return nums.length
+      ? { min: Math.floor(Math.min(...nums)), max: Math.ceil(Math.max(...nums)) }
+      : { min: 0, max: 0 };
+  }, [allProducts]);
+
+  useEffect(() => {
+    if (!priceTouched && allProducts?.length) {
+      setFilterMinPrice(priceBounds.min);
+      setFilterMaxPrice(priceBounds.max);
+    }
+  }, [priceBounds, priceTouched, allProducts?.length]);
 
   // console.log("filteredProducts..", filteredProducts);
 
@@ -48,11 +63,20 @@ const useProductFilter = (allProducts, categoryOrBrand) => {
     }
 
     // Filter by price range
-    updatedProducts = updatedProducts.filter(
-      (product) =>
-        product?.prices?.price >= filterMinPrice &&
-        product?.prices?.price <= filterMaxPrice
+    const minValue = Number(filterMinPrice);
+    const maxValue = Number(filterMaxPrice);
+    const lo = Math.min(
+      Number.isFinite(minValue) ? minValue : priceBounds.min,
+      Number.isFinite(maxValue) ? maxValue : priceBounds.max
     );
+    const hi = Math.max(
+      Number.isFinite(minValue) ? minValue : priceBounds.min,
+      Number.isFinite(maxValue) ? maxValue : priceBounds.max
+    );
+    updatedProducts = updatedProducts.filter((product) => {
+      const value = Number(product?.prices?.price);
+      return Number.isFinite(value) && value >= lo && value <= hi;
+    });
 
     // Filter by search text
     if (searchText) {
@@ -72,12 +96,12 @@ const useProductFilter = (allProducts, categoryOrBrand) => {
       } else if (normalizedSortValue === "low_highprice") {
         updatedProducts.sort(
           (a, b) =>
-            Number(a.prices?.originalPrice) - Number(b.prices?.originalPrice)
+            Number(a.prices?.price) - Number(b.prices?.price)
         );
       } else if (normalizedSortValue === "high_lowprice") {
         updatedProducts.sort(
           (a, b) =>
-            Number(b.prices?.originalPrice) - Number(a.prices?.originalPrice)
+            Number(b.prices?.price) - Number(a.prices?.price)
         );
       }
     }
@@ -90,6 +114,7 @@ const useProductFilter = (allProducts, categoryOrBrand) => {
     filterMaxPrice,
     searchText,
     normalizedSortValue,
+    priceBounds,
   ]);
 
   // Paginate the filtered products and update pagination based on the filtered result
@@ -123,10 +148,10 @@ const useProductFilter = (allProducts, categoryOrBrand) => {
   const resetFilters = () => {
     setSearchText("");
     setSortValue("");
-    setFilterMinPrice(0);
-    setFilterMaxPrice(10000);
+    setFilterMinPrice(priceBounds.min);
+    setFilterMaxPrice(priceBounds.max);
     setCurrentPage(0);
-    router.refresh(); // Refresh the page if necessary
+    setPriceTouched(false);
   };
 
   return {
@@ -140,6 +165,7 @@ const useProductFilter = (allProducts, categoryOrBrand) => {
     pageCount,
     filteredProducts,
     itemsPerPage,
+    setItemsPerPage,
     incrementItems,
     decrementItems,
     filterMinPrice,
@@ -147,6 +173,8 @@ const useProductFilter = (allProducts, categoryOrBrand) => {
     filterMaxPrice,
     setFilterMaxPrice,
     sortedAndFilteredProducts,
+    priceBounds,
+    setPriceTouched,
   };
 };
 

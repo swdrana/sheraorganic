@@ -1,6 +1,10 @@
 import Product from "@/app/backend/model/product.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import Order from "@/app/backend/model/order.model";
+import { destroyImages } from "@/app/backend/utils/cloudinaryServer";
 
 //===== Delete single post by id =========
 export const DELETE = async (req, { params }) => {
@@ -11,6 +15,12 @@ export const DELETE = async (req, { params }) => {
     if (!deletedProduct) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
+    void destroyImages([
+      ...(deletedProduct.image || []),
+      ...(deletedProduct.variants || [])
+        .map((variant) => variant?.image)
+        .filter(Boolean),
+    ]);
     return NextResponse.json({
       message: "Product deleted successfully",
       status: 200,
@@ -90,11 +100,41 @@ export const GET = async (req, { params }) => {
 
 export const PUT = async (req, { params }) => {
   connectDB();
-  const data = await req.json();
-  const { user, rating, comment, name } = data;
 
   try {
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
+    if (!userId) {
+      return NextResponse.json({ message: "লগইন করুন।" }, { status: 401 });
+    }
+    const { rating, comment } = await req.json();
+    const numRating = Number(rating);
+    if (!Number.isInteger(numRating) || numRating < 1 || numRating > 5) {
+      return NextResponse.json(
+        { message: "রেটিং ১-৫ হতে হবে।" },
+        { status: 400 }
+      );
+    }
+    if (!comment || !String(comment).trim()) {
+      return NextResponse.json(
+        { message: "কমেন্ট লিখুন।" },
+        { status: 400 }
+      );
+    }
+
     const { productId } = params;
+    const delivered = await Order.exists({
+      user: userId,
+      status: "Delivered",
+      $or: [{ "cart._id": productId }, { "cart.productId": productId }],
+    });
+    if (!delivered) {
+      return NextResponse.json(
+        { message: "শুধু ডেলিভারি হওয়া পণ্যে রিভিউ দেওয়া যায়।" },
+        { status: 403 }
+      );
+    }
+
     const product = await Product.findById(productId);
 
     if (!product) {
@@ -106,27 +146,38 @@ export const PUT = async (req, { params }) => {
 
     // Check if the user has already rated the product
     const existingRating = product.ratings.find(
-      (r) => r.user && r.user.equals(user)
+      (review) => review.user && review.user.equals(userId)
     );
 
     if (existingRating) {
       // Update existing rating
-      existingRating.rating = rating;
-      existingRating.comment = comment;
+      existingRating.rating = numRating;
+      existingRating.comment = String(comment).trim();
       existingRating.productId = productId;
-      existingRating.name = name;
+      existingRating.name = session.user.name;
+      existingRating.reviewDate = new Date();
     } else {
       // Add new rating
-      product.ratings.push({ user, rating, comment, productId, name });
+      product.ratings.push({
+        user: userId,
+        rating: numRating,
+        comment: String(comment).trim(),
+        productId,
+        name: session.user.name,
+      });
     }
 
     // Calculate new average rating
-    const totalRatings = product.ratings.reduce((acc, r) => acc + r.rating, 0);
-    product.averageRating = totalRatings / product.ratings.length;
+    const totalRatings = product.ratings.reduce(
+      (total, review) => total + Number(review.rating),
+      0
+    );
+    product.averageRating =
+      Math.round((totalRatings / product.ratings.length) * 10) / 10;
 
     await product.save();
     return NextResponse.json(
-      { message: "Rating updated successfully" },
+      { message: "রিভিউ সফলভাবে যুক্ত হয়েছে।" },
       { status: 200 }
     );
   } catch (error) {

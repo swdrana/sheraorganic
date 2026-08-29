@@ -54,9 +54,11 @@ const FeatureProduct = ({ products, setting }) => {
 
           <div className="row g-4 justify-content-center">
             <div className="col-xxl-4 col-lg-6">
-              {featureBrandProductOne?.slice(0, 4).map((p, i) => (
-                <FeatureBrandProductCard product={p} key={i} i={i} />
-              ))}
+              <div className="row row-cols-2 row-cols-md-1 g-3">
+                {featureBrandProductOne?.slice(0, 4).map((p, i) => (
+                  <FeatureBrandProductCard product={p} key={i} i={i} />
+                ))}
+              </div>
             </div>
             <div className="col-xxl-4 col-lg-6 order-3 order-xxl-2">
               <div className="product-card-lg bg-white rounded-2 d-flex flex-coloumn h-100">
@@ -104,9 +106,11 @@ const FeatureProduct = ({ products, setting }) => {
               </div>
             </div>
             <div className="col-xxl-4 col-lg-6 order-2 order-xxl-3">
-              {featureBrandProductTwo?.slice(0, 4).map((p, i) => (
-                <FeatureBrandProductCard key={i} i={i} product={p} />
-              ))}
+              <div className="row row-cols-2 row-cols-md-1 g-3">
+                {featureBrandProductTwo?.slice(0, 4).map((p, i) => (
+                  <FeatureBrandProductCard key={i} i={i} product={p} />
+                ))}
+              </div>
             </div>
           </div>
         </div>

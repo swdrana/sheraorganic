@@ -2,7 +2,7 @@ import { getUserByEmail } from "@/app/backend/actions/user.action";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const authOptions = {
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -66,7 +66,7 @@ const authOptions = {
   },
 };
 
-const handler = (req, res) => NextAuth(req, res, authOptions);
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
 
 // Try to Anonymous Login but session not set properly and create user data now shown in console

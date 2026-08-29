@@ -9,6 +9,7 @@ const Sidebar = dynamic(() => import("./components/admin/shared/Sidebar"), { ssr
 import Footer from "./components/store/common/nav/Footer";
 import Navbar from "./components/store/common/nav/Navbar";
 import Offcanvas from "./components/store/common/nav/Offcanvas";
+import CartDrawer from "./components/store/common/nav/CartDrawer";
 const ProductModal = dynamic(() => import("./components/store/common/others/ProductModal"), { ssr: false });
 import { AuthProvider } from "./components/store/provider/AuthProvider";
 import CartProviderContext from "./components/store/provider/CartProviderContex";
@@ -51,6 +52,7 @@ export default function ClientLayout({ children }) {
                 {isStorePage && (
                   <>
                     <Offcanvas />
+                    <CartDrawer />
                     <Navbar />
                   </>
                 )}

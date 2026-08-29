@@ -2,9 +2,11 @@
 import Link from "next/link";
 import { useCart } from "react-use-cart";
 import { useEffect, useState } from "react";
+import { useMainContext } from "../../provider/MainContextStore";
 
-const FooterNav = ({ setCategoryOffcanvas, categoryOffcanvas }) => {
+const FooterNav = () => {
   const { totalItems } = useCart();
+  const { setOpenOffcanvas } = useMainContext();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ const FooterNav = ({ setCategoryOffcanvas, categoryOffcanvas }) => {
           <button
             className="flex flex-col items-center justify-center py-2 px-1 flex-1 text-center cursor-pointer bg-transparent border-0"
             type="button"
-            onClick={() => setCategoryOffcanvas(true)}
+            onClick={() => setOpenOffcanvas(true)}
           >
             <span className="flex items-center justify-center mb-1">
               <i className="fas fa-bars text-gray-600 text-sm"></i>

@@ -14,16 +14,17 @@ const FeatureBrandProductCard = ({ product, i }) => {
   return (
     <>
       <div
-        className={`horizontal-product-card next_style d-sm-flex align-items-center p-3 bg-white rounded-2 gap-4 position-relative ${
-          i !== 0 && "mt-4"
+        className={`col horizontal-product-card next_style d-sm-flex align-items-center p-2 p-md-3 bg-white rounded-2 gap-4 position-relative ${
+          i !== 0 && "mt-md-4"
         }`}
       >
         <Link href={`/product-details/${product._id}`} className="d-sm-flex align-items-center gap-4 text-decoration-none text-dark flex-grow-1">
-          <div className="thumbnail position-relative rounded-2 flex-shrink-0">
+          <div className="thumbnail position-relative rounded-2 flex-shrink-0 overflow-hidden" style={{ aspectRatio: "1 / 1" }}>
             <img
               src={optimizeCloudinaryUrl(product.image[0], 200)}
               alt={product.name || "product"}
-              className="img-fluid"
+              className="img-fluid w-100 h-100"
+              style={{ objectFit: "contain" }}
               width="200"
               height="200"
               loading="lazy"

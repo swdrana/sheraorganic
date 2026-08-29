@@ -1,14 +1,12 @@
 "use client";
 import { useState } from "react";
 import useCategory from "../../dataFetching/useCategory";
-import CategoryOffcanvas from "./CategoryOffcanvas";
 import FooterNav from "./FooterNav";
 import Link from "next/link";
 import useSetting from "../../dataFetching/useSetting";
 import { toast } from "react-toastify";
 
 const Footer = () => {
-  const [categoryOffcanvas, setCategoryOffcanvas] = useState(false);
   const { categorys } = useCategory();
   // console.log("category..", categorys);
   const { setting, settingLoading } = useSetting();
@@ -48,16 +46,7 @@ const Footer = () => {
   return (
     <>
       {/* Footer navbar */}
-      <FooterNav
-        categoryOffcanvas={categoryOffcanvas}
-        setCategoryOffcanvas={setCategoryOffcanvas}
-      />
-      {/* category offcanvs */}
-      <CategoryOffcanvas
-        categoryOffcanvas={categoryOffcanvas}
-        setCategoryOffcanvas={setCategoryOffcanvas}
-        categorys={categorys}
-      />
+      <FooterNav />
 
       <div className="footer-curve position-relative overflow-hidden">
         <span

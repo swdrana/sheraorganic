@@ -3,8 +3,18 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade, Pagination } from "swiper";
 import Link from "next/link";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
-import { useEffect } from "react";
-import { loadStylesheet } from "@/app/utils/loadStylesheet";
+
+const renderBtn = (text, link, show, fallbackText, fallbackLink, className) => {
+  if (show === false) return null;
+  const href = (link && link.trim()) || fallbackLink;
+  const label = (text && text.trim()) || fallbackText;
+  const content = <>{label} <span className="ms-2"><i className="fa-solid fa-arrow-right"></i></span></>;
+  return /^https?:\/\//i.test(href) ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className}>{content}</a>
+  ) : (
+    <Link href={href} className={className}>{content}</Link>
+  );
+};
 
 const HeroSwiper = ({ setting }) => {
   return (
@@ -32,12 +42,8 @@ const HeroSwiper = ({ setting }) => {
               <h1 className="display-4 mb-3">{setting?.home?.slider_one_title}</h1>
               <p className="mb-7 fs-6">{setting?.home?.slider_one_description}</p>
               <div className="hero-btns d-flex align-items-center gap-3 gap-sm-5 flex-wrap">
-                <Link href="/products" className="btn btn-secondary">
-                  Shop Now <span className="ms-2"><i className="fa-solid fa-arrow-right"></i></span>
-                </Link>
-                <Link href="/about" className="btn btn-primary">
-                  About Us <span className="ms-2"><i className="fa-solid fa-arrow-right"></i></span>
-                </Link>
+                {renderBtn(setting?.home?.slider_one_btn_one_text, setting?.home?.slider_one_btn_one_link, setting?.home?.slider_one_btn_one_show, "Shop Now", "/products", "btn btn-secondary")}
+                {renderBtn(setting?.home?.slider_one_btn_two_text, setting?.home?.slider_one_btn_two_link, setting?.home?.slider_one_btn_two_show, "About Us", "/about", "btn btn-primary")}
               </div>
             </div>
           </div>
@@ -72,12 +78,8 @@ const HeroSwiper = ({ setting }) => {
               <h1 className="display-4 mb-3">{setting?.home?.slider_two_title}</h1>
               <p className="mb-7 fs-6">{setting?.home?.slider_two_description}</p>
               <div className="hero-btns d-flex align-items-center gap-3 gap-sm-5 flex-wrap">
-                <Link href="/products" className="btn btn-secondary">
-                  Shop Now <span className="ms-2"><i className="fa-solid fa-arrow-right"></i></span>
-                </Link>
-                <Link href="/about" className="btn btn-primary">
-                  About Us <span className="ms-2"><i className="fa-solid fa-arrow-right"></i></span>
-                </Link>
+                {renderBtn(setting?.home?.slider_two_btn_one_text, setting?.home?.slider_two_btn_one_link, setting?.home?.slider_two_btn_one_show, "Shop Now", "/products", "btn btn-secondary")}
+                {renderBtn(setting?.home?.slider_two_btn_two_text, setting?.home?.slider_two_btn_two_link, setting?.home?.slider_two_btn_two_show, "About Us", "/about", "btn btn-primary")}
               </div>
             </div>
           </div>
@@ -104,12 +106,8 @@ const HeroSwiper = ({ setting }) => {
               <h1 className="display-4 mb-3">{setting?.home?.slider_three_title}</h1>
               <p className="mb-7 fs-6">{setting?.home?.slider_three_description}</p>
               <div className="hero-btns d-flex align-items-center gap-3 gap-sm-5 flex-wrap">
-                <Link href="/products" className="btn btn-secondary">
-                  Shop Now <span className="ms-2"><i className="fa-solid fa-arrow-right"></i></span>
-                </Link>
-                <Link href="/about" className="btn btn-primary">
-                  About Us <span className="ms-2"><i className="fa-solid fa-arrow-right"></i></span>
-                </Link>
+                {renderBtn(setting?.home?.slider_three_btn_one_text, setting?.home?.slider_three_btn_one_link, setting?.home?.slider_three_btn_one_show, "Shop Now", "/products", "btn btn-secondary")}
+                {renderBtn(setting?.home?.slider_three_btn_two_text, setting?.home?.slider_three_btn_two_link, setting?.home?.slider_three_btn_two_show, "About Us", "/about", "btn btn-primary")}
               </div>
             </div>
           </div>

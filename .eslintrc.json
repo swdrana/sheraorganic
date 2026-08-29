@@ -15,8 +15,10 @@
   "globals": {
     "process": "readonly"  // Define 'process' as a global variable
   },
-  "plugins": ["react", "react-hooks","next"],
+  "plugins": ["react", "react-hooks", "@next/next"],
   "rules": {
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "no-undef": "warn",
+    "no-useless-escape": "warn"
   }
 }

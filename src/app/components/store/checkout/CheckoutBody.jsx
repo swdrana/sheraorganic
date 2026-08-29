@@ -11,6 +11,7 @@ import { useCart } from "react-use-cart";
 import { getAllCoupons } from "@/app/backend/controllers/coupon.controller";
 import { InitiateCheckout, Purchase } from "@/app/utilities/facebookPixel";
 import { getUserById, updateUserProfile } from "@/app/controlers/user.controler";
+import { notifyError } from "@/app/utils/toast";
 
 import dayjs from "dayjs";
 const CheckoutBody = () => {
@@ -108,8 +109,8 @@ const CheckoutBody = () => {
         user_data: {
           em: email,
           ph: phone,
-          fn: name.split(' ')[0],
-          ln: name.split(' ')[1] || '',
+          fn: (name || "").split(" ")[0],
+          ln: (name || "").split(" ")[1] || "",
           ct: address
         }
       });
@@ -121,7 +122,7 @@ const CheckoutBody = () => {
         address: address,
       };
       const orderData = {
-        user: session?.data?.user?.id,
+        user: session?.data?.user?.id || undefined,
         cart: items,
         user_info: userInfo,
         subTotal: cartTotal,
@@ -129,6 +130,7 @@ const CheckoutBody = () => {
         taxes: 0,
         discount: Math.floor(discount),
         total: grandTotal,
+        shippingOption: selectedShipping,
         paymentMethod: payment,
         status: "Pending",
         clientToken: clientToken,
@@ -136,7 +138,7 @@ const CheckoutBody = () => {
 
       const res = await createOrder(orderData);
       // console.log("res......", res);
-      if (res?.message) {
+      if (res?.order?.orderCode) {
         // Update user profile with billing details if user is logged in
         if (session?.data?.user?.id) {
           try {
@@ -164,8 +166,8 @@ const CheckoutBody = () => {
           user_data: {
             em: email,
             ph: phone,
-            fn: name.split(' ')[0],
-            ln: name.split(' ')[1] || '',
+            fn: (name || "").split(" ")[0],
+            ln: (name || "").split(" ")[1] || "",
             ct: address
           }
         });
@@ -176,6 +178,7 @@ const CheckoutBody = () => {
         router.push(`/thank-you/${res?.order?.orderCode}`);
       } else {
         setIsSubmitting(false);
+        notifyError(res?.message || "অর্ডার সম্পন্ন হয়নি।");
       }
     }
   };
@@ -265,22 +268,17 @@ const CheckoutBody = () => {
                         </div>
                       </div>
 
-                      {/* <div className="w-100 mt-4">
+                      <div className="w-100 mt-4">
                         <label className="form-label fw-medium" htmlFor="email">
-                          Email Address <span className="text-primary">*</span>
+                          Email Address
                         </label>
                         <input
                           type="email"
                           placeholder="Enter your email"
                           className="form-control"
-                          {...register("email", {
-                            required: "Email is required",
-                          })}
+                          {...register("email")}
                         />
-                        {errors.email && (
-                          <p className="text-danger">{errors.email.message}</p>
-                        )}
-                      </div> */}
+                      </div>
 
                       <div className="d-flex flex-wrap gap-3 mt-4">
                         <div className="w-100 col-md-6">

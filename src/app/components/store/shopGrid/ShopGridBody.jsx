@@ -24,6 +24,10 @@ const ShopGridBody = ({ categoryOrBrand }) => {
     sortedAndFilteredProducts,
     setSearchText,
     searchText,
+    sortValue,
+    setItemsPerPage,
+    priceBounds,
+    setPriceTouched,
   } = useProductFilter(products, categoryOrBrand);
   return (
     <>
@@ -43,6 +47,8 @@ const ShopGridBody = ({ categoryOrBrand }) => {
                 filterMinPrice={filterMinPrice}
                 setSearchText={setSearchText}
                 searchText={searchText}
+                priceBounds={priceBounds}
+                setPriceTouched={setPriceTouched}
               />
               {/* Shop gride product */}
               <ShopGridProduct
@@ -53,6 +59,8 @@ const ShopGridBody = ({ categoryOrBrand }) => {
                 itemsPerPage={itemsPerPage}
                 currentPage={currentPage}
                 setSortValue={setSortValue}
+                sortValue={sortValue}
+                setItemsPerPage={setItemsPerPage}
                 incrementItems={incrementItems}
                 decrementItems={decrementItems}
                 sortedAndFilteredProducts={sortedAndFilteredProducts}

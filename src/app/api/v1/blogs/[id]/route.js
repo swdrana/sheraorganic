@@ -1,6 +1,7 @@
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import Blog from "../../../../backend/model/blog.model";
+import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
 
 //===== Delete single category by id =========
 export const DELETE = async (req, { params }) => {
@@ -12,6 +13,7 @@ export const DELETE = async (req, { params }) => {
     if (!deletedBlog) {
       return NextResponse.json({ error: "blog not found" }, { status: 404 });
     }
+    void destroyImages(deletedBlog.img);
     return NextResponse.json({
       message: "blog deleted successfully",
       status: 200,
@@ -38,12 +40,14 @@ export const PATCH = async (req, { params }) => {
     if (!existingBlog) {
       return new Response("blog not found", { status: 404 });
     }
+    const previousImage = existingBlog.img;
     existingBlog.img = updateBlogData.img;
     existingBlog.description = updateBlogData.description;
     existingBlog.category = updateBlogData.category;
     existingBlog.title = updateBlogData.title;
     existingBlog.status = updateBlogData.status;
     await existingBlog.save();
+    void destroyImages(diffRemoved(previousImage, updateBlogData.img));
     return NextResponse.json({
       message: "blog Update successfully",
       status: 200,

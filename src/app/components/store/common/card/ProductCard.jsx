@@ -8,6 +8,7 @@ import useAddToCart from "../../hooks/useAddToCart";
 import useAddWishlist from "../../hooks/useAddWishlist";
 import { useMainContext } from "../../provider/MainContextStore";
 import { trackAddToCart } from "@/app/utilities/facebookPixel";
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 const ProductCard = ({ product }) => {
   const { handelAddItem } = useAddToCart();
@@ -40,7 +41,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <>
-      <div className="col-xxl-3 col-lg-4 col-md-6 col-sm-10 group">
+      <div className="col-6 col-md-4 col-xxl-3 group">
         <div className="vertical-product-card trend_style rounded-2 position-relative border-0 bg-white d-flex flex-column h-100">
           <Link href={`/product-details/${product._id}`} className="d-block text-decoration-none flex-grow-1 text-dark">
             {product.prices.discount >= 1 && (
@@ -49,15 +50,19 @@ const ProductCard = ({ product }) => {
               </span>
             )}
 
-            <div className="thumbnail position-relative text-center p-4 overflow-hidden">
+            <div className="thumbnail position-relative text-center p-2 p-md-4 overflow-hidden" style={{ aspectRatio: "1 / 1" }}>
               <img
-                src={product.image[0]}
+                src={optimizeCloudinaryUrl(product.image?.[0], 400)}
                 alt={product.name}
-                className="img-fluid group-hover:scale-105 transition-all ease-in-out transition-duration-500"
+                width="400"
+                height="400"
+                loading="lazy"
+                className="img-fluid w-100 h-100 group-hover:scale-105 transition-all ease-in-out transition-duration-500"
+                style={{ objectFit: "contain" }}
               />
             </div>
 
-            <div className="card-content">
+            <div className="card-content p-2 p-md-4">
               <div className="mb-2 tt-category tt-line-clamp tt-clamp-1">
                 <span className="d-inline-block text-muted fs-xxs">
                   {product.category}
@@ -73,11 +78,11 @@ const ProductCard = ({ product }) => {
                 </span>
               </div>
               <div className="d-flex gap-3">
-                <h6 className="price text-dark mb-4">
+                <h6 className="price text-dark mb-2 mb-md-4">
                   ৳{product.prices.price}.00
                 </h6>
                 {product.prices.discount >= 1 && (
-                  <h6 className="price deleted text-danger mb-4">
+                  <h6 className="price deleted text-danger mb-2 mb-md-4">
                     ৳{product.prices.originalPrice}.00
                   </h6>
                 )}
@@ -114,8 +119,8 @@ const ProductCard = ({ product }) => {
             <button
               type="button"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCartWithTracking(product); }}
-              className="btn btn-outline-secondary d-block btn-md hover:cursor-auto position-relative w-100"
-              style={{ minHeight: "48px" }}
+              className="btn btn-outline-secondary d-block btn-sm hover:cursor-auto position-relative w-100"
+              style={{ minHeight: "40px" }}
               aria-label={`Add ${product.name} to cart`}
             >
               Add to Cart

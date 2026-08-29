@@ -17,16 +17,17 @@ const TrendingProductCard = ({ product }) => {
 
   return (
     <>
-      <div className="col-lg-4 col-md-6 col-sm-10 filter_item beans_peas">
+      <div className="col-6 col-md-4 col-lg-4 filter_item beans_peas">
         <div className="vertical-product-card trend_style rounded-2 position-relative h-100 d-flex flex-column">
           <Link href={`/product-details/${product._id}`} className="d-block text-decoration-none flex-grow-1 text-dark">
-            <div className="thumbnail position-relative text-center p-4 overflow-hidden">
+            <div className="thumbnail position-relative text-center p-2 p-md-4 overflow-hidden" style={{ aspectRatio: "1 / 1" }}>
               <img
                 src={optimizeCloudinaryUrl(product.image[0], 200)}
                 alt={product.name || "product"}
-                className="img-fluid"
-                width="200"
-                height="200"
+                className="img-fluid w-100 h-100"
+                style={{ objectFit: "contain" }}
+                width="400"
+                height="400"
                 loading="lazy"
               />
               {product.discount && (
@@ -35,7 +36,7 @@ const TrendingProductCard = ({ product }) => {
                 </span>
               )}
             </div>
-            <div className="card-content">
+            <div className="card-content p-2 p-md-4">
               {/* Brand rendered as span to avoid nested links */}
               <span
                 className="mb-2 d-inline-block text-secondary fw-semibold fs-xxs position-relative"
@@ -95,7 +96,8 @@ const TrendingProductCard = ({ product }) => {
             <button
               type="button"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); handelAddItem({ ...product, id: product._id }); }}
-              className="btn btn-secondary d-block btn-md rounded-1 position-relative w-100"
+              className="btn btn-secondary d-block btn-sm rounded-1 position-relative w-100"
+              style={{ minHeight: "40px" }}
             >
               Add to Cart
             </button>

@@ -135,25 +135,17 @@ export async function deleteProduct(id) {
 export async function updateProductRating(id, data) {
   if (!id || !data) return null;
 
-  const apiUrl = getApiUrl();
-  if (!apiUrl) return null;
-
   try {
-    const response = await fetch(`${apiUrl}/api/v1/products/${id}`, {
+    const response = await fetch(`/api/v1/products/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(data),
     });
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to update product rating. Status: ${response.status}`
-      );
-    }
-
-    return await response.json();
+    const result = await response.json();
+    return { ...result, ok: response.ok, status: response.status };
   } catch (error) {
     console.error("Error updating product rating:", error);
     return null;

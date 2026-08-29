@@ -1,9 +1,10 @@
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import ReactPlayer from "react-player";
 import dayjs from "dayjs";
 
 import StarRating from "../common/others/StartRating";
+const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 const ProductDetailsTab = ({ product }) => {
   const [activeTab, setActiveTab] = useState("des");
   return (
@@ -61,12 +62,18 @@ const ProductDetailsTab = ({ product }) => {
             }`}
           >
             <h6 className="my-2">Video Information:</h6>
-            <ReactPlayer
-              url={product?.videoUrl}
-              controls
-              width="100%"
-              height="450px"
-            />
+            {product?.videoUrl ? (
+              <div className="ratio ratio-16x9">
+                <ReactPlayer
+                  url={product.videoUrl}
+                  controls
+                  width="100%"
+                  height="100%"
+                />
+              </div>
+            ) : (
+              <p className="text-muted">এই পণ্যের কোনো ভিডিও নেই।</p>
+            )}
           </TabPanel>
           <TabPanel
             className={`tab-pane fade show  px-7 py-5 ${
@@ -85,6 +92,9 @@ const ProductDetailsTab = ({ product }) => {
                 </div>
               </div>
               <hr className="mt-4 mb-4" />
+              {product?.ratings?.length === 0 && (
+                <p className="text-muted">এখনও কোনো রিভিউ নেই।</p>
+              )}
               {product?.ratings?.map((r, i) => (
                 <div key={i} className="users_review">
                   <div className="d-flex align-items-center justify-content-between gap-3 flex-wrap mt-5">
@@ -99,7 +109,7 @@ const ProductDetailsTab = ({ product }) => {
                         <span>{dayjs(r?.reviewDate).format("YYYY-MM-DD")}</span>
                       </div>
                     </div>
-                    <StarRating rating={product?.averageRating} />
+                    <StarRating rating={r?.rating} />
                   </div>
                   <p className="mt-3 mb-0">{r?.comment}</p>
                 </div>

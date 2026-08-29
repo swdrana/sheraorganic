@@ -1,8 +1,7 @@
 import { updateProductRating } from "@/app/backend/controllers/product.controller";
-import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import { toast } from "react-toastify";
 import Loading from "../common/others/Loading";
+import { notifyError, notifySuccess } from "@/app/utils/toast";
 
 const ReviewModal = ({
   showModal,
@@ -13,13 +12,9 @@ const ReviewModal = ({
   const [reviewSubmit, setReviewSubmit] = useState(false);
   const [review, setReview] = useState("");
   const [rating, setRating] = useState("");
-  const { data } = useSession();
   const ratingData = {
-    user: data?.user?.id,
-    rating: rating,
+    rating: Number(rating),
     comment: review,
-    productId: id,
-    name: data?.user?.name,
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,15 +22,15 @@ const ReviewModal = ({
 
     const res = await updateProductRating(id, ratingData);
     // console.log("res..in", res);
-    if (res?.message) {
-      toast.success("Your review successfully submitted");
+    if (res?.ok) {
+      notifySuccess(res.message);
       setReviewSubmit(false);
       setShowModal(false);
       setReview("");
       setRating("");
       setSuccessfullyReview(true);
     } else {
-      toast.error("Something is wronag");
+      notifyError(res?.message || "রিভিউ দেওয়া যায়নি।");
       setReviewSubmit(false);
     }
   };

@@ -3,11 +3,11 @@ import { useCart } from "react-use-cart";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useMainContext } from "../provider/MainContextStore";
 
 const useAddToCart = () => {
   const session = useSession();
-  const router = useRouter();
+  const { setOpenCartDrawer } = useMainContext();
   // console.log("session in add to cart", session);
   const [quantity, setQuantity] = useState(1);
   const [addToCardLoading, setAddToCardLoading] = useState(false);
@@ -24,6 +24,7 @@ const useAddToCart = () => {
     if (session?.data) {
       if (session.data.user?.role !== "Customer") {
         toast.error("You are not a customer");
+        setAddToCardLoading(false);
         return;
       }
     }
@@ -34,7 +35,6 @@ const useAddToCart = () => {
       updateItemQuantity(existingProduct.id, newQuantity);
       toast(`${product.name} added ${quantity} quantity successfully`);
       setAddToCardLoading(false);
-      setQuantity(20);
     } else {
       const newItem = {
         ...product,
@@ -46,6 +46,7 @@ const useAddToCart = () => {
       toast(`${product.name} added to cart successfully`);
       setAddToCardLoading(false);
     }
+    setOpenCartDrawer(true);
     setQuantity(1);
   };
 

@@ -142,8 +142,41 @@ const Navbar = () => {
         <NavbarTop />
 
         <div className="container px-3 px-md-3">
-          <div className="gshop-navbar bg-white rounded ps-lg-5 position-relative">
-            <div className="row align-items-center">
+          <div ref={searchBarRef} className="gshop-navbar bg-white rounded ps-lg-5 position-relative">
+            <div className="d-flex d-xl-none align-items-center justify-content-between w-100 py-2 px-2">
+              <button
+                type="button"
+                onClick={() => setOpenOffcanvas(true)}
+                className="gshop-offcanvas-btn offcanvas-toggle"
+                aria-label="Open navigation and categories"
+              >
+                <i className="fa-solid fa-grip"></i>
+              </button>
+              <Link href="/" className="navbar-brand mx-auto">
+                {setting?.home?.logo ? (
+                  <img src={setting.home.logo} alt="logo" height="36" />
+                ) : (
+                  <span style={{ display: "block", width: 120, height: 36 }} />
+                )}
+              </Link>
+              <button
+                type="button"
+                onClick={() => setShowSearchBar((current) => !current)}
+                className="header-icon border-0 bg-transparent"
+                aria-label="Search"
+              >
+                <i className="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
+            <div className={`gshop-header-search d-xl-none w-100 ${showSearchBar ? "d-block" : "d-none"}`}>
+              <div className="dropdown-menu show position-static border-0 w-100 px-2 pb-2">
+                <form className="search-form d-flex align-items-center" onSubmit={handleSubmit}>
+                  <input type="text" placeholder="Search products..." className="w-100" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+                  <button type="submit" className="submit-icon-btn-secondary" aria-label="Submit search"><i className="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+              </div>
+            </div>
+            <div className="row align-items-center d-none d-xl-flex">
               <div className="col-xxl-2 col-xl-3 col-md-3 col-5">
                 <Link href="/" className="logo">
                   {setting?.home?.logo ? (
@@ -248,7 +281,7 @@ const Navbar = () => {
                     </ul>
                   </nav>
                   <div className="gshop-header-icons d-none d-md-inline-flex align-items-center justify-content-end ms-3">
-                    <div className="gshop-header-search " ref={searchBarRef}>
+                    <div className="gshop-header-search ">
                       <button
                         type="button"
                         onClick={() => setShowSearchBar(true)}

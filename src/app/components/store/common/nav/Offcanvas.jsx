@@ -1,186 +1,92 @@
 "use client";
 
+import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 import { menuItems } from "@/app/utils/data";
-import { useMainContext } from "../../provider/MainContextStore";
-
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useCart } from "react-use-cart";
+import useCategory from "../../dataFetching/useCategory";
 import useSetting from "../../dataFetching/useSetting";
+import { useMainContext } from "../../provider/MainContextStore";
 
 const Offcanvas = () => {
   const { openOffcanvas, setOpenOffcanvas } = useMainContext();
   const offcanvasRef = useRef(null);
+  const [activeSubmenu, setActiveSubmenu] = useState(null);
+  const [mounted, setMounted] = useState(false);
+  const session = useSession();
+  const { totalItems } = useCart();
+  const { categorys } = useCategory();
+  const { setting } = useSetting();
 
-  // Close offcanvas when clicking outside of it
+  useEffect(() => setMounted(true), []);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        offcanvasRef.current &&
-        !offcanvasRef.current.contains(event.target)
-      ) {
+      if (offcanvasRef.current && !offcanvasRef.current.contains(event.target)) {
         setOpenOffcanvas(false);
       }
     };
-
-    if (openOffcanvas) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    // Cleanup the event listener
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    if (openOffcanvas) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [openOffcanvas, setOpenOffcanvas]);
 
-  const [activeSubmenu, setActiveSubmenu] = useState(null);
+  const closeOffcanvas = () => setOpenOffcanvas(false);
 
-  const handleItemClick = (index, hasSubmenu) => {
-    if (hasSubmenu) {
-      setActiveSubmenu((prev) => (prev === index ? null : index));
-    } else {
-      setOpenOffcanvas(false);
-    }
-  };
-
-  const { setting, settingLoading } = useSetting();
   return (
     <>
-      <div
-        ref={offcanvasRef}
-        className={`offcanvas_menu position-fixed ${
-          openOffcanvas ? "active" : ""
-        }`}
-      >
-        <div className="tt-short-info d-none d-md-none d-lg-none d-xl-block">
-          <button
-            onClick={() => setOpenOffcanvas(false)}
-            className="offcanvas-close"
-            aria-label="Close Navigation Menu"
-          >
-            <i className="fa-solid fa-xmark"></i>
-          </button>
-          <Link href="/" className="logo-wrapper d-inline-block mb-5">
+      {openOffcanvas && <div className="offcanvas-backdrop" onClick={closeOffcanvas} />}
+      <div ref={offcanvasRef} className={`offcanvas_menu position-fixed ${openOffcanvas ? "active" : ""}`}>
+        <div className="mobile-menu d-block">
+          <button onClick={closeOffcanvas} className="offcanvas-close" aria-label="Close Navigation Menu"><i className="fa-solid fa-xmark"></i></button>
+          <Link href="/" onClick={closeOffcanvas} className="d-inline-block mb-4">
             <img src={setting?.home?.logo} alt="logo" width="200" height="30" loading="lazy" />
           </Link>
-          <div className="offcanvas-content">
-            <h4 className="mb-4">About Us</h4>
-            <p>{setting?.about?.about_top_description}</p>
-
-            <Link
-              onClick={() => setOpenOffcanvas(false)}
-              href="/about"
-              className="btn btn-primary mt-4"
-            >
-              About Us
-            </Link>
-          </div>
-          <div className="offcanvas-contact mt-15">
-            <h5 className="mb-5">Contact Info</h5>
-            <address>
-              {setting?.contact?.contact_office_address_one} <br />
-              <a href="tel:+8801682648101">
-                {setting?.contact?.contact_emergency_call}
-              </a>{" "}
-              <br />
-              <a href="mailto:info@example.com">
-                {setting?.contact?.contact_general_comunication}
-              </a>
-            </address>
-          </div>
-          <div className="social-contact offcanvas_social mt-4">
-            <Link
-              target="_blank"
-              rel="noopener noreferrer"
-              href={setting?.home?.hero_facebook_link || "#"}
-              aria-label="Facebook"
-            >
-              <i className="fab fa-facebook-f"></i>
-            </Link>
-
-            <Link
-              target="_blank"
-              rel="noopener noreferrer"
-              href={setting?.home?.hero_linkdin_link || "#"}
-              aria-label="LinkedIn"
-            >
-              <i className="fab fa-linkedin-in"></i>
-            </Link>
-            <Link
-              target="_blank"
-              rel="noopener noreferrer"
-              href={setting?.home?.hero_twitter_link || "#"}
-              aria-label="Twitter"
-            >
-              <i className="fab fa-twitter"></i>
-            </Link>
-            <Link
-              target="_blank"
-              rel="noopener noreferrer"
-              href={setting?.home?.hero_youtube_link || "#"}
-              aria-label="YouTube"
-            >
-              <i className="fab fa-youtube"></i>
-            </Link>
-          </div>
-        </div>
-        <div className="mobile-menu d-md-block d-lg-block d-xl-none">
-          <button
-            onClick={() => setOpenOffcanvas(false)}
-            className="offcanvas-close"
-            aria-label="Close Navigation Menu"
-          >
-            <i className="fa-solid fa-xmark"></i>
-          </button>
-          <a href="#" className="d-inline-block mb-5">
-            <img src={setting?.home?.logo} alt="logo" width="200" height="30" loading="lazy" />
-          </a>
-          <nav className="mobile-menu-wrapper mt-4">
+          <nav className="mobile-menu-wrapper mt-3">
             <ul>
-              {menuItems.map((item, index) => (
-                <li key={index} className={item.submenu ? "has-submenu" : ""}>
-                  <Link
-                    href={item.href || "#"}
-                    onClick={() => handleItemClick(index, item.submenu)}
-                  >
-                    {item.name}
-                    {item.submenu && (
-                      <span className="ms-1 fs-xs float-end">
-                        <i className="fa-solid fa-angle-right"></i>
-                      </span>
-                    )}
-                  </Link>
-                  {item.submenu && (
-                    <ul
-                      className={activeSubmenu === index ? "d-block" : "d-none"}
-                    >
-                      {item.submenu.map((subItem, subIndex) => (
-                        <li key={subIndex}>
-                          <Link
-                            href={subItem.href}
-                            onClick={() => setOpenOffcanvas(false)}
-                          >
-                            {subItem.name}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
+              {!session?.data?.user?.email ? (
+                <><li><Link href="/login" onClick={closeOffcanvas}>Login</Link></li><li><Link href="/singup" onClick={closeOffcanvas}>Registration</Link></li></>
+              ) : session.data.user.role !== "Customer" ? (
+                <li><Link href="/admin" onClick={closeOffcanvas}>Dashboard</Link></li>
+              ) : (
+                <>
+                  <li><Link href="/my-account" onClick={closeOffcanvas}>My Account</Link></li>
+                  <li><Link href="/cart" onClick={closeOffcanvas}>My Cart</Link></li>
+                  <li><button type="button" className="bg-transparent border-0 p-0" onClick={() => signOut({ callbackUrl: "/" })}>Sign Out</button></li>
+                </>
+              )}
+              <li className="has-submenu">
+                <Link href="#" onClick={(event) => { event.preventDefault(); setActiveSubmenu((current) => current === "categories" ? null : "categories"); }}>
+                  All Product Categories <span className="ms-1 fs-xs float-end"><i className="fa-solid fa-angle-right"></i></span>
+                </Link>
+                <ul className={activeSubmenu === "categories" ? "d-block" : "d-none"}>
+                  {categorys?.map((category) => (
+                    <li key={category._id}>
+                      <Link href={`/products/category=${category.name.replace(/\s+/g, "").toLowerCase()}=${category._id}`} onClick={closeOffcanvas} className="d-flex align-items-center">
+                        <img src={optimizeCloudinaryUrl(category.icon, 48)} alt={category.name} width="32" height="32" className="rounded-circle me-2" style={{ objectFit: "contain" }} />
+                        {category.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              {menuItems.map((item) => <li key={item.href}><Link href={item.href} onClick={closeOffcanvas}>{item.name}</Link></li>)}
+              <li><Link href="/cart" onClick={closeOffcanvas}>কার্ট ({mounted ? totalItems : 0})</Link></li>
             </ul>
           </nav>
           <div className="offcanvas-contact mt-15">
             <h5 className="mb-5">Contact Info</h5>
             <address>
-              {setting?.contact?.contact_office_address_one} <br />
-              <a href="tel:+8801682648101">
-                {setting?.contact?.contact_emergency_call}
-              </a>{" "}
-              <br />
-              <a href="mailto:info@example.com">
-                {setting?.contact?.contact_general_comunication}
-              </a>
+              {setting?.contact?.contact_office_address_one}<br />
+              <a href={`tel:${setting?.contact?.contact_emergency_call || ""}`}>{setting?.contact?.contact_emergency_call}</a><br />
+              <a href={`mailto:${setting?.contact?.contact_general_comunication || ""}`}>{setting?.contact?.contact_general_comunication}</a>
             </address>
+          </div>
+          <div className="social-contact offcanvas_social mt-4">
+            <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_facebook_link || "#"} aria-label="Facebook"><i className="fab fa-facebook-f"></i></Link>
+            <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_linkdin_link || "#"} aria-label="LinkedIn"><i className="fab fa-linkedin-in"></i></Link>
+            <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_twitter_link || "#"} aria-label="Twitter"><i className="fab fa-twitter"></i></Link>
+            <Link target="_blank" rel="noopener noreferrer" href={setting?.home?.hero_youtube_link || "#"} aria-label="YouTube"><i className="fab fa-youtube"></i></Link>
           </div>
         </div>
       </div>

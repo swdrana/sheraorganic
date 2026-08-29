@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
+import { Autoplay } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 const Category = ({ categorys, products }) => {
   // const { categorys, categoryLoading } = useCategory();
@@ -20,54 +22,68 @@ const Category = ({ categorys, products }) => {
                 Our Top Category
               </h2>
             </div>
-            <div className="row justify-content-center g-4">
-              {categorys?.slice(0, 6).map((category, index) => (
-                <Link
-                  href={`/products/category=${category.name
-                    .replace(/\s+/g, "")
-                    .toLowerCase()}=${category._id}`}
-                  className="col-xxl-2 col-lg-3 col-md-4 col-sm-6"
-                  key={index}
-                >
-                  <div
-                    className={`gshop-animated-iconbox py-5 px-4 text-center border rounded-3 position-relative overflow-hidden ${
-                      category.colorClass || ""
-                    }`}
+            <Swiper
+              modules={[Autoplay]}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              }}
+              loop={categorys?.length > 6}
+              grabCursor
+              spaceBetween={16}
+              style={{ paddingBottom: 8 }}
+              breakpoints={{
+                0: { slidesPerView: 2.2 },
+                576: { slidesPerView: 3 },
+                768: { slidesPerView: 4 },
+                992: { slidesPerView: 5 },
+                1200: { slidesPerView: 6 },
+              }}
+            >
+              {categorys?.slice(0, 12).map((category, index) => (
+                <SwiperSlide key={index}>
+                  <Link
+                    href={`/products/category=${category.name
+                      .replace(/\s+/g, "")
+                      .toLowerCase()}=${category._id}`}
+                    className="d-block"
                   >
-                    <div className="animated-icon d-inline-flex align-items-center justify-content-center rounded-circle position-relative">
-                      <img
-                        src={optimizeCloudinaryUrl(category.icon, 80)}
-                        alt={category.name}
-                        className="img-fluid"
-                        width="62"
-                        height="62"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="text-dark fs-sm fw-bold d-block mt-3">
-                      {category.name}
-                    </div>
-                    <span className="total-count position-relative ps-3 fs-sm fw-medium doted-primary">
-                      {
-                        products?.filter(
-                          (p) =>
-                            p.category.replace(/\s+/g, "").toLowerCase() ===
-                            `${category.name.replace(/\s+/g, "").toLowerCase()}`
-                        ).length
-                      }{" "}
-                    </span>
                     <div
-                      // href={`/products/category=${category.name
-                      // .replace(/\s+/g, "")
-                      // .toLowerCase()}=${category._id}`}
-                      className="explore-btn position-absolute"
+                      className={`gshop-animated-iconbox py-5 px-4 text-center border rounded-3 position-relative overflow-hidden ${
+                        category.colorClass || ""
+                      }`}
                     >
-                      <i className="fa-solid fa-arrow-up"></i>
+                      <div className="animated-icon d-inline-flex align-items-center justify-content-center rounded-circle position-relative">
+                        <img
+                          src={optimizeCloudinaryUrl(category.icon, 80)}
+                          alt={category.name}
+                          className="img-fluid"
+                          width="62"
+                          height="62"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="text-dark fs-sm fw-bold d-block mt-3">
+                        {category.name}
+                      </div>
+                      <span className="total-count position-relative ps-3 fs-sm fw-medium doted-primary">
+                        {
+                          products?.filter(
+                            (p) =>
+                              p.category.replace(/\s+/g, "").toLowerCase() ===
+                              category.name.replace(/\s+/g, "").toLowerCase()
+                          ).length
+                        }{" "}
+                      </span>
+                      <div className="explore-btn position-absolute">
+                        <i className="fa-solid fa-arrow-up"></i>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </SwiperSlide>
               ))}
-            </div>
+            </Swiper>
           </div>
         </div>
       </section>

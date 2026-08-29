@@ -33,6 +33,12 @@ const useStoreCustomize = () => {
   const [sliderImageOne, setSliderImageOne] = useState("");
   const [sliderImageTwo, setSliderImageTwo] = useState("");
   const [sliderImageThree, setSliderImageThree] = useState("");
+  const [sliderOneBtnOneShow, setSliderOneBtnOneShow] = useState(true);
+  const [sliderOneBtnTwoShow, setSliderOneBtnTwoShow] = useState(true);
+  const [sliderTwoBtnOneShow, setSliderTwoBtnOneShow] = useState(true);
+  const [sliderTwoBtnTwoShow, setSliderTwoBtnTwoShow] = useState(true);
+  const [sliderThreeBtnOneShow, setSliderThreeBtnOneShow] = useState(true);
+  const [sliderThreeBtnTwoShow, setSliderThreeBtnTwoShow] = useState(true);
 
   // feature top tranding producut (category)
   const [featureCategoryOne, setFeatureCategoryOne] = useState("");
@@ -110,16 +116,34 @@ const useStoreCustomize = () => {
             slider_one_subtitle: data.slider_one_subtitle,
             slider_one_title: data.slider_one_title,
             slider_one_img: sliderImageOne,
+            slider_one_btn_one_text: data.slider_one_btn_one_text,
+            slider_one_btn_one_link: data.slider_one_btn_one_link,
+            slider_one_btn_one_show: sliderOneBtnOneShow,
+            slider_one_btn_two_text: data.slider_one_btn_two_text,
+            slider_one_btn_two_link: data.slider_one_btn_two_link,
+            slider_one_btn_two_show: sliderOneBtnTwoShow,
 
             slider_two_description: data.slider_two_description,
             slider_two_subtitle: data.slider_two_subtitle,
             slider_two_title: data.slider_two_title,
             slider_two_img: sliderImageTwo,
+            slider_two_btn_one_text: data.slider_two_btn_one_text,
+            slider_two_btn_one_link: data.slider_two_btn_one_link,
+            slider_two_btn_one_show: sliderTwoBtnOneShow,
+            slider_two_btn_two_text: data.slider_two_btn_two_text,
+            slider_two_btn_two_link: data.slider_two_btn_two_link,
+            slider_two_btn_two_show: sliderTwoBtnTwoShow,
 
             slider_three_description: data.slider_three_description,
             slider_three_subtitle: data.slider_three_subtitle,
             slider_three_title: data.slider_three_title,
             slider_three_img: sliderImageThree,
+            slider_three_btn_one_text: data.slider_three_btn_one_text,
+            slider_three_btn_one_link: data.slider_three_btn_one_link,
+            slider_three_btn_one_show: sliderThreeBtnOneShow,
+            slider_three_btn_two_text: data.slider_three_btn_two_text,
+            slider_three_btn_two_link: data.slider_three_btn_two_link,
+            slider_three_btn_two_show: sliderThreeBtnTwoShow,
 
             // feature brand product
             featured_brand_title: data.featured_brand_title,
@@ -488,6 +512,12 @@ const useStoreCustomize = () => {
         setSliderImageOne(
           res?.storeCustomizationSetting?.setting?.home?.slider_one_img
         );
+        setValue("slider_one_btn_one_text", res?.storeCustomizationSetting?.setting?.home?.slider_one_btn_one_text);
+        setValue("slider_one_btn_one_link", res?.storeCustomizationSetting?.setting?.home?.slider_one_btn_one_link);
+        setSliderOneBtnOneShow(res?.storeCustomizationSetting?.setting?.home?.slider_one_btn_one_show ?? true);
+        setValue("slider_one_btn_two_text", res?.storeCustomizationSetting?.setting?.home?.slider_one_btn_two_text);
+        setValue("slider_one_btn_two_link", res?.storeCustomizationSetting?.setting?.home?.slider_one_btn_two_link);
+        setSliderOneBtnTwoShow(res?.storeCustomizationSetting?.setting?.home?.slider_one_btn_two_show ?? true);
 
         setValue(
           "slider_two_description",
@@ -504,6 +534,12 @@ const useStoreCustomize = () => {
         setSliderImageTwo(
           res?.storeCustomizationSetting?.setting?.home?.slider_two_img
         );
+        setValue("slider_two_btn_one_text", res?.storeCustomizationSetting?.setting?.home?.slider_two_btn_one_text);
+        setValue("slider_two_btn_one_link", res?.storeCustomizationSetting?.setting?.home?.slider_two_btn_one_link);
+        setSliderTwoBtnOneShow(res?.storeCustomizationSetting?.setting?.home?.slider_two_btn_one_show ?? true);
+        setValue("slider_two_btn_two_text", res?.storeCustomizationSetting?.setting?.home?.slider_two_btn_two_text);
+        setValue("slider_two_btn_two_link", res?.storeCustomizationSetting?.setting?.home?.slider_two_btn_two_link);
+        setSliderTwoBtnTwoShow(res?.storeCustomizationSetting?.setting?.home?.slider_two_btn_two_show ?? true);
 
         setValue(
           "slider_three_description",
@@ -521,6 +557,12 @@ const useStoreCustomize = () => {
         setSliderImageThree(
           res?.storeCustomizationSetting?.setting?.home?.slider_three_img
         );
+        setValue("slider_three_btn_one_text", res?.storeCustomizationSetting?.setting?.home?.slider_three_btn_one_text);
+        setValue("slider_three_btn_one_link", res?.storeCustomizationSetting?.setting?.home?.slider_three_btn_one_link);
+        setSliderThreeBtnOneShow(res?.storeCustomizationSetting?.setting?.home?.slider_three_btn_one_show ?? true);
+        setValue("slider_three_btn_two_text", res?.storeCustomizationSetting?.setting?.home?.slider_three_btn_two_text);
+        setValue("slider_three_btn_two_link", res?.storeCustomizationSetting?.setting?.home?.slider_three_btn_two_link);
+        setSliderThreeBtnTwoShow(res?.storeCustomizationSetting?.setting?.home?.slider_three_btn_two_show ?? true);
 
         // home -feature brand product
         setValue(
@@ -783,6 +825,18 @@ const useStoreCustomize = () => {
     setSliderImageTwo,
     sliderImageThree,
     setSliderImageThree,
+    sliderOneBtnOneShow,
+    setSliderOneBtnOneShow,
+    sliderOneBtnTwoShow,
+    setSliderOneBtnTwoShow,
+    sliderTwoBtnOneShow,
+    setSliderTwoBtnOneShow,
+    sliderTwoBtnTwoShow,
+    setSliderTwoBtnTwoShow,
+    sliderThreeBtnOneShow,
+    setSliderThreeBtnOneShow,
+    sliderThreeBtnTwoShow,
+    setSliderThreeBtnTwoShow,
 
     // client say
     clientOneImg,

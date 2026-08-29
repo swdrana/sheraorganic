@@ -55,27 +55,13 @@ const navigation = [
 ];
 
 export const menuItems = [
-  {
-    name: "Home",
-    href: "/",
-  },
-  {
-    name: "Products",
-    href: "/products",
-  },
-  {
-    name: "Coupons",
-    href: "/coupons",
-  },
-  {
-    name: "Pages",
-    submenu: [
-      { name: "About Us", href: "/about" },
-      { name: "Contact", href: "/contact" },
-      { name: "Blogs", href: "/blog-listing" },
-      { name: "Terms & Condition", href: "/terms-condition" },
-    ],
-  },
+  { name: "Home", href: "/" },
+  { name: "Products", href: "/products" },
+  { name: "Coupons", href: "/coupons" },
+  { name: "About Us", href: "/about" },
+  { name: "Contact", href: "/contact" },
+  { name: "Blog", href: "/blog" },
+  { name: "Terms & Condition", href: "/terms-condition" },
 ];
 
 const categorys = [

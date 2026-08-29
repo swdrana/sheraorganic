@@ -2,6 +2,7 @@
 import connectDB from "@/app/utils/database";
 import Category from "../model/category.model";
 import cloudinary from "cloudinary";
+import { destroyImages, diffRemoved } from "../utils/cloudinaryServer";
 
 // add category
 // category update
@@ -36,6 +37,7 @@ export async function categoryUpdate(categoryId, updateCategoryData) {
       return "category not found", { status: 404 };
     }
 
+    const previousIcon = existingCategory.icon;
     existingCategory.name = updateCategoryData.name;
     existingCategory.description = updateCategoryData.description;
     existingCategory.parentId = updateCategoryData.parentId;
@@ -43,6 +45,7 @@ export async function categoryUpdate(categoryId, updateCategoryData) {
     existingCategory.status = updateCategoryData.status;
     existingCategory.icon = updateCategoryData.icon;
     await existingCategory.save();
+    void destroyImages(diffRemoved(previousIcon, updateCategoryData.icon));
 
     return { message: "category update successfully" };
   } catch (err) {
@@ -91,6 +94,8 @@ export async function deleteCategoryById(id) {
   try {
     // console.log("delete category ", id);
     const res = await Category.findByIdAndDelete(id);
+    if (!res) return { message: "category not found", status: 404 };
+    void destroyImages(res.icon);
     // console.log("res in delete action in category action", res);
     return { message: `${res.name} delete successfully ` };
   } catch (err) {

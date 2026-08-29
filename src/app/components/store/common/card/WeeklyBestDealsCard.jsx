@@ -17,12 +17,13 @@ const WeeklyBestDealsCard = ({ product }) => {
       <div key={product._id} className="col-lg-6">
         <div className="horizontal-product-card next_style d-sm-flex align-items-center p-3 bg-white rounded-2 shadow gap-4 position-relative">
           <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} aria-label={product.name || "View product details"} />
-          <div className="thumbnail position-relative rounded-2">
+          <div className="thumbnail position-relative rounded-2 overflow-hidden" style={{ aspectRatio: "1 / 1" }}>
             <a href={`/product-details/${product._id}`}>
               <img
                 src={optimizeCloudinaryUrl(product?.image[0], 200)}
                 alt={product?.name || "product"}
-                className="img-fluid"
+                className="img-fluid w-100 h-100"
+                style={{ objectFit: "contain" }}
                 width="200"
                 height="200"
                 loading="lazy"

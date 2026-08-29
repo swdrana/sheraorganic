@@ -1,6 +1,7 @@
 import Coupon from "@/app/backend/model/coupon.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
 
 //===== Delete single Coupon by id =========
 export const DELETE = async (req, { params }) => {
@@ -12,6 +13,7 @@ export const DELETE = async (req, { params }) => {
     if (!deletedCoupon) {
       return NextResponse.json({ error: "Coupon not found" }, { status: 404 });
     }
+    void destroyImages(deletedCoupon.bannerImage);
     return NextResponse.json({
       message: "Coupon deleted successfully",
       status: 200,
@@ -35,6 +37,7 @@ export const PATCH = async (req, { params }) => {
     if (!existingCoupon) {
       return new Response("blog not found", { status: 404 });
     }
+    const previousBanner = existingCoupon.bannerImage;
     existingCoupon.title = updateCouponData.title;
     existingCoupon.couponCode = updateCouponData.couponCode;
     existingCoupon.discountPercentage = updateCouponData.discountPercentage;
@@ -43,6 +46,9 @@ export const PATCH = async (req, { params }) => {
     existingCoupon.endTime = updateCouponData.endTime;
 
     await existingCoupon.save();
+    void destroyImages(
+      diffRemoved(previousBanner, updateCouponData.bannerImage)
+    );
     return NextResponse.json({
       message: "Coupon Update successfully...",
       status: 200,

@@ -1,6 +1,7 @@
 import User from "@/app/backend/model/user.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
 
 export async function PATCH(req, { params }) {
   connectDB();
@@ -9,6 +10,7 @@ export async function PATCH(req, { params }) {
   const updateUserData = await req.json(); // Get the status from request body
   // console.log("update updateUserData", updateUserData, id);
   try {
+    const existingUser = await User.findById(id);
     const result = await User.updateOne(
       { _id: id },
       {
@@ -30,6 +32,7 @@ export async function PATCH(req, { params }) {
         { status: 404 }
       );
     }
+    void destroyImages(diffRemoved(existingUser?.img, updateUserData.img));
 
     return NextResponse.json(
       { message: "User Updated Successfully!" },

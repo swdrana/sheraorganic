@@ -30,6 +30,20 @@ export const POST = async (req) => {
   const data = await req.json();
   // console.log("product data", data);
   try {
+    if (
+      !data?.cart?.length ||
+      !data?.user_info?.name ||
+      !data?.user_info?.contact ||
+      !data?.user_info?.address ||
+      data?.total === undefined ||
+      data?.total === null
+    ) {
+      return NextResponse.json(
+        { message: "অসম্পূর্ণ অর্ডার তথ্য" },
+        { status: 400 }
+      );
+    }
+
     if (data?.clientToken) {
       const existingOrder = await Order.findOne({ clientToken: data.clientToken });
       if (existingOrder) {
@@ -42,7 +56,7 @@ export const POST = async (req) => {
     const newOrder = new Order({
       clientToken: data.clientToken,
       orderCode: orderCode,
-      user: data.user,
+      user: data.user || undefined,
       cart: data.cart,
       user_info: data.user_info,
       subTotal: data.subTotal,
@@ -57,6 +71,6 @@ export const POST = async (req) => {
     await newOrder.save();
     return NextResponse.json({ message: "order create successfully", order: newOrder }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ message: "error", error });
+    return NextResponse.json({ message: "error", error }, { status: 500 });
   }
 };

@@ -24,13 +24,16 @@ const MyReview = () => {
         .flatMap((order) => order?.cart || [])
     : [];
 
-  console.log("allCartItems", allCartItems);
-
   const [reviewProducts, setReviewProducts] = useState([]);
-  console.log("reviewProducts", reviewProducts);
   const productIdsFromCart = allCartItems.map((item) => item._id);
-  // console.log("reviewProducts", reviewProducts);
-  console.log("productIdsFromCart", productIdsFromCart);
+  const uid = session?.data?.user?.id;
+  const pendingProducts = reviewProducts?.filter(
+    (product) =>
+      !product?.ratings?.some((rating) => String(rating.user) === uid)
+  );
+  const reviewedProducts = reviewProducts?.filter((product) =>
+    product?.ratings?.some((rating) => String(rating.user) === uid)
+  );
 
   useEffect(() => {
     if (productIdsFromCart.length === 0) {
@@ -107,12 +110,7 @@ const MyReview = () => {
                     <div className="tab-content product-details-nav-tab">
                       {activeTab === "review-pending" && (
                         <>
-                          {reviewProducts?.filter((product) =>
-                            product?.ratings?.every(
-                              (rating) =>
-                                rating.user !== session?.data?.user?.id
-                            )
-                          ).length < 1 && (
+                          {pendingProducts?.length < 1 && (
                             <p className="py-5 text-center text-red-500">
                               No review pending product
                             </p>
@@ -121,13 +119,7 @@ const MyReview = () => {
                             className="tab-pane fade show active"
                             id="review-pending"
                           >
-                            {reviewProducts
-                              ?.filter((product) =>
-                                product?.ratings?.every(
-                                  (rating) =>
-                                    rating.user !== session?.data?.user?.id
-                                )
-                              )
+                            {pendingProducts
                               .map((order, i) => (
                                 <div
                                   key={i}
@@ -174,8 +166,7 @@ const MyReview = () => {
                       )}
                       {activeTab === "review-history" && (
                         <>
-                          {reviewProducts?.filter((o) => o.ratings?.length > 0)
-                            .length < 1 && (
+                          {reviewedProducts?.length < 1 && (
                             <p className="py-5 text-center text-red-500">
                               No review history product
                             </p>
@@ -184,13 +175,7 @@ const MyReview = () => {
                             className="tab-pane fade show active"
                             id="review-history"
                           >
-                            {reviewProducts
-                              ?.filter((product) =>
-                                product?.ratings?.some(
-                                  (rating) =>
-                                    rating.user === session?.data?.user?.id
-                                )
-                              )
+                            {reviewedProducts
                               .map((order, i) => (
                                 <div
                                   key={i}

@@ -1,6 +1,7 @@
 import Brand from "@/app/backend/model/brands.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
 
 //===== Delete single category by id =========
 export const DELETE = async (req, { params }) => {
@@ -12,6 +13,7 @@ export const DELETE = async (req, { params }) => {
     if (!deletedBrand) {
       return NextResponse.json({ error: "brand not found" }, { status: 404 });
     }
+    void destroyImages(deletedBrand.icon);
     return NextResponse.json({
       message: "brand deleted successfully",
       status: 200,
@@ -38,10 +40,12 @@ export const PATCH = async (req, { params }) => {
     if (!existingBrand) {
       return new Response("blog not found", { status: 404 });
     }
+    const previousIcon = existingBrand.icon;
     existingBrand.icon = updateBrandData.icon;
     existingBrand.name = updateBrandData.name;
     existingBrand.status = updateBrandData.status;
     await existingBrand.save();
+    void destroyImages(diffRemoved(previousIcon, updateBrandData.icon));
     return NextResponse.json({
       message: "brand Update successfully",
       status: 200,

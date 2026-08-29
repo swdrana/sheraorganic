@@ -200,7 +200,7 @@ const TrendingProducts = ({ products, setting }) => {
               </div>
             </div>
           </div>
-          <div className="row row-cols-xxl-5 g-3 justify-content-center justify-content-md-start mt-5 filter_group">
+          <div className="row row-cols-2 row-cols-md-3 row-cols-xxl-5 g-3 justify-content-center justify-content-md-start mt-5 filter_group">
             {filteredProducts?.slice(0, endSlice).map((product, i) => (
               <TrendingProductCard key={i} product={product} />
             ))}

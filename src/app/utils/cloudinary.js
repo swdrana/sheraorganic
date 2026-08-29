@@ -16,3 +16,23 @@ export function optimizeCloudinaryUrl(url, width = 400, quality = 80) {
     `/upload/w_${width},q_${quality},f_auto/`
   );
 }
+
+export function getCloudinaryPublicId(url) {
+  if (
+    !url ||
+    typeof url !== "string" ||
+    !url.includes("res.cloudinary.com")
+  ) {
+    return null;
+  }
+  try {
+    const afterUpload = url.split("/image/upload/")[1];
+    if (!afterUpload) return null;
+    const path = afterUpload
+      .replace(/^v\d+\//, "")
+      .replace(/\.[a-zA-Z0-9]+$/, "");
+    return decodeURIComponent(path);
+  } catch {
+    return null;
+  }
+}

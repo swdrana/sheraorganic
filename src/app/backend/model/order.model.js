@@ -8,8 +8,8 @@ const orderSchema = new Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Customer",
-      required: true,
+      ref: "User",
+      required: false,
     },
     invoice: {
       type: Number,
