@@ -4,6 +4,7 @@ import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 import { menuItems } from "@/app/utils/data";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "react-use-cart";
 import useCategory from "../../dataFetching/useCategory";
@@ -15,6 +16,8 @@ const Offcanvas = () => {
   const offcanvasRef = useRef(null);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const [mounted, setMounted] = useState(false);
+  const [q, setQ] = useState("");
+  const router = useRouter();
   const session = useSession();
   const { totalItems } = useCart();
   const { categorys } = useCategory();
@@ -32,6 +35,12 @@ const Offcanvas = () => {
   }, [openOffcanvas, setOpenOffcanvas]);
 
   const closeOffcanvas = () => setOpenOffcanvas(false);
+  const handleSearch = (event) => {
+    event.preventDefault();
+    if (!q.trim()) return;
+    router.push(`/products/search=${q.trim()}`);
+    closeOffcanvas();
+  };
 
   return (
     <>
@@ -47,6 +56,17 @@ const Offcanvas = () => {
           <Link href="/" onClick={closeOffcanvas} className="d-inline-block mb-4">
             <img src={setting?.home?.logo} alt="logo" width="200" height="30" loading="lazy" />
           </Link>
+          <form className="offcanvas-search mb-3" onSubmit={handleSearch}>
+            <input
+              value={q}
+              onChange={(event) => setQ(event.target.value)}
+              placeholder="পণ্য খুঁজুন..."
+              className="form-control"
+            />
+            <button type="submit" className="btn btn-primary btn-sm mt-2 w-100">
+              খুঁজুন
+            </button>
+          </form>
           <nav className="mobile-menu-wrapper mt-3">
             <ul>
               {!session?.data?.user?.email ? (

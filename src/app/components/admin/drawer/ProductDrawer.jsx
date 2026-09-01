@@ -51,8 +51,8 @@ const ProductDrawer = ({ attribue, categoriesList }) => {
     setBrand,
     flashSaleProduct,
     setFlashSaleProduct,
-    category,
-    setCategory,
+    selectedCategory,
+    setSelectedCategory,
     productDes,
     setProductDes,
   } = useProductSubmit(attribue);
@@ -296,20 +296,12 @@ const ProductDrawer = ({ attribue, categoriesList }) => {
                               </div>
                               <div className="sm:col-span-2">
                                 <div>
-                                  <select
-                                    value={category}
-                                    onChange={(e) =>
-                                      setCategory(e.target.value)
-                                    }
-                                    className="mt-2 w-full rounded-lg bg-slate-500 bg-opacity-5 border border-gray-400 px-4 py-3 focus:ring-0 outline-none"
-                                  >
-                                    <option hidden value="">
-                                      Select a Category
-                                    </option>
-                                    {categoriesList?.map((category, i) => (
-                                      <option key={i}>{category?.name}</option>
-                                    ))}
-                                  </select>
+                                  <MultiSelect
+                                    options={categoriesList?.map((item) => ({ label: item.name, value: item.name })) || []}
+                                    value={selectedCategory || []}
+                                    onChange={setSelectedCategory}
+                                    labelledBy="Select categories"
+                                  />
                                 </div>
                               </div>
                             </div>

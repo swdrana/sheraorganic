@@ -14,6 +14,7 @@ import PreLoader from "../common/others/PreLoader";
 import StarRating from "../common/others/StartRating";
 import usebrands from "../dataFetching/useBrand";
 import useSingleProduct from "../dataFetching/useSingleProduct";
+import useUserOrders from "../dataFetching/useUserOrders";
 import useAddToCart from "../hooks/useAddToCart";
 import Price from "./Price";
 import ProductDetailsSidebar from "./ProductDetailsSidebar";
@@ -35,8 +36,21 @@ const ProductDetailsBody = ({ id, initialProduct }) => {
   const [secondSwiper, setSecondSwiper] = useState(null);
   const [loadingHuteiThak, set] = useState(true);
 
-  const { product, productLoading } = useSingleProduct(id, initialProduct);
+  const { product, productLoading, refetch } = useSingleProduct(id, initialProduct);
   const { data: session } = useSession();
+  const { userOrders } = useUserOrders();
+  const deliveredProductIds = new Set(
+    (Array.isArray(userOrders) ? userOrders : [])
+      .filter((order) => order.status === "Delivered")
+      .flatMap((order) =>
+        (order.cart || []).map((item) => String(item._id || item.productId))
+      )
+  );
+  const canReview =
+    !!session?.user?.id && deliveredProductIds.has(String(product?._id));
+  const myReview = product?.ratings?.find(
+    (rating) => String(rating.user) === String(session?.user?.id)
+  );
 
   const { brands } = usebrands();
   // console.log("product..", product);
@@ -484,7 +498,13 @@ const ProductDetailsBody = ({ id, initialProduct }) => {
                     </div>
                   </div>
 
-                  <ProductDetailsTab product={product} />
+                  <ProductDetailsTab
+                    product={product}
+                    canReview={canReview}
+                    myReview={myReview}
+                    isAuthenticated={!!session?.user?.id}
+                    onReviewSubmitted={refetch}
+                  />
                 </div>
               </div>
 

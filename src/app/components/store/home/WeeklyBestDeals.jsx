@@ -3,7 +3,7 @@ import { useMemo } from "react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import WeeklyBestDealsCard from "../common/card/WeeklyBestDealsCard";
+import ProductCard from "../common/card/ProductCard";
 import useAddToCart from "../hooks/useAddToCart";
 import WeeklyBestDealsOfferTime from "./WeeklyBestDealsOfferTime";
 const WeeklyBestDeals = ({ setting, products }) => {
@@ -81,9 +81,13 @@ const WeeklyBestDeals = ({ setting, products }) => {
                 </ul>
               </div>
               <div className="mt-4">
-                <div className="row g-4">
+                <div className="row g-2">
                   {weeklyBestProducts?.slice(0, 4).map((product) => (
-                    <WeeklyBestDealsCard product={product} key={product._id} />
+                    <ProductCard
+                      product={product}
+                      key={product._id}
+                      columnClassName="col-6 col-lg-4"
+                    />
                   ))}
                 </div>
               </div>

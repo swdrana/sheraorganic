@@ -60,6 +60,10 @@ const HomeCustomization = () => {
     setweeklyBestDealsFour,
     setweeklyBestDealsImg,
     weeklyBestDealsImg,
+    reviewGiftEnabled,
+    setReviewGiftEnabled,
+    reviewGiftProduct,
+    setReviewGiftProduct,
 
     // main slider
     sliderImageOne,
@@ -1018,6 +1022,59 @@ const HomeCustomization = () => {
               </div>
             </TabPanel>
           </Tabs>
+        </div>
+
+        {/* Review Gift */}
+        <div className="bg-white inline-block min-w-full align-middle pt-5 pb-8 px-8 rounded-lg mt-8">
+          <ContentTitle title="Review Gift" />
+          <div className="grid grid-cols-12 gap-4">
+            <InputLabel labelText="Enable Review Gift" />
+            <div className="col-span-12 xl:col-span-10">
+              <SwitchToggle
+                handleProcess={setReviewGiftEnabled}
+                processOption={reviewGiftEnabled}
+              />
+            </div>
+
+            <InputLabel labelText="Gift Product" />
+            <div className="col-span-12 xl:col-span-10">
+              <select
+                value={
+                  reviewGiftProduct?.name && reviewGiftProduct?.id
+                    ? `${reviewGiftProduct.name}|${reviewGiftProduct.id}`
+                    : ""
+                }
+                onChange={(event) => {
+                  const [name, id] = event.target.value.split("|");
+                  setReviewGiftProduct({ name, id });
+                }}
+                className="w-full rounded-lg bg-slate-500 bg-opacity-5 border border-gray-400 px-4 py-3 focus:ring-0 outline-none"
+              >
+                <option value="">Select gift product</option>
+                {products?.map((product) => (
+                  <option key={product._id} value={`${product.name}|${product._id}`}>
+                    {product.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <InputLabel labelText="Minimum Order Amount" />
+            <div className="col-span-12 xl:col-span-10">
+              <input
+                type="number"
+                min="0"
+                className="w-full rounded-lg bg-slate-500 bg-opacity-5 border border-gray-400 px-4 py-3 focus:ring-0 outline-none"
+                {...register("review_gift_min_order")}
+              />
+            </div>
+
+            <InputLabel labelText="Gift Label" />
+            <TextInput register={register} name="review_gift_label" placeholder="🎁 রিভিউ গিফট" errors={errors} errorMessage="Gift label is required" />
+
+            <InputLabel labelText="Gift Note" />
+            <TextInput register={register} name="review_gift_note" placeholder="রিভিউ দিলে পরের অর্ডারে একটি ফ্রি গিফট!" errors={errors} errorMessage="" isRequired={false} />
+          </div>
         </div>
 
         {/* Footer */}

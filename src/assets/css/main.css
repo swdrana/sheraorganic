@@ -5,7 +5,8 @@
  Version: 1.0
  Author: https://themeforest.net/user/themetags
 =======================*/
-
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Oleo+Script&display=swap");
 .w-0 {
   width: 0;
 }
@@ -7296,7 +7297,7 @@ small, .small,
   font-family: "Font Awesome 6 Brands";
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
   src: url(../fonts/fa-brands-400.woff2) format("woff2"), url(../fonts/fa-brands-400.ttf) format("truetype");
 }
 .fa-brands, .fab {
@@ -9171,7 +9172,7 @@ small, .small,
   font-family: "Font Awesome 6 Free";
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
   src: url(../fonts/fa-regular-400.woff2) format("woff2"), url(../fonts/fa-regular-400.ttf) format("truetype");
 }
 .fa-regular, .far {
@@ -9187,7 +9188,7 @@ small, .small,
   font-family: "Font Awesome 6 Free";
   font-style: normal;
   font-weight: 900;
-  font-display: swap;
+  font-display: block;
   src: url(../fonts/fa-solid-900.woff2) format("woff2"), url(../fonts/fa-solid-900.ttf) format("truetype");
 }
 .fa-solid, .fas {
@@ -9196,41 +9197,41 @@ small, .small,
 
 @font-face {
   font-family: "Font Awesome 5 Brands";
-  font-display: swap;
+  font-display: block;
   font-weight: 400;
   src: url(../fonts/fa-brands-400.woff2) format("woff2"), url(../fonts/fa-brands-400.ttf) format("truetype");
 }
 @font-face {
   font-family: "Font Awesome 5 Free";
-  font-display: swap;
+  font-display: block;
   font-weight: 900;
   src: url(../fonts/fa-solid-900.woff2) format("woff2"), url(../fonts/fa-solid-900.ttf) format("truetype");
 }
 @font-face {
   font-family: "Font Awesome 5 Free";
-  font-display: swap;
+  font-display: block;
   font-weight: 400;
   src: url(../fonts/fa-regular-400.woff2) format("woff2"), url(../fonts/fa-regular-400.ttf) format("truetype");
 }
 @font-face {
   font-family: "FontAwesome";
-  font-display: swap;
+  font-display: block;
   src: url(../fonts/fa-solid-900.woff2) format("woff2"), url(../fonts/fa-solid-900.ttf) format("truetype");
 }
 @font-face {
   font-family: "FontAwesome";
-  font-display: swap;
+  font-display: block;
   src: url(../fonts/fa-brands-400.woff2) format("woff2"), url(../fonts/fa-brands-400.ttf) format("truetype");
 }
 @font-face {
   font-family: "FontAwesome";
-  font-display: swap;
+  font-display: block;
   src: url(../fonts/fa-regular-400.woff2) format("woff2"), url(../fonts/fa-regular-400.ttf) format("truetype");
   unicode-range: u+f003, u+f006, u+f014, u+f016-f017, u+f01a-f01b, u+f01d, u+f022, u+f03e, u+f044, u+f046, u+f05c-f05d, u+f06e, u+f070, u+f087-f088, u+f08a, u+f094, u+f096-f097, u+f09d, u+f0a0, u+f0a2, u+f0a4-f0a7, u+f0c5, u+f0c7, u+f0e5-f0e6, u+f0eb, u+f0f6-f0f8, u+f10c, u+f114-f115, u+f118-f11a, u+f11c-f11d, u+f133, u+f147, u+f14e, u+f150-f152, u+f185-f186, u+f18e, u+f190-f192, u+f196, u+f1c1-f1c9, u+f1d9, u+f1db, u+f1e3, u+f1ea, u+f1f7, u+f1f9, u+f20a, u+f247-f248, u+f24a, u+f24d, u+f255-f25b, u+f25d, u+f271-f274, u+f278, u+f27b, u+f28c, u+f28e, u+f29c, u+f2b5, u+f2b7, u+f2ba, u+f2bc, u+f2be, u+f2c0-f2c1, u+f2c3, u+f2d0, u+f2d2, u+f2d4, u+f2dc;
 }
 @font-face {
   font-family: "FontAwesome";
-  font-display: swap;
+  font-display: block;
   src: url(../fonts/fa-v4compatibility.woff2) format("woff2"), url(../fonts/fa-v4compatibility.ttf) format("truetype");
   unicode-range: u+f041, u+f047, u+f065-f066, u+f07d-f07e, u+f080, u+f08b, u+f08e, u+f090, u+f09a, u+f0ac, u+f0ae, u+f0b2, u+f0d0, u+f0d6, u+f0e4, u+f0ec, u+f10a-f10b, u+f123, u+f13e, u+f148-f149, u+f14c, u+f156, u+f15e, u+f160-f161, u+f163, u+f175-f178, u+f195, u+f1f8, u+f219, u+f27a;
 }
@@ -35737,7 +35738,7 @@ select:focus {
   justify-content: center;
   flex-shrink: 0;
   border-radius: 0 4px 4px 0;
-  margin-right: -1px;
+  margin-right: 0;
 }
 @media (max-width: 575.98px) {
   .gshop-offcanvas-btn {
@@ -35899,10 +35900,15 @@ select:focus {
 }
 
 .mobile-toolbar-item {
-  padding: 0.5rem;
+  padding: 6px 4px;
   border-left: 1px solid #f4f4f4;
-  text-align: left;
-  padding-inline: 35px;
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .mobile-toolbar-item:first-child {
   border-right: 0;
@@ -35912,14 +35918,28 @@ select:focus {
 }
 
 .mobile-toolbar-icon {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #5d6374;
+  margin: 0 auto 2px auto;
+}
+.mobile-toolbar-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 .mobile-toolbar-label {
   display: block;
   color: #5d6374;
-  font-size: 0.75rem;
+  font-size: 10px;
+  line-height: 1.2;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  width: 100%;
 }
 
 @media (max-width: 991.98px) {
@@ -35927,10 +35947,34 @@ select:focus {
     padding-bottom: 3.5rem;
   }
   .mobile-toolbar {
-    display: block;
+    display: flex;
   }
   .mobile-toolbar + .btn-scroll-top {
     bottom: 4.5rem;
+  }
+}
+@media (max-width: 480px) {
+  .mobile-toolbar-item {
+    padding: 4px 2px;
+  }
+  .mobile-toolbar-label {
+    font-size: 9px;
+  }
+  .mobile-toolbar-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+@media (max-width: 360px) {
+  .mobile-toolbar-item {
+    padding: 3px 1px;
+  }
+  .mobile-toolbar-label {
+    font-size: 8px;
+  }
+  .mobile-toolbar-icon svg {
+    width: 12px;
+    height: 12px;
   }
 }
 .mobile-cart-icon {
@@ -35938,18 +35982,20 @@ select:focus {
 }
 .mobile-cart-icon svg {
   position: relative;
-  z-index: -1;
+  z-index: 1;
 }
 .mobile-cart-icon small.badge, .mobile-cart-icon .badge.small {
   position: absolute;
   padding: 0;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
   text-align: center;
-  left: 52%;
+  font-size: 8px;
+  top: -4px;
+  right: -4px;
   border-radius: 50%;
-  z-index: 1;
+  z-index: 2;
 }
 
 #preloader {
@@ -36148,7 +36194,6 @@ select:focus {
   border-radius: 4px;
   position: fixed;
   bottom: 0;
-  right: 40px;
   z-index: 2;
   opacity: 0;
   visibility: hidden;
@@ -36574,6 +36619,102 @@ select:focus {
 
 .product-info .pricing span.h4 {
   font-size: 1.25rem;
+}
+
+.product-card-v2 {
+  border: 1px solid #e9ecec;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.product-card-v2 .pcv2-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1/1;
+  background: #f6f7f5;
+  padding: 10px;
+}
+.product-card-v2 .pcv2-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.product-card-v2 .pcv2-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  background: #e23744;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.product-card-v2 .pcv2-wish {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  color: #e23744;
+}
+.product-card-v2 .pcv2-body {
+  padding: 10px 12px 4px;
+  gap: 4px;
+}
+.product-card-v2 .pcv2-cat {
+  font-size: 11px;
+  color: #8a8f8a;
+  text-transform: capitalize;
+}
+.product-card-v2 .pcv2-title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 34px;
+}
+.product-card-v2 .pcv2-rating {
+  font-size: 12px;
+}
+.product-card-v2 .pcv2-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-top: 2px;
+}
+.product-card-v2 .pcv2-add {
+  border-radius: 0;
+  font-size: 13px;
+  padding: 9px 8px;
+  min-height: 42px;
+}
+@media (min-width: 992px) {
+  .product-card-v2 .pcv2-body {
+    padding: 14px 16px 6px;
+  }
+  .product-card-v2 .pcv2-title {
+    font-size: 14px;
+    min-height: 37px;
+  }
+  .product-card-v2 .pcv2-price {
+    font-size: 17px;
+  }
+  .product-card-v2:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
 }
 
 .banner-box {

@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { useMainContext } from "../../provider/MainContextStore";
 
 const FooterNav = () => {
-  const { totalItems } = useCart();
-  const { setOpenOffcanvas } = useMainContext();
+  const { totalItems, cartTotal } = useCart();
+  const { setOpenCategoryDrawer } = useMainContext();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const FooterNav = () => {
           <button
             className="flex flex-col items-center justify-center py-2 px-1 flex-1 text-center cursor-pointer bg-transparent border-0"
             type="button"
-            onClick={() => setOpenOffcanvas(true)}
+            onClick={() => setOpenCategoryDrawer(true)}
           >
             <span className="flex items-center justify-center mb-1">
               <i className="fas fa-bars text-gray-600 text-sm"></i>
@@ -96,6 +96,9 @@ const FooterNav = () => {
               <small className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center leading-none">{mounted ? totalItems : 0}</small>
             </span>
             <span className="text-xs text-gray-600 leading-tight">Cart</span>
+            <span className="text-xs text-gray-600 leading-tight">
+              ৳{mounted ? cartTotal : 0}
+            </span>
           </Link>
         </div>
       </div>

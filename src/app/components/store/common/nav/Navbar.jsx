@@ -55,19 +55,13 @@ const Navbar = () => {
     }
   };
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (
-        searchBarRef.current &&
-        !searchBarRef.current.contains(event.target)
-      ) {
+    const handleClickOutside = (event) => {
+      if (searchBarRef.current && !searchBarRef.current.contains(event.target)) {
         setShowSearchBar(false);
       }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   const [isScrolled, setIsScrolled] = useState(false);
   const handleClick = (event) => {
@@ -144,15 +138,7 @@ const Navbar = () => {
         <div className="container px-3 px-md-3">
           <div ref={searchBarRef} className="gshop-navbar bg-white rounded ps-lg-5 position-relative">
             <div className="d-flex d-xl-none align-items-center justify-content-between w-100 py-2 px-2">
-              <button
-                type="button"
-                onClick={() => setOpenOffcanvas(true)}
-                className="gshop-offcanvas-btn offcanvas-toggle"
-                aria-label="Open navigation and categories"
-              >
-                <i className="fa-solid fa-grip"></i>
-              </button>
-              <Link href="/" className="navbar-brand mx-auto">
+              <Link href="/" className="navbar-brand">
                 {setting?.home?.logo ? (
                   <img src={setting.home.logo} alt="logo" height="36" />
                 ) : (
@@ -161,20 +147,12 @@ const Navbar = () => {
               </Link>
               <button
                 type="button"
-                onClick={() => setShowSearchBar((current) => !current)}
-                className="header-icon border-0 bg-transparent"
-                aria-label="Search"
+                onClick={() => setOpenOffcanvas(true)}
+                className="gshop-offcanvas-btn offcanvas-toggle ms-auto"
+                aria-label="Open navigation and search"
               >
-                <i className="fa-solid fa-magnifying-glass"></i>
+                <i className="fa-solid fa-grip"></i>
               </button>
-            </div>
-            <div className={`gshop-header-search d-xl-none w-100 ${showSearchBar ? "d-block" : "d-none"}`}>
-              <div className="dropdown-menu show position-static border-0 w-100 px-2 pb-2">
-                <form className="search-form d-flex align-items-center" onSubmit={handleSubmit}>
-                  <input type="text" placeholder="Search products..." className="w-100" value={searchText} onChange={(e) => setSearchText(e.target.value)} />
-                  <button type="submit" className="submit-icon-btn-secondary" aria-label="Submit search"><i className="fa-solid fa-magnifying-glass"></i></button>
-                </form>
-              </div>
             </div>
             <div className="row align-items-center d-none d-xl-flex">
               <div className="col-xxl-2 col-xl-3 col-md-3 col-5">

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import FeatureBrandProductCard from "../common/card/FeatureBrandProductCard";
+import ProductCard from "../common/card/ProductCard";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 
 
@@ -54,9 +54,9 @@ const FeatureProduct = ({ products, setting }) => {
 
           <div className="row g-4 justify-content-center">
             <div className="col-xxl-4 col-lg-6">
-              <div className="row row-cols-2 row-cols-md-1 g-3">
+              <div className="row g-2">
                 {featureBrandProductOne?.slice(0, 4).map((p, i) => (
-                  <FeatureBrandProductCard product={p} key={i} i={i} />
+                  <ProductCard product={p} key={p._id || i} columnClassName="col-6" />
                 ))}
               </div>
             </div>
@@ -106,9 +106,9 @@ const FeatureProduct = ({ products, setting }) => {
               </div>
             </div>
             <div className="col-xxl-4 col-lg-6 order-2 order-xxl-3">
-              <div className="row row-cols-2 row-cols-md-1 g-3">
+              <div className="row g-2">
                 {featureBrandProductTwo?.slice(0, 4).map((p, i) => (
-                  <FeatureBrandProductCard key={i} i={i} product={p} />
+                  <ProductCard key={p._id || i} product={p} columnClassName="col-6" />
                 ))}
               </div>
             </div>

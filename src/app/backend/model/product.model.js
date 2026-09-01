@@ -36,8 +36,9 @@ const productSchema = new Schema(
     },
     category: {
       type: String,
-      required: true,
+      required: false,
     },
+    categories: { type: [String], default: [] },
     videoUrl: {
       type: String,
       required: false,

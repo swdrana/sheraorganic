@@ -24,8 +24,9 @@ export async function productUpdate(id, updateProductData) {
       product.sku = updateProductData.sku;
       product.barcode = updateProductData.barcode;
       product.slug = updateProductData.slug;
-      product.categories = updateProductData.categories;
-      product.category = updateProductData.category;
+      product.categories = updateProductData.categories || [];
+      product.category =
+        updateProductData.category || updateProductData.categories?.[0];
       product.show = updateProductData.show;
       product.isCombination = updateProductData.isCombination;
       product.variants = updateProductData.variants;

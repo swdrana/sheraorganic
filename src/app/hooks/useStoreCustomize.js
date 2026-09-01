@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { notifyError, notifySuccess } from "../utils/toast";
 import {
-  addStoreCustomizationSetting,
   getStoreCustomizationSetting,
   updateStoreCustomizationSetting,
 } from "../backend/controllers/storecustomize.controller";
@@ -14,7 +13,6 @@ const useStoreCustomize = () => {
   // feature brand product
   const [isUpdate, setIsUpdate] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSave, setIsSave] = useState(true);
   const [featureBandBannerImg, setFeatureBandBannerImg] = useState("");
 
   // navbar
@@ -53,6 +51,8 @@ const useStoreCustomize = () => {
   const [weeklyBestDealsTwo, setweeklyBestDealsTwo] = useState({});
   const [weeklyBestDealsThree, setweeklyBestDealsThree] = useState({});
   const [weeklyBestDealsFour, setweeklyBestDealsFour] = useState({});
+  const [reviewGiftEnabled, setReviewGiftEnabled] = useState(false);
+  const [reviewGiftProduct, setReviewGiftProduct] = useState({});
 
   // HOME banner
   const [homeBannerOneImg, setHomeBannerOneImg] = useState("");
@@ -187,6 +187,11 @@ const useStoreCustomize = () => {
             weekly_best_delas_product_two: weeklyBestDealsTwo,
             weekly_best_delas_product_three: weeklyBestDealsThree,
             weekly_best_delas_product_four: weeklyBestDealsFour,
+            review_gift_enabled: reviewGiftEnabled,
+            review_gift_product: reviewGiftProduct,
+            review_gift_min_order: Number(data.review_gift_min_order) || 0,
+            review_gift_label: data.review_gift_label,
+            review_gift_note: data.review_gift_note,
 
             // our client say
             our_client_say_title: data.our_client_say_title,
@@ -256,26 +261,12 @@ const useStoreCustomize = () => {
         },
       };
 
-      if (!isSave) {
-        const res = await updateStoreCustomizationSetting(
-          storeCustomizationSettingData
-        );
-        // console.log("res...", res);
-
-        setIsUpdate(true);
-        setIsSubmitting(false);
-        notifySuccess(res.message);
-      } else {
-        const res = await addStoreCustomizationSetting(
-          storeCustomizationSettingData
-        );
-        // console.log("res..in add", res);
-
-        setIsUpdate(true);
-        setIsSubmitting(false);
-
-        notifySuccess(res.message);
-      }
+      const res = await updateStoreCustomizationSetting(
+        storeCustomizationSettingData
+      );
+      setIsUpdate(true);
+      setIsSubmitting(false);
+      notifySuccess(res.message);
     } catch (err) {
       // console.log("err..in", err);
       notifyError(err ? err?.response?.data?.message : err?.message);
@@ -692,6 +683,23 @@ const useStoreCustomize = () => {
           res?.storeCustomizationSetting?.setting?.home
             ?.weekly_best_delas_product_four
         );
+        const reviewGiftHome =
+          res?.storeCustomizationSetting?.setting?.home || {};
+        setReviewGiftEnabled(!!reviewGiftHome.review_gift_enabled);
+        setReviewGiftProduct(reviewGiftHome.review_gift_product || {});
+        setValue(
+          "review_gift_min_order",
+          Number(reviewGiftHome.review_gift_min_order) || 0
+        );
+        setValue(
+          "review_gift_label",
+          reviewGiftHome.review_gift_label || "🎁 রিভিউ গিফট"
+        );
+        setValue(
+          "review_gift_note",
+          reviewGiftHome.review_gift_note ||
+            "রিভিউ দিলে পরের অর্ডারে একটি ফ্রি গিফট!"
+        );
 
         // our client say
         setValue(
@@ -759,9 +767,6 @@ const useStoreCustomize = () => {
           res?.storeCustomizationSetting?.setting?.home?.client_five_img
         );
 
-        if (res) {
-          setIsSave(false);
-        }
       } catch (err) {
         console.log("error in use..-------------------", err);
         notifyError(err ? err?.response?.data?.message : err?.message);
@@ -811,6 +816,10 @@ const useStoreCustomize = () => {
     setweeklyBestDealsFour,
     weeklyBestDealsImg,
     setweeklyBestDealsImg,
+    reviewGiftEnabled,
+    setReviewGiftEnabled,
+    reviewGiftProduct,
+    setReviewGiftProduct,
 
     // navbar
     logo,

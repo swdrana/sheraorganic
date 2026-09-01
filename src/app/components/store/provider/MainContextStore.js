@@ -19,6 +19,9 @@ export function MainContextProviderStore({ children }) {
   const [productDetails, setProductDetails] = useState({});
   const [openOffcanvas, setOpenOffcanvas] = useState(false);
   const [openCartDrawer, setOpenCartDrawer] = useState(false);
+  const [cartPopup, setCartPopup] = useState({ open: false, product: null });
+  const [openCategoryDrawer, setOpenCategoryDrawer] = useState(false);
+  const [reviewReminder, setReviewReminder] = useState({ open: false, items: [] });
 
   const contextValue = {
     updateUserProfile,
@@ -33,6 +36,12 @@ export function MainContextProviderStore({ children }) {
     setOpenOffcanvas,
     openCartDrawer,
     setOpenCartDrawer,
+    cartPopup,
+    setCartPopup,
+    openCategoryDrawer,
+    setOpenCategoryDrawer,
+    reviewReminder,
+    setReviewReminder,
   };
 
   return (

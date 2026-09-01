@@ -12,7 +12,7 @@ export const getCachedSettings = unstable_cache(
       await connectDB();
       const storeCustomizationSetting = await Setting.findOne({
         name: "storeCustomizationSetting",
-      });
+      }).sort({ createdAt: 1 });
       return storeCustomizationSetting?.setting || null;
     } catch (e) {
       console.error("Error fetching settings directly from DB:", e);

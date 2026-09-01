@@ -41,6 +41,7 @@ export const POST = async (req) => {
       barcode: data.barcode,
       description: data.description,
       category: data.category,
+      categories: data.categories || [],
       image: data.image,
       tag: data.tag,
       prices: data.prices,

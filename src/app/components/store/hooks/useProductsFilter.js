@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { productMatchesCategory } from "@/app/utils/productCategory";
 
 const useProductFilter = (allProducts, categoryOrBrand) => {
   // console.log("categoryOrBrand..", categoryOrBrand);
@@ -54,8 +55,7 @@ const useProductFilter = (allProducts, categoryOrBrand) => {
     if (categoryOrBrand) {
       updatedProducts = updatedProducts.filter(
         (product) =>
-          product?.category?.replace(/\s+/g, "").toLowerCase() ===
-            categoryOrBrand ||
+          productMatchesCategory(product, categoryOrBrand) ||
           product?.brand?.replace(/\s+/g, "").toLowerCase() ===
             categoryOrBrand ||
           product?.name.toLowerCase().includes(categoryOrBrand.toLowerCase())

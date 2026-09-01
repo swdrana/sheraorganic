@@ -134,7 +134,8 @@ const useProductSubmit = (attribue) => {
           ? data.slug
           : data.name.toLowerCase().replace(/[^A-Z0-9]+/gi, "-"),
 
-        category: category,
+        categories: selectedCategory?.map((option) => option.value) || [],
+        category: selectedCategory?.[0]?.value || category,
 
         image: imageUrl,
         stock: variants?.length < 1 ? data.stock : Number(totalStock),
@@ -197,7 +198,7 @@ const useProductSubmit = (attribue) => {
           setBarcode(res?.product?.barcode);
           setSku(res?.product?.sku);
           setBrand(res?.product?.brand);
-          setBrand(res?.product?.category);
+          setCategory(res?.product?.category);
           const result = res.variants.map(({ ...rest }) => rest);
 
           setVariant(result);
@@ -310,7 +311,12 @@ const useProductSubmit = (attribue) => {
       setBrand(productDetails?.brand);
       setCategory(productDetails?.category);
       setSku(productDetails?.sku);
-      setSelectedCategory(productDetails?.categories);
+      setSelectedCategory(
+        (productDetails?.categories?.length
+          ? productDetails.categories
+          : [productDetails?.category].filter(Boolean)
+        ).map((name) => ({ label: name, value: name }))
+      );
       setDefaultCategory([productDetails?.category]);
       setTag(JSON.parse(productDetails.tag));
       setImageUrl(productDetails?.image);

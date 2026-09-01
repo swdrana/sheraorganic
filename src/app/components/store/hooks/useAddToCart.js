@@ -7,7 +7,7 @@ import { useMainContext } from "../provider/MainContextStore";
 
 const useAddToCart = () => {
   const session = useSession();
-  const { setOpenCartDrawer } = useMainContext();
+  const { setCartPopup } = useMainContext();
   // console.log("session in add to cart", session);
   const [quantity, setQuantity] = useState(1);
   const [addToCardLoading, setAddToCardLoading] = useState(false);
@@ -33,7 +33,6 @@ const useAddToCart = () => {
     if (existingProduct) {
       const newQuantity = Number(existingProduct.quantity) + Number(quantity);
       updateItemQuantity(existingProduct.id, newQuantity);
-      toast(`${product.name} added ${quantity} quantity successfully`);
       setAddToCardLoading(false);
     } else {
       const newItem = {
@@ -43,10 +42,9 @@ const useAddToCart = () => {
         quantity,
       };
       addItem(newItem, quantity);
-      toast(`${product.name} added to cart successfully`);
       setAddToCardLoading(false);
     }
-    setOpenCartDrawer(true);
+    setCartPopup({ open: true, product });
     setQuantity(1);
   };
 

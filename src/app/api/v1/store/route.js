@@ -2,6 +2,15 @@ import Setting from "@/app/backend/model/setting.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
+import { revalidatePath, revalidateTag } from "next/cache";
+
+const revalidateSettings = () => {
+  revalidateTag("settings");
+  revalidatePath("/", "layout");
+  revalidatePath("/about");
+  revalidatePath("/contact");
+  revalidatePath("/terms-condition");
+};
 
 const homeImageKeys = [
   "logo",
@@ -37,7 +46,7 @@ export const GET = async () => {
     // get orders from the server
     const storeCustomizationSetting = await Setting.findOne({
       name: "storeCustomizationSetting",
-    });
+    }).sort({ createdAt: 1 });
 
     return NextResponse.json(
       { message: "successfully get all settings", storeCustomizationSetting },
@@ -56,9 +65,13 @@ export const POST = async (req) => {
   const data = await req.json();
   // console.log("setting data", data);
   try {
-    const newStoreCustomizationSetting = new Setting(data);
-    const storeCustomizationSetting = await newStoreCustomizationSetting.save();
-    return NextResponse.json({ message: "store customization" });
+    await Setting.findOneAndUpdate(
+      { name: "storeCustomizationSetting" },
+      { $set: { ...data, name: "storeCustomizationSetting" } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    revalidateSettings();
+    return NextResponse.json({ message: "store customization saved" });
   } catch (error) {
     return NextResponse.json({ message: "error", error });
   }
@@ -71,13 +84,14 @@ export const PATCH = async (req) => {
   try {
     const previousSetting = await Setting.findOne({
       name: "storeCustomizationSetting",
-    });
-    const storeCustomizationSetting = await Setting.findOneAndUpdate(
+    }).sort({ createdAt: 1 });
+    await Setting.findOneAndUpdate(
       {
         name: "storeCustomizationSetting",
       },
       {
         $set: {
+          name: "storeCustomizationSetting",
           // contact us
           "setting.contact.contact_office_address_one":
             setting?.contact?.contact_office_address_one,
@@ -283,6 +297,14 @@ export const PATCH = async (req) => {
             setting?.home?.weekly_best_delas_product_three,
           "setting.home.weekly_best_delas_product_four":
             setting?.home?.weekly_best_delas_product_four,
+          "setting.home.review_gift_enabled":
+            setting?.home?.review_gift_enabled,
+          "setting.home.review_gift_product":
+            setting?.home?.review_gift_product,
+          "setting.home.review_gift_min_order":
+            setting?.home?.review_gift_min_order,
+          "setting.home.review_gift_label": setting?.home?.review_gift_label,
+          "setting.home.review_gift_note": setting?.home?.review_gift_note,
 
           // Our client say
           "setting.home.our_client_say_title":
@@ -309,6 +331,8 @@ export const PATCH = async (req) => {
       },
       {
         new: true,
+        upsert: true,
+        setDefaultsOnInsert: true,
       }
     );
     const removedImages = [
@@ -330,6 +354,7 @@ export const PATCH = async (req) => {
       ),
     ];
     void destroyImages(removedImages);
+    revalidateSettings();
     return NextResponse.json({
       message: "store customization update successfully-2",
     });

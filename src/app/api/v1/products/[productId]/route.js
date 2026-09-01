@@ -5,6 +5,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Order from "@/app/backend/model/order.model";
 import { destroyImages } from "@/app/backend/utils/cloudinaryServer";
+import User from "@/app/backend/model/user.model";
+import Setting from "@/app/backend/model/setting.model";
 
 //===== Delete single post by id =========
 export const DELETE = async (req, { params }) => {
@@ -52,6 +54,7 @@ export const PATCH = async (req, { params }) => {
     // Update product details
     existingProduct.name = updateProductData.name;
     existingProduct.category = updateProductData.category;
+    existingProduct.categories = updateProductData.categories || [];
     existingProduct.des = updateProductData.des;
     existingProduct.currentPrice = updateProductData.currentPrice;
     existingProduct.previousPrice = updateProductData.previousPrice;
@@ -176,6 +179,25 @@ export const PUT = async (req, { params }) => {
       Math.round((totalRatings / product.ratings.length) * 10) / 10;
 
     await product.save();
+    if (!existingRating) {
+      const settingDoc = await Setting.findOne({
+        name: "storeCustomizationSetting",
+      }).sort({ createdAt: 1 });
+      const home = settingDoc?.setting?.home || {};
+      if (home.review_gift_enabled && home.review_gift_product?.id) {
+        const user = await User.findById(userId);
+        const alreadyGranted = user?.pendingGifts?.some(
+          (gift) => gift.grantedForProductId === productId
+        );
+        if (user && !alreadyGranted) {
+          user.pendingGifts.push({
+            productId: home.review_gift_product.id,
+            grantedForProductId: productId,
+          });
+          await user.save();
+        }
+      }
+    }
     return NextResponse.json(
       { message: "রিভিউ সফলভাবে যুক্ত হয়েছে।" },
       { status: 200 }

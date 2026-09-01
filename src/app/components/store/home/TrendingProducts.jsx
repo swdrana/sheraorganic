@@ -2,10 +2,10 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import useProducts from "../dataFetching/useProducts";
-import TrendingProductCard from "../common/card/TrendingProductCard";
 import ProductCard from "../common/card/ProductCard";
 import useSetting from "../dataFetching/useSetting";
 import Loading from "../common/others/Loading";
+import { productMatchesCategory } from "@/app/utils/productCategory";
 
 const TrendingProducts = ({ products, setting }) => {
   const [hasMore, setHasMore] = useState(true);
@@ -33,13 +33,11 @@ const TrendingProducts = ({ products, setting }) => {
           .replace(/\s+/g, "")
           .toLowerCase()}`,
       ];
-      return featuredCategories.includes(
-        p.category.replace(/\s+/g, "").toLowerCase()
+      return featuredCategories.some((category) =>
+        productMatchesCategory(p, category)
       );
     } else {
-      return (
-        p.category.replace(/\s+/g, "").toLowerCase() === activeTrendingProduct
-      );
+      return productMatchesCategory(p, activeTrendingProduct);
     }
   });
   const handleEndSlice = () => {
@@ -202,7 +200,7 @@ const TrendingProducts = ({ products, setting }) => {
           </div>
           <div className="row row-cols-2 row-cols-md-3 row-cols-xxl-5 g-3 justify-content-center justify-content-md-start mt-5 filter_group">
             {filteredProducts?.slice(0, endSlice).map((product, i) => (
-              <TrendingProductCard key={i} product={product} />
+              <ProductCard key={product._id || i} product={product} />
             ))}
           </div>
           {activeTrendingProduct === "all products" && (

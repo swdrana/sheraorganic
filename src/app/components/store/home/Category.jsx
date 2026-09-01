@@ -3,6 +3,7 @@ import Link from "next/link";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 import { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { normalizeCategory, productMatchesCategory } from "@/app/utils/productCategory";
 
 const Category = ({ categorys, products }) => {
   // const { categorys, categoryLoading } = useCategory();
@@ -31,14 +32,15 @@ const Category = ({ categorys, products }) => {
               }}
               loop={categorys?.length > 6}
               grabCursor
-              spaceBetween={16}
+              spaceBetween={10}
               style={{ paddingBottom: 8 }}
               breakpoints={{
-                0: { slidesPerView: 2.2 },
-                576: { slidesPerView: 3 },
-                768: { slidesPerView: 4 },
-                992: { slidesPerView: 5 },
-                1200: { slidesPerView: 6 },
+                0: { slidesPerView: 3.3, spaceBetween: 8 },
+                420: { slidesPerView: 3.8 },
+                576: { slidesPerView: 4.5 },
+                768: { slidesPerView: 5 },
+                992: { slidesPerView: 6 },
+                1200: { slidesPerView: 7 },
               }}
             >
               {categorys?.slice(0, 12).map((category, index) => (
@@ -50,7 +52,7 @@ const Category = ({ categorys, products }) => {
                     className="d-block"
                   >
                     <div
-                      className={`gshop-animated-iconbox py-5 px-4 text-center border rounded-3 position-relative overflow-hidden ${
+                      className={`gshop-animated-iconbox py-3 px-2 py-md-4 px-md-3 text-center border rounded-3 position-relative overflow-hidden ${
                         category.colorClass || ""
                       }`}
                     >
@@ -59,20 +61,21 @@ const Category = ({ categorys, products }) => {
                           src={optimizeCloudinaryUrl(category.icon, 80)}
                           alt={category.name}
                           className="img-fluid"
-                          width="62"
-                          height="62"
+                          width="48"
+                          height="48"
                           loading="lazy"
                         />
                       </div>
-                      <div className="text-dark fs-sm fw-bold d-block mt-3">
+                      <div className="text-dark fs-xxs fs-md-sm fw-bold d-block mt-2 mt-md-3">
                         {category.name}
                       </div>
                       <span className="total-count position-relative ps-3 fs-sm fw-medium doted-primary">
                         {
-                          products?.filter(
-                            (p) =>
-                              p.category.replace(/\s+/g, "").toLowerCase() ===
-                              category.name.replace(/\s+/g, "").toLowerCase()
+                          products?.filter((product) =>
+                            productMatchesCategory(
+                              product,
+                              normalizeCategory(category.name)
+                            )
                           ).length
                         }{" "}
                       </span>

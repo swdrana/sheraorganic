@@ -1,134 +1,113 @@
 "use client";
 
-import Link from "next/link";
-import StarRating from "../others/StartRating";
 import { useSession } from "next-auth/react";
-
-import useAddToCart from "../../hooks/useAddToCart";
-import useAddWishlist from "../../hooks/useAddWishlist";
-import { useMainContext } from "../../provider/MainContextStore";
+import Link from "next/link";
 import { trackAddToCart } from "@/app/utilities/facebookPixel";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
+import { productCategoryList } from "@/app/utils/productCategory";
+import useAddToCart from "../../hooks/useAddToCart";
+import useAddWishlist from "../../hooks/useAddWishlist";
+import StarRating from "../others/StartRating";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({
+  product,
+  columnClassName = "col-6 col-lg-4 col-xxl-3",
+}) => {
   const { handelAddItem } = useAddToCart();
   const { data: session } = useSession();
-
   const { handleWishlist, wishlist } = useAddWishlist();
-  const { setOpenProductModal, setProductDetails } = useMainContext();
 
-  const handleAddToCartWithTracking = (product) => {
-    // Track Facebook Pixel AddToCart event
+  const handleAddToCartWithTracking = () => {
     trackAddToCart({
       content_ids: [product._id],
-      contents: [{
-        id: product._id,
-        quantity: 1,
-        item_price: product.prices.price
-      }],
-      currency: 'BDT',
-      value: product.prices.price,
+      contents: [
+        { id: product._id, quantity: 1, item_price: product.prices?.price },
+      ],
+      currency: "BDT",
+      value: product.prices?.price,
       user_data: {
-        em: session?.user?.email || '',
-        fn: session?.user?.name?.split(' ')[0] || '',
-        ln: session?.user?.name?.split(' ')[1] || ''
-      }
+        em: session?.user?.email || "",
+        fn: session?.user?.name?.split(" ")[0] || "",
+        ln: session?.user?.name?.split(" ")[1] || "",
+      },
     });
-    
-    // Add to cart
     handelAddItem({ ...product, id: product._id });
   };
 
+  const discounted = Number(product?.prices?.discount) >= 1;
+
   return (
-    <>
-      <div className="col-6 col-md-4 col-xxl-3 group">
-        <div className="vertical-product-card trend_style rounded-2 position-relative border-0 bg-white d-flex flex-column h-100">
-          <Link href={`/product-details/${product._id}`} className="d-block text-decoration-none flex-grow-1 text-dark">
-            {product.prices.discount >= 1 && (
-              <span className="offer-badge text-white fw-bold fs-xxs bg-danger position-absolute start-0 top-0" style={{ zIndex: 5 }}>
-                {product.prices.discount.toFixed(0)}% OFF
-              </span>
+    <div className={columnClassName}>
+      <div className="product-card-v2 h-100 d-flex flex-column position-relative bg-white">
+        {discounted && (
+          <span className="pcv2-badge">
+            {Math.round(product.prices.discount)}% OFF
+          </span>
+        )}
+        <button
+          type="button"
+          className="pcv2-wish"
+          aria-label="Wishlist"
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            handleWishlist(product);
+          }}
+        >
+          <i
+            className={
+              wishlist?.some((item) => item._id === product._id)
+                ? "fa-solid fa-heart"
+                : "fa-regular fa-heart"
+            }
+          ></i>
+        </button>
+        <Link
+          href={`/product-details/${product._id}`}
+          className="pcv2-body text-decoration-none text-dark d-flex flex-column flex-grow-1"
+        >
+          <span className="pcv2-thumb">
+            <img
+              src={optimizeCloudinaryUrl(product.image?.[0], 500)}
+              alt={product.name}
+              width="500"
+              height="500"
+              loading="lazy"
+            />
+          </span>
+          <span className="pcv2-cat">
+            {productCategoryList(product)[0] || product.brand}
+          </span>
+          <span className="pcv2-title">{product.name}</span>
+          <span className="pcv2-rating d-flex align-items-center">
+            <StarRating rating={product?.averageRating} />
+            <small className="text-muted ms-1">
+              ({product?.ratings?.length || 0})
+            </small>
+          </span>
+          <span className="pcv2-price">
+            ৳{product.prices?.price}
+            {discounted && (
+              <del className="text-muted ms-2">
+                ৳{product.prices?.originalPrice}
+              </del>
             )}
-
-            <div className="thumbnail position-relative text-center p-2 p-md-4 overflow-hidden" style={{ aspectRatio: "1 / 1" }}>
-              <img
-                src={optimizeCloudinaryUrl(product.image?.[0], 400)}
-                alt={product.name}
-                width="400"
-                height="400"
-                loading="lazy"
-                className="img-fluid w-100 h-100 group-hover:scale-105 transition-all ease-in-out transition-duration-500"
-                style={{ objectFit: "contain" }}
-              />
-            </div>
-
-            <div className="card-content p-2 p-md-4">
-              <div className="mb-2 tt-category tt-line-clamp tt-clamp-1">
-                <span className="d-inline-block text-muted fs-xxs">
-                  {product.category}
-                </span>
-              </div>
-              <div className="card-title fw-medium d-block mb-2 tt-line-clamp tt-clamp-2 text-dark">
-                {product.name}
-              </div>
-              <div className="d-flex align-items-center flex-nowrap star-rating fs-xxs mb-2">
-                <StarRating rating={product?.averageRating} />
-                <span className="flex-shrink-0 text-muted">
-                  ({product.ratings?.length} Reviews)
-                </span>
-              </div>
-              <div className="d-flex gap-3">
-                <h6 className="price text-dark mb-2 mb-md-4">
-                  ৳{product.prices.price}.00
-                </h6>
-                {product.prices.discount >= 1 && (
-                  <h6 className="price deleted text-danger mb-2 mb-md-4">
-                    ৳{product.prices.originalPrice}.00
-                  </h6>
-                )}
-              </div>
-            </div>
-          </Link>
-
-          {/* Action buttons kept outside the main link to avoid nested interactive elements */}
-          <div className="product-btns position-absolute d-flex gap-2 flex-column" style={{ zIndex: 10 }}>
-            <button
-              type="button"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleWishlist(product); }}
-              className="rounded-btn"
-              aria-label="Add to wishlist"
-            >
-              {wishlist?.some((item) => item._id === product._id) ? (
-                <i className="fa-solid fa-heart"></i>
-              ) : (
-                <i className="fa-regular fa-heart"></i>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpenProductModal(true); setProductDetails(product); }}
-              className="rounded-btn"
-              aria-label="Quick view"
-            >
-              <i className="fa-regular fa-eye"></i>
-            </button>
-          </div>
-
-          <div className="card-btn bg-white" style={{ zIndex: 10 }}>
-            <button
-              type="button"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCartWithTracking(product); }}
-              className="btn btn-outline-secondary d-block btn-sm hover:cursor-auto position-relative w-100"
-              style={{ minHeight: "40px" }}
-              aria-label={`Add ${product.name} to cart`}
-            >
-              Add to Cart
-            </button>
-          </div>
-        </div>
+          </span>
+        </Link>
+        <button
+          type="button"
+          className="pcv2-add btn btn-secondary w-100"
+          aria-label={`Add ${product.name} to cart`}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            handleAddToCartWithTracking();
+          }}
+        >
+          <i className="fa-solid fa-cart-plus me-2"></i>Add to Cart
+        </button>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -63,6 +63,15 @@ const UserSchema = new Schema(
       type: Date,
       required: false,
     },
+    pendingGifts: [
+      {
+        productId: { type: Schema.Types.ObjectId, ref: "Product" },
+        grantedForProductId: { type: String },
+        grantedAt: { type: Date, default: Date.now },
+        redeemed: { type: Boolean, default: false },
+        redeemedOrderCode: { type: Number },
+      },
+    ],
   },
   {
     timestamps: true,

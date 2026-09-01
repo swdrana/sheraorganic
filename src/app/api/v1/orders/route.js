@@ -1,5 +1,8 @@
 import getNextOrderCode from "@/app/backend/controllers/order.controller";
 import Order from "@/app/backend/model/order.model";
+import Product from "@/app/backend/model/product.model";
+import User from "@/app/backend/model/user.model";
+import Setting from "@/app/backend/model/setting.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 
@@ -53,11 +56,44 @@ export const POST = async (req) => {
     const orderCode = await getNextOrderCode();
     // console.log("orderCode..", orderCode);
 
+    let giftLine = null;
+    if (data.user) {
+      const settingDoc = await Setting.findOne({
+        name: "storeCustomizationSetting",
+      }).sort({ createdAt: 1 });
+      const home = settingDoc?.setting?.home || {};
+      const minOrder = Number(home.review_gift_min_order) || 0;
+      if (home.review_gift_enabled && Number(data.total) >= minOrder) {
+        const user = await User.findById(data.user);
+        const pending = user?.pendingGifts?.find((gift) => !gift.redeemed);
+        if (pending) {
+          const giftProduct = await Product.findById(pending.productId);
+          if (giftProduct) {
+            const label = (home.review_gift_label || "🎁 রিভিউ গিফট").trim();
+            giftLine = {
+              _id: String(giftProduct._id),
+              id: `${giftProduct._id}-gift`,
+              name: `${label}: ${giftProduct.name}`,
+              image: giftProduct.image || [],
+              price: 0,
+              prices: { price: 0, originalPrice: 0, discount: 0 },
+              quantity: 1,
+              isGift: true,
+            };
+            pending.redeemed = true;
+            pending.redeemedOrderCode = orderCode;
+            await user.save();
+          }
+        }
+      }
+    }
+    const finalCart = giftLine ? [giftLine, ...data.cart] : data.cart;
+
     const newOrder = new Order({
       clientToken: data.clientToken,
       orderCode: orderCode,
       user: data.user || undefined,
-      cart: data.cart,
+      cart: finalCart,
       user_info: data.user_info,
       subTotal: data.subTotal,
       shippingCost: data.shippingCost,

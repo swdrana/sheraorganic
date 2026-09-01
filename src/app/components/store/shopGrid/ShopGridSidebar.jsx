@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { normalizeCategory, productMatchesCategory } from "@/app/utils/productCategory";
 import { useEffect, useState } from "react";
 import useCategory from "../dataFetching/useCategory";
 import usebrands from "../dataFetching/useBrand";
@@ -73,10 +74,11 @@ const ShopGridSidebar = ({
                     {category.name}
                     <span className="fw-bold fs-xs total-count">
                       {
-                        products?.filter(
-                          (p) =>
-                            p.category.replace(/\s+/g, "").toLowerCase() ===
-                            `${category.name.replace(/\s+/g, "").toLowerCase()}`
+                        products?.filter((product) =>
+                          productMatchesCategory(
+                            product,
+                            normalizeCategory(category.name)
+                          )
                         ).length
                       }{" "}
                     </span>

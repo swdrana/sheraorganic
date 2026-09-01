@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"; // For App Router in Next.js 13
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { createUser } from "@/app/backend/controllers/user.controller";
+import PasswordInput from "./PasswordInput";
 
 const Login = ({ setting }) => {
   const [error, setError] = useState("");
@@ -188,26 +189,11 @@ const Login = ({ setting }) => {
                       <label className="fw-bold text-dark fs-sm mb-1">
                         Password
                       </label>
-                      <div className="check-password">
-                        <input
-                          onFocus={() => setError("")}
-                          type="password"
-                          placeholder="Password"
-                          className="theme-input"
-                          {...register("password", {
-                            required: "Password is required",
-                          })}
-                        />
-                        <span className="eye eye-icon">
-                          <i className="fa-solid fa-eye"></i>
-                        </span>
-                        <span className="eye eye-slash">
-                          <i className="fa-solid fa-eye-slash"></i>
-                        </span>
-                      </div>
-                      {errors.password && (
-                        <p className="text-danger">{errors.password.message}</p>
-                      )}
+                      <PasswordInput
+                        register={register}
+                        error={errors.password}
+                        onFocus={() => setError("")}
+                      />
                     </div>
                   </div>
                 </div>

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { createUser } from "@/app/backend/controllers/user.controller";
 import Loading from "@/app/components/store/common/others/Loading";
 import useSetting from "../../components/store/dataFetching/useSetting";
+import PasswordInput from "../../components/store/auth/PasswordInput";
 const page = () => {
   const router = useRouter();
   const {
@@ -132,21 +133,10 @@ const page = () => {
                   </div>
                   <div className="col-sm-12">
                     <div className="input-field check-password">
-                      <input
-                        type="password"
-                        placeholder="Password"
-                        className="theme-input"
-                        {...register("password", { required: true })}
+                      <PasswordInput
+                        register={register}
+                        error={errors.password}
                       />
-                      {errors.password && (
-                        <p className="text-red-600 mt-2">Password is requred</p>
-                      )}
-                      <span className="eye eye-icon">
-                        <i className="fa-solid fa-eye"></i>
-                      </span>
-                      <span className="eye eye-slash">
-                        <i className="fa-solid fa-eye-slash"></i>
-                      </span>
                     </div>
                   </div>
                 </div>

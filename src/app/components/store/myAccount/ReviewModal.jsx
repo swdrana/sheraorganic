@@ -2,6 +2,7 @@ import { updateProductRating } from "@/app/backend/controllers/product.controlle
 import React, { useState } from "react";
 import Loading from "../common/others/Loading";
 import { notifyError, notifySuccess } from "@/app/utils/toast";
+import StarRatingInput from "../common/others/StarRatingInput";
 
 const ReviewModal = ({
   showModal,
@@ -28,7 +29,7 @@ const ReviewModal = ({
       setShowModal(false);
       setReview("");
       setRating("");
-      setSuccessfullyReview(true);
+      setSuccessfullyReview?.(true);
     } else {
       notifyError(res?.message || "রিভিউ দেওয়া যায়নি।");
       setReviewSubmit(false);
@@ -48,20 +49,12 @@ const ReviewModal = ({
                 <form onSubmit={handleSubmit}>
                   <div className="form-group">
                     <label htmlFor="rating">Rating</label>
-                    <select
-                      id="rating"
-                      className="form-control border border-success py-1 mt-3"
-                      value={rating}
-                      onChange={(e) => setRating(e.target.value)}
-                      required
-                    >
-                      <option value="">Select rating</option>
-                      <option value="1">1 - Poor</option>
-                      <option value="2">2 - Fair</option>
-                      <option value="3">3 - Good</option>
-                      <option value="4">4 - Very Good</option>
-                      <option value="5">5 - Excellent</option>
-                    </select>
+                    <div className="mt-3">
+                      <StarRatingInput
+                        value={Number(rating) || 0}
+                        onChange={setRating}
+                      />
+                    </div>
                   </div>
                   <div className="form-group mt-5">
                     <label htmlFor="review">Your Review</label>
@@ -74,7 +67,7 @@ const ReviewModal = ({
                     />
                   </div>
                   <button
-                    disabled={reviewSubmit}
+                    disabled={reviewSubmit || Number(rating) < 1 || !review.trim()}
                     type="submit"
                     className="btn btn-primary"
                   >

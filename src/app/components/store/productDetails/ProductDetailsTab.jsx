@@ -2,10 +2,18 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import dayjs from "dayjs";
+import Link from "next/link";
 
 import StarRating from "../common/others/StartRating";
+import ProductReviewForm from "./ProductReviewForm";
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
-const ProductDetailsTab = ({ product }) => {
+const ProductDetailsTab = ({
+  product,
+  canReview,
+  myReview,
+  isAuthenticated,
+  onReviewSubmitted,
+}) => {
   const [activeTab, setActiveTab] = useState("des");
   return (
     <>
@@ -92,6 +100,21 @@ const ProductDetailsTab = ({ product }) => {
                 </div>
               </div>
               <hr className="mt-4 mb-4" />
+              {canReview ? (
+                <ProductReviewForm
+                  productId={product._id}
+                  existingReview={myReview}
+                  onSubmitted={onReviewSubmitted}
+                />
+              ) : isAuthenticated ? (
+                <p className="text-muted">
+                  এই পণ্য ডেলিভারি হওয়ার পর রিভিউ দিতে পারবেন।
+                </p>
+              ) : (
+                <p className="text-muted">
+                  <Link href="/login">লগইন</Link> করে রিভিউ দিন।
+                </p>
+              )}
               {product?.ratings?.length === 0 && (
                 <p className="text-muted">এখনও কোনো রিভিউ নেই।</p>
               )}
