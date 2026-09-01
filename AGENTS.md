@@ -143,9 +143,13 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
 
 ## Working agreement
 
-- **Commits: author is the repo owner (`swdrana`), plain message, NO `Co-Authored-By` / AI trailer.**
-- **Do not `git push` / open PRs / merge.** Finish work, run the self-checks, commit locally, report,
-  and let the owner push.
+- **Every commit and push in this repo goes out as the repo owner only.** Author & committer =
+  `swdrana <tctr2s@gmail.com>`, plain message, **NO `Co-Authored-By`, no AI/agent trailer, no
+  "generated with" line — ever, anywhere.** GitHub must show the owner as the sole contributor.
+  Never add a co-author, never change `git config user.*`, never open a PR from a bot identity.
+- **Push only after the owner explicitly approves this round's work** (e.g. "verified, push it").
+  Then `git push origin main` with the owner's own credentials/remote — nothing else changes. Do not
+  open PRs or merge. If not explicitly told to push, commit locally and let the owner push.
 - Per-task: run that task's manual test; don't block on browser-only checks — list them under
   "MANUAL VERIFY" and continue. Only a failing `npm run build` blocks progress.
 - After any `.scss` change: `npm run sass`, stage `src/assets/css/main.css`.

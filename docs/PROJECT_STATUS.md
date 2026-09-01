@@ -43,7 +43,11 @@
 
 ---
 
-## Round 2 — implemented locally, verification/push pending
+## Round 2 — সম্পন্ন, verified ও push (commit `869d540` + docs commit, `main`)
+
+Codex implement করেছে; Claude verify করেছে (`npm run build` clean, 54/54 static; `npm run lint`
+exit 0 warnings-only; `main.css` fresh compile-এর সাথে byte-identical); commit author/committer
+`swdrana <tctr2s@gmail.com>`, কোনো AI trailer নেই। ক্লায়েন্ট-এর জন্য checklist: `plan/client-check-list.md`।
 
 ক্রম: R2-T4 → R2-T5 → R2-T2 → R2-T1 → R2-T3 → R2-T9 → R2-T6 → R2-T7 → R2-T8।
 
@@ -86,7 +90,10 @@ Round-2 verify checklist: `plan/client-check-list.md`।
 
 ## এখন কী বাকি
 
-- Browser/session-dependent `MANUAL VERIFY` checklist চালানো।
-- Owner/Claude verification শেষে সব সবুজ হলে owner local Round-2 commit push করবেন।
-- Production DB-তে duplicate Setting document থাকলে deploy-এর আগে/পরে একবার
-  `node scripts/dedupe-settings.js` চালিয়ে unique index নিশ্চিত করতে হবে।
+- **ক্লায়েন্ট/মালিকের ম্যানুয়াল যাচাই** (`plan/client-check-list.md` — মোবাইল ও ডেস্কটপ দুটোতেই):
+  browser/session-নির্ভর জিনিসগুলো — নতুন card layout, cart popup, slider button live update,
+  password eye toggle, multi-category page, review form + reminder + gift redemption।
+- Vercel deploy-এর পর: production DB-তে পুরনো duplicate `Setting` doc থাকলে একবার
+  `MONGODB_URI="<prod-uri>" node scripts/dedupe-settings.js` চালাতে হবে (`Setting.name` unique
+  index কার্যকর করতে)। duplicate না থাকলে কিছু করার দরকার নেই।
+- ক্লায়েন্ট feedback এলে → পরের রাউন্ড: `plan/implementation-plan.md` নতুন করে লেখা, এই ফাইল হালনাগাদ।
