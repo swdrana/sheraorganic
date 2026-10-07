@@ -8,7 +8,7 @@
 > gotcha বদলালে `AGENTS.md`-ও একই ভাবে হালনাগাদ করো। machine-local (`~/.claude`) মেমোরিতে
 > এই প্রজেক্টের কিছু আলাদা করে রাখা হয় না — সব knowledge এখানেই।
 
-শেষ হালনাগাদ: 2026-09-01
+শেষ হালনাগাদ: 2026-10-07
 
 ---
 
@@ -88,8 +88,30 @@ Round-2 verify checklist: `plan/client-check-list.md`।
 
 ---
 
+## Round 3 — Admin Product category/variant fix, local implementation verified
+
+- Coolify application `cd4godxzi52rqcngcpudbhfy` read-only inspect করা হয়েছে: running container-এর
+  `NEXT_PUBLIC_BASE_URL` canonical HTTPS, attribute/category API `200`; production DB mutate করা হয়নি।
+- Git history ও production log count দিয়ে root cause নিশ্চিত: create API শুরু থেকেই `{ product }`
+  ফেরায়, কিন্তু combination create flow top-level `res.variants.map(...)` চালাত। Successful save-এর পরে
+  client `TypeError` করত। এটি env failure নয়; migration-এর পরে পুরনো pathটি দৃশ্যমান হয়েছে।
+- Combination selection এখন controlled: Generate/Clear-এর পরে visible option clear, attribute deselect-এ
+  stale values remove, existing edit-এ attributes/options hydrate, regeneration duplicate skip করে।
+- Category required; drawer reset-এ stale legacy category clear হয়। Attribute API empty/error হলে `[]`
+  fallback হওয়ায় drawer crash করে না।
+- Minimal Vitest + React Testing Library setup এবং ৭টি regression test যোগ হয়েছে। `npm test` ৭/৭ pass,
+  `npm run lint` exit 0 (pre-existing warnings), `npm run build` successful (54/54 static pages)।
+- Coolify application env secret-safeভাবে local `.env.local`-এ sync; original local file secure temp backup;
+  `.env*.local` ignored এবং `.env.local` Git index থেকে untracked। Credential rotation করা হয়নি।
+- কোনো commit, push বা deploy করা হয়নি।
+
+---
+
 ## এখন কী বাকি
 
+- **ম্যানুয়াল যাচাই:** Admin > Product-এ category select, নতুন combination create, Generate-এর পরে
+  selector clear, existing variant product edit/hydration, deselect/regenerate এবং duplicate না হওয়া।
+- Owner approval-এর পরে owner-only commit/push; Coolify Git auto-deploy enabled থাকলে push deployment trigger করবে।
 - **ক্লায়েন্ট/মালিকের ম্যানুয়াল যাচাই** (`plan/client-check-list.md` — মোবাইল ও ডেস্কটপ দুটোতেই):
   browser/session-নির্ভর জিনিসগুলো — নতুন card layout, cart popup, slider button live update,
   password eye toggle, multi-category page, review form + reminder + gift redemption।

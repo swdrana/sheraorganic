@@ -25,7 +25,8 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
   commit the regenerated `main.css`. Tailwind is also present but used sparingly (a few nav/footer bits).
   Swiper CSS is a static file: `public/css/swiper-bundle.min.css` (linked in `layout.js`).
 - Scripts: `npm run dev` (may hit EMFILE — use `WATCHPACK_POLLING=true npm run dev`), `npm run build`
-  (`next build` + `scripts/postbuild.js`), `npm run lint`, `npm run sass`.
+  (`next build` + `scripts/postbuild.js`), `npm run lint`, `npm test` (Vitest + React Testing Library),
+  `npm run sass`.
 - Images: **Cloudinary**, stored as raw `secure_url` strings. `product.image` is a `[String]` array.
   `src/app/utils/cloudinary.js` → `optimizeCloudinaryUrl(url, width=400, quality=80)` injects
   `w_,q_,f_auto` after `/upload/` (no height/crop). Server-side delete helper:
@@ -124,6 +125,14 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
   `src/app/utils/productCategory.js` → `productCategoryList(p)` / `productMatchesCategory(p, normalized)`
   everywhere instead of `p.category === x`.
 
+### Admin product variants
+
+- `POST /api/v1/products` returns `{ message, product }`; create-flow hydration must read
+  `response.product.variants`, never a top-level `response.variants`.
+- `useProductSubmit` owns selected attribute IDs/options. `AttributeOptionTwo` is controlled by its
+  `values` prop so Generate/Clear/Edit remain synchronized. Existing variant products hydrate selected
+  attributes/options from their variant keys, and generation skips combinations already present.
+
 ## Known gotchas
 
 - `src/assets/scss/base/_helpers.scss` forces `.vertical-product-card.trend_style .thumbnail { height: 250px }`
@@ -131,8 +140,8 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
   don't reintroduce the old classes for the new card.
 - `.card-btn` / `.product-btns` in `_product-card.scss` are hover-only (`visibility:hidden`) → invisible on
   touch. Any always-visible card button must not rely on those.
-- `.env.local` is **tracked in git** — secrets (Mongo URI, Cloudinary key+secret, Gmail app password,
-  NEXTAUTH_SECRET) are already on GitHub. Pre-existing; flag to the owner, don't fix silently.
+- `.env*.local` is ignored and `.env.local` is no longer tracked. Historical secrets were previously
+  committed to GitHub; the owner still needs to rotate them outside the repository.
 - Cloudinary API key/secret are exposed as `NEXT_PUBLIC_*` (browser bundle). Server delete helper prefers
   non-public `CLOUDINARY_*` but falls back to the public ones.
 - `POST /api/v1/store` historically could create duplicate `Setting` docs; `findOne` has no `.sort()`.

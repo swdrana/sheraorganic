@@ -45,7 +45,7 @@ const Products = () => {
     const fetchData = async () => {
       const res = await getAllCategories();
       // console.log('res..in',res )
-      setCategorys(res);
+      setCategorys(res || []);
       setLoading(false);
     };
 
@@ -65,7 +65,7 @@ const Products = () => {
     const fetchData = async () => {
       const res = await getAllAttributes();
       // console.log('res..in',res )
-      setAttribue(res);
+      setAttribue(res || []);
       setLoading(false);
     };
 

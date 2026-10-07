@@ -9,7 +9,7 @@ import { addProduct } from "../backend/controllers/product.controller";
 import { productUpdate } from "../backend/actions/product.action";
 import swal from "sweetalert";
 
-const useProductSubmit = (attribue) => {
+const useProductSubmit = (attribue = []) => {
   const {
     register,
     handleSubmit,
@@ -101,6 +101,11 @@ const useProductSubmit = (attribue) => {
         return toast.error("Brand is required!");
       }
 
+      if (selectedCategory.length === 0) {
+        setIsSubmitting(false);
+        return toast.error("Category is required!");
+      }
+
       const updatedVariants = variants.map((v) => {
         const newObj = {
           ...v,
@@ -190,7 +195,8 @@ const useProductSubmit = (attribue) => {
           setFlashSaleProduct(res?.product?.flashSale);
           setTag(JSON.parse(res?.product?.tag));
           setImageUrl(res?.product?.image);
-          setVariants(res?.product?.variants);
+          const savedVariants = res?.product?.variants || [];
+          setVariants(savedVariants);
           setValue("productId", res?.product?.productId);
           setProductId(res?.product?.productId);
           setOriginalPrice(res?.product?.prices?.originalPrice);
@@ -199,7 +205,21 @@ const useProductSubmit = (attribue) => {
           setSku(res?.product?.sku);
           setBrand(res?.product?.brand);
           setCategory(res?.product?.category);
-          const result = res.variants.map(({ ...rest }) => rest);
+          setSelectedCategory(
+            (res?.product?.categories?.length
+              ? res.product.categories
+              : [res?.product?.category].filter(Boolean)
+            ).map((name) => ({ label: name, value: name }))
+          );
+          const result = savedVariants.map((savedVariant) => {
+            const combination = {};
+            attribue.forEach((attribute) => {
+              if (savedVariant[attribute._id]) {
+                combination[attribute._id] = savedVariant[attribute._id];
+              }
+            });
+            return combination;
+          });
 
           setVariant(result);
 
@@ -279,6 +299,7 @@ const useProductSubmit = (attribue) => {
       setIsSubmitting(false);
       setAttributes([]);
       setBrand();
+      setCategory("");
       setUpdatedId();
       return;
     } else {
@@ -332,6 +353,43 @@ const useProductSubmit = (attribue) => {
   }, [productDetails, isProductDrawerOpen]);
 
   useEffect(() => {
+    if (!isProductDrawerOpen || !productDetails?._id) return;
+
+    const productVariants = productDetails?.variants || [];
+    const variantKeys = new Set(
+      productVariants.flatMap((productVariant) => Object.keys(productVariant))
+    );
+    const selectedAttributes = attribue.filter((attribute) =>
+      variantKeys.has(attribute._id)
+    );
+    const hydratedValues = Object.fromEntries(
+      selectedAttributes.map((attribute) => [
+        attribute._id,
+        [
+          ...new Set(
+            productVariants
+              .map((productVariant) => productVariant[attribute._id])
+              .filter(Boolean)
+          ),
+        ],
+      ])
+    );
+
+    setAttributes(selectedAttributes);
+    setValues(hydratedValues);
+    setVariant(
+      productVariants.map((productVariant) =>
+        Object.fromEntries(
+          selectedAttributes.map((attribute) => [
+            attribute._id,
+            productVariant[attribute._id],
+          ])
+        )
+      )
+    );
+  }, [attribue, isProductDrawerOpen, productDetails]);
+
+  useEffect(() => {
     if (productDetails.description) {
       setProductDes(productDetails.description);
     }
@@ -380,6 +438,12 @@ const useProductSubmit = (attribue) => {
     });
 
     setAttributes(attributeArray);
+    const selectedIds = new Set(attributeArray.map((attribute) => attribute._id));
+    setValues((currentValues) =>
+      Object.fromEntries(
+        Object.entries(currentValues).filter(([key]) => selectedIds.has(key))
+      )
+    );
   };
 
   //generate all combination combination
@@ -388,37 +452,40 @@ const useProductSubmit = (attribue) => {
       return toast.error("Please select a variant first!");
     }
 
-    const result = variants.filter(
-      ({ ...rest }) => JSON.stringify({ ...rest }) !== "{}"
-    );
-
-    // console.log("result", result);
-
-    setVariants(result);
-
     const combo = combinate(values);
+    const attributeIds = Object.keys(values);
+    const newCombinations = combo.filter(
+      (combination) =>
+        !variants.some((existingVariant) =>
+          attributeIds.every(
+            (attributeId) =>
+              existingVariant[attributeId] === combination[attributeId]
+          )
+        )
+    );
+    const generatedVariants = newCombinations.map((combination, index) => ({
+      ...combination,
+      originalPrice: getNumberTwo(originalPrice),
+      price: getNumber(price),
+      quantity: Number(quantity),
+      discount: Number(originalPrice - price),
+      productId:
+        productId && productId + "-" + (variants.length + index),
+      barcode,
+      sku,
+      image: imageUrl[0] || "",
+    }));
 
-    combo.map((com, i) => {
-      if (JSON.stringify(variant).includes(JSON.stringify(com))) {
-        return setVariant((pre) => [...pre, com]);
-      } else {
-        const newCom = {
-          ...com,
-
-          originalPrice: getNumberTwo(originalPrice),
-          price: getNumber(price),
-          quantity: Number(quantity),
-          discount: Number(originalPrice - price),
-          productId: productId && productId + "-" + (variants.length + i),
-          barcode: barcode,
-          sku: sku,
-          image: imageUrl[0] || "",
-        };
-
-        setVariants((pre) => [...pre, newCom]);
-        return setVariant((pre) => [...pre, com]);
-      }
-    });
+    setVariants((currentVariants) => [
+      ...currentVariants.filter((existingVariant) =>
+        Object.keys(existingVariant).length
+      ),
+      ...generatedVariants,
+    ]);
+    setVariant((currentCombinations) => [
+      ...currentCombinations,
+      ...newCombinations,
+    ]);
 
     setValues({});
   };

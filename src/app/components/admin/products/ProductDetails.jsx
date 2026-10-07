@@ -46,9 +46,9 @@ const ProductDetails = ({ productId }) => {
         getAllProducts(),
         getAllAttributes(),
       ]);
-      setCategories(categoryRes);
+      setCategories(categoryRes || []);
       setProducts(productRes);
-      setAttributes(attributeRes);
+      setAttributes(attributeRes || []);
       setLoading(false);
     };
 

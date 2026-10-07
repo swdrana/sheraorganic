@@ -1,45 +1,33 @@
-"use client"
-import React, { useEffect, useState } from "react";
+"use client";
+import React from "react";
 import { MultiSelect } from "react-multi-select-component";
-
 
 const AttributeOptionTwo = ({
   attributes,
   values,
   setValues,
-  selectedValueClear,
 }) => {
-  const [attributeOptions, setAttributeOptions] = useState([]);
-  const [selected, setSelected] = useState([]);
-  // console.log('attributes in attribute option',attributes)
-
-
+  const attributeOptions = (attributes?.variants || []).map((variant) => ({
+    ...variant,
+    label: variant?.name,
+    value: variant?._id,
+  }));
+  const selectedIds = values?.[attributes?._id] || [];
+  const selected = attributeOptions.filter((option) =>
+    selectedIds.includes(option._id)
+  );
 
   const handleSelectValue = (items) => {
-    // setSelectedValueClear(false);
-    setSelected(items);
-    setValues({
-      ...values,
-      [attributes._id]: items?.map((el) => el._id),
+    setValues((currentValues) => {
+      const nextValues = { ...currentValues };
+      if (items.length === 0) {
+        delete nextValues[attributes._id];
+      } else {
+        nextValues[attributes._id] = items.map((item) => item._id);
+      }
+      return nextValues;
     });
   };
-
-  useEffect(() => {
-    const options = attributes?.variants?.map((val) => {
-      return {
-        ...val,
-        label:val?.name,
-        value: val?._id,
-      };
-    });
-    setAttributeOptions(options);
-  }, [attributes?.variants]);
-
-  useEffect(() => {
-    if (selectedValueClear) {
-      setSelected([]);
-    }
-  }, [selectedValueClear]);
 
   return (
     <div>

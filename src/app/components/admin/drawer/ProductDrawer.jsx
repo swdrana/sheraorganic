@@ -18,7 +18,7 @@ import SwitchToggle from "../form/switch/SwitchToggle";
 import usebrands from "../featch/brands";
 import DescriptionInput from "../form/input/DescriptionInput";
 
-const ProductDrawer = ({ attribue, categoriesList }) => {
+const ProductDrawer = ({ attribue = [], categoriesList = [] }) => {
   const {
     values,
     language,
@@ -297,7 +297,7 @@ const ProductDrawer = ({ attribue, categoriesList }) => {
                               <div className="sm:col-span-2">
                                 <div>
                                   <MultiSelect
-                                    options={categoriesList?.map((item) => ({ label: item.name, value: item.name })) || []}
+                                    options={categoriesList.map((item) => ({ label: item.name, value: item.name }))}
                                     value={selectedCategory || []}
                                     onChange={setSelectedCategory}
                                     labelledBy="Select categories"

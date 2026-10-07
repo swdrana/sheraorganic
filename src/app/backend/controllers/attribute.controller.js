@@ -29,10 +29,14 @@ export async function getAllAttributes() {
     const response = await fetch(`${baseUrl}/api/v1/attributes`, {
       next: { tags: ["attribute"] },
     });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch attributes. Status: ${response.status}`);
+    }
     const attribute = await response.json();
-    return attribute.attributes;
+    return attribute.attributes || [];
   } catch (error) {
     console.error("Error in getAllAttributes:", error);
+    return [];
   }
 }
 
