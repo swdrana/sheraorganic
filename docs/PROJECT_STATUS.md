@@ -73,8 +73,6 @@ exit 0 warnings-only; `main.css` fresh compile-এর সাথে byte-identica
 9. **R2-T9** মোবাইল হেডার: 3-dot ডানে, standalone search বাদ → search Offcanvas-এর ভিতরে;
    bottom-nav "Category" নতুন category-only `CategoryDrawer` খোলে (পুরো মেনু নয়)।
 
-Round-2 verify checklist: `plan/client-check-list.md`।
-
 ### Round 2 এ যোগ হওয়া নতুন ফাইল (মূল)
 
 `src/assets/scss/components/_product-card-v2.scss`; `src/app/components/store/common/nav/`
@@ -88,7 +86,7 @@ Round-2 verify checklist: `plan/client-check-list.md`।
 
 ---
 
-## Round 3 — Admin Product category/variant fix, local implementation verified
+## Round 3 — Admin Product category/variant fix, deployed (`e2fa12d`)
 
 - Coolify application `cd4godxzi52rqcngcpudbhfy` read-only inspect করা হয়েছে: running container-এর
   `NEXT_PUBLIC_BASE_URL` canonical HTTPS, attribute/category API `200`; production DB mutate করা হয়নি।
@@ -103,7 +101,8 @@ Round-2 verify checklist: `plan/client-check-list.md`।
   `npm run lint` exit 0 (pre-existing warnings), `npm run build` successful (54/54 static pages)।
 - Coolify application env secret-safeভাবে local `.env.local`-এ sync; original local file secure temp backup;
   `.env*.local` ignored এবং `.env.local` Git index থেকে untracked। Credential rotation করা হয়নি।
-- কোনো commit, push বা deploy করা হয়নি।
+- Owner-only commit `e2fa12d` `main`-এ push হয়েছে; Coolify webhook `200` পেয়ে auto-deploy সম্পন্ন করেছে।
+  Production container commit match, storefront/attribute/category endpoints `200`, relevant runtime error `0`।
 
 ---
 
@@ -111,11 +110,10 @@ Round-2 verify checklist: `plan/client-check-list.md`।
 
 - **ম্যানুয়াল যাচাই:** Admin > Product-এ category select, নতুন combination create, Generate-এর পরে
   selector clear, existing variant product edit/hydration, deselect/regenerate এবং duplicate না হওয়া।
-- Owner approval-এর পরে owner-only commit/push; Coolify Git auto-deploy enabled থাকলে push deployment trigger করবে।
-- **ক্লায়েন্ট/মালিকের ম্যানুয়াল যাচাই** (`plan/client-check-list.md` — মোবাইল ও ডেস্কটপ দুটোতেই):
-  browser/session-নির্ভর জিনিসগুলো — নতুন card layout, cart popup, slider button live update,
+- **ক্লায়েন্ট/মালিকের ম্যানুয়াল যাচাই** (মোবাইল ও ডেস্কটপ দুটোতেই): browser/session-নির্ভর জিনিসগুলো —
+  নতুন card layout, cart popup, slider button live update,
   password eye toggle, multi-category page, review form + reminder + gift redemption।
 - Vercel deploy-এর পর: production DB-তে পুরনো duplicate `Setting` doc থাকলে একবার
   `MONGODB_URI="<prod-uri>" node scripts/dedupe-settings.js` চালাতে হবে (`Setting.name` unique
   index কার্যকর করতে)। duplicate না থাকলে কিছু করার দরকার নেই।
-- ক্লায়েন্ট feedback এলে → পরের রাউন্ড: `plan/implementation-plan.md` নতুন করে লেখা, এই ফাইল হালনাগাদ।
+- ক্লায়েন্ট feedback এলে → পরের রাউন্ডের scope ঠিক করে এই ফাইল হালনাগাদ।
