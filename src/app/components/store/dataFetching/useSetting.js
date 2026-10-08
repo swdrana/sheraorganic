@@ -1,28 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { getStoreCustomizationSetting } from "../../../backend/controllers/storecustomize.controller";
-// Adjust the import path according to your project structure
+import { useSharedData } from "./sharedFetch";
 
+// Settings are read by Navbar, NavbarTop, Offcanvas, Footer and several pages; they all share
+// one request.
 const useSetting = (page) => {
-  // console.log("page", page);
-  const [settingLoading, setSettingLoading] = useState(false);
-  const [setting, setSetting] = useState({});
-  useEffect(() => {
-    setSettingLoading(true);
-    const fetchData = async () => {
-      const res = await getStoreCustomizationSetting();
-      // console.log('res..in',res )
-
-      setSetting(res?.storeCustomizationSetting?.setting);
-      page === "faq" &&
-        setSetting(res?.storeCustomizationSetting?.setting?.faq);
-      setSettingLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
+  const [res, settingLoading] = useSharedData("settings", getStoreCustomizationSetting, null);
+  const all = res?.storeCustomizationSetting?.setting;
+  const setting = res ? (page === "faq" ? all?.faq : all) : {};
   return { setting, settingLoading };
 };
 

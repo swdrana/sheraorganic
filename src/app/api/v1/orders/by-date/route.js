@@ -1,9 +1,11 @@
 import Order from "@/app/backend/model/order.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
 // Get orders by date
 export const GET = async (req) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   
   try {

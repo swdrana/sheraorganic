@@ -10,9 +10,10 @@ import StarRating from "./StartRating";
 
 import { useMainContext } from "../../provider/MainContextStore";
 import usebrands from "../../dataFetching/useBrand";
+import useAttributes from "../../dataFetching/useAttributes";
+import useProducts from "../../dataFetching/useProducts";
 import { useCart } from "react-use-cart";
 import useAddToCart from "../../hooks/useAddToCart";
-import { getAllAttributes } from "../../../../backend/controllers/attribute.controller";
 import VariantList from "../../productDetails/VariantList";
 import Price from "../../productDetails/Price";
 import { trackAddToCart } from "@/app/utilities/facebookPixel";
@@ -22,27 +23,23 @@ const ProductModal = () => {
   const [secondSwiper, setSecondSwiper] = useState(null);
   const [loadingHuteiThak, set] = useState(true);
 
-  const { brands } = usebrands();
-
   const { handelAddItem, handleIncrement, handleDecrement, quantity } =
     useAddToCart();
   const { openProductModal, setOpenProductModal, productDetails } =
     useMainContext();
   const { items, inCart } = useCart();
 
-  const [attributes, setAttributes] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await getAllAttributes();
-      // console.log("res..in========================================", res);
-      setAttributes(res);
-    };
-
-    // Only fetch data when the modal is open
-    if (openProductModal) {
-      fetchData();
-    }
-  }, [openProductModal]);
+  // This modal is mounted on every route; only load its data once it is opened.
+  const { brands } = usebrands({ enabled: !!openProductModal });
+  const { attributes } = useAttributes({ enabled: !!openProductModal });
+  // Home-page cards carry products without `description` (keeps the page small); look it up
+  // from the shared product list when a wishlist item from there is opened.
+  const needsDescription =
+    !!openProductModal && !!productDetails && productDetails.description === undefined;
+  const { products: allProducts } = useProducts({ enabled: needsDescription });
+  const description =
+    productDetails?.description ??
+    allProducts.find((item) => item._id === productDetails?._id)?.description;
 
   const [value, setValue] = useState("");
   const [price, setPrice] = useState(0);
@@ -389,7 +386,7 @@ const ProductModal = () => {
                         <span className="hr-line w-100 position-relative d-block align-self-end ms-1"></span>
                       </div>
                       <p className="tt-line-clamp tt-clamp-3 mb-3">
-                        {productDetails?.description}
+                        {description}
                       </p>
 
                       <div className="mb-3">

@@ -2,6 +2,8 @@
 import connectDB from "@/app/utils/database";
 import Product from "../model/product.model";
 import mongoose from "mongoose";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/app/data/cachedData";
 import { destroyImages, diffRemoved } from "../utils/cloudinaryServer";
 
 // category update
@@ -39,6 +41,7 @@ export async function productUpdate(id, updateProductData) {
       product.flashSale = updateProductData.flashSale;
 
       await product.save();
+      revalidateTag(CACHE_TAGS.products);
       const nextImages = [
         ...(updateProductData.image || []),
         ...(updateProductData.variants || [])
@@ -68,6 +71,8 @@ export async function productAdd(ProductData) {
     });
     // console.log("new product...", newProduct);
     await newProduct.save();
+    revalidateTag(CACHE_TAGS.products);
+    revalidateTag(CACHE_TAGS.stats);
     // console.log("product add...", product);
 
     return { message: "successfully" };

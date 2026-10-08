@@ -1,4 +1,4 @@
-import { getUserByEmail } from "@/app/backend/actions/user.action";
+import { findUserByEmail } from "@/app/backend/utils/userLookup";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -15,7 +15,7 @@ export const authOptions = {
 
         try {
           // Fetch user from your database
-          const user = await getUserByEmail(email);
+          const user = await findUserByEmail(email);
           // console.log("user in auth..", user);
 
           if (user && user.password === password) {
@@ -48,7 +48,7 @@ export const authOptions = {
     signIn: "/login",
   },
   session: {
-    jwt: true,
+    strategy: "jwt",
   },
   callbacks: {
     async jwt({ token, user }) {

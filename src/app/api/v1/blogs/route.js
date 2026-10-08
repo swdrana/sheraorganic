@@ -1,13 +1,13 @@
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import Blog from "../../../backend/model/blog.model";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS, getCachedBlogList } from "@/app/data/cachedData";
 
-// get all Blogs
+// get all Blogs (served from the shared data cache; writes revalidate the tag)
 export const GET = async () => {
-  connectDB();
   try {
-    // get blogs from the server
-    const blogs = await Blog.find().sort({ _id: -1 });
+    const blogs = await getCachedBlogList();
     // console.log("Blogs..", Blogs);
 
     if (blogs?.length <= 0)
@@ -41,6 +41,7 @@ export const POST = async (req) => {
     });
     // console.log("new Blog...", newBlog);
     const blog = await newBlog.save();
+    revalidateTag(CACHE_TAGS.blogs);
     return NextResponse.json({ message: "success", blog });
   } catch (error) {
     console.log("errro in blog route", error);

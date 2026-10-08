@@ -8,7 +8,7 @@
 > gotcha বদলালে `AGENTS.md`-ও একই ভাবে হালনাগাদ করো। machine-local (`~/.claude`) মেমোরিতে
 > এই প্রজেক্টের কিছু আলাদা করে রাখা হয় না — সব knowledge এখানেই।
 
-শেষ হালনাগাদ: 2026-10-07
+শেষ হালনাগাদ: 2026-10-08
 
 ---
 
@@ -106,6 +106,31 @@ exit 0 warnings-only; `main.css` fresh compile-এর সাথে byte-identica
 
 ---
 
+## Round 4 — CPU / duplicate-request fix + security (2026-10-08)
+
+কারণ (audit): প্রতিটা store page-এ Navbar/NavbarTop/Offcanvas/Footer/CategoryDrawer আলাদা করে
+`/api/v1/store` (৪×, `no-store`) ও `/api/v1/categorys` (৪–৫×) আনত; কোনো public API-তে cache ছিল না
+(প্রতি request = full-collection DB query); `product-details` নিজের API-কে HTTP-তে ডাকত; `useProducts`-এ race;
+home-এ `ProductPrefetcher` পুরো product list আবার নামাত; tab focus-এ session refetch; home-এর Category
+Swiper `loop` hydration mismatch করে পুরো page client-এ re-render করাত (production-এও ছিল)।
+
+করা হয়েছে:
+- `cachedData.js` shared server cache + সব write path-এ `revalidateTag`; public GET route-এর JSON production-এর
+  সাথে byte-identical যাচাই করা।
+- `sharedFetch.js` দিয়ে client-side dedupe; ProductModal শুধু open হলে fetch; session focus-refetch বন্ধ।
+- Browser request (headless Chrome, mobile): product-details ১৫ → ৬, home ১১ → ৩; DB query প্রতি request-এর
+  বদলে ৫ মিনিটে একবার/admin edit-এ; local API ~২ms; home HTML ৫২০KB → ৩১৬KB; home hydration error ০।
+- DB: cached connection, Order index (`orderCode`, `user+createdAt`, `clientToken`, `createdAt`)।
+- Security: user/order API staff/self-only, password কোনো response-এ নেই, `/admin` staff-only,
+  order status PATCH staff-only, `getUserByEmail` "use server" থেকে সরানো।
+- `robots.js` + `sitemap.js`; `next.config` cleanup (Next 15-only key বাদ, `remotePatterns`, error/warn log রাখা)।
+- About page-এর সংখ্যা server-side `countDocuments` (আগে browser সব order/user নামাত)।
+- Codex (read-only review) এর ৪টি finding fix করা হয়েছে।
+
+VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU; সার্ভার load ৩৪–৩৯ (২ core), CPU steal ~৮৫%,
+একসাথে ৩টি Coolify build (`coolify-helper`) চলছিল — slowness-এর মূল কারণ সার্ভার-স্তরে (build/অন্য app),
+আমাদের app নয়।
+
 ## এখন কী বাকি
 
 - **ম্যানুয়াল যাচাই:** Admin > Product-এ category select, নতুন combination create, Generate-এর পরে
@@ -113,7 +138,13 @@ exit 0 warnings-only; `main.css` fresh compile-এর সাথে byte-identica
 - **ক্লায়েন্ট/মালিকের ম্যানুয়াল যাচাই** (মোবাইল ও ডেস্কটপ দুটোতেই): browser/session-নির্ভর জিনিসগুলো —
   নতুন card layout, cart popup, slider button live update,
   password eye toggle, multi-category page, review form + reminder + gift redemption।
-- Vercel deploy-এর পর: production DB-তে পুরনো duplicate `Setting` doc থাকলে একবার
+- **সার্ভার:** Coolify-তে আটকে থাকা deployment cancel; server-এর concurrent build ১-এ নামানো; provider-এর
+  CPU steal/throttle যাচাই; অন্য AI-এর push কমানো।
+- Round 4 ম্যানুয়াল যাচাই: admin-এ category/brand/product/settings edit → storefront-এ সাথে সাথে দেখা যায়;
+  লগইন করা customer-এর my-account/order history/checkout ঠিক; admin customers/orders page ঠিক।
+- বাকি ঝুঁকি: products/categories/brands/attributes/blogs/coupons/staff write API এখনো auth ছাড়া;
+  plaintext password (hashing আলাদা round); `/products` grid client-side filter।
+- পুরনো: production DB-তে পুরনো duplicate `Setting` doc থাকলে একবার
   `MONGODB_URI="<prod-uri>" node scripts/dedupe-settings.js` চালাতে হবে (`Setting.name` unique
   index কার্যকর করতে)। duplicate না থাকলে কিছু করার দরকার নেই।
 - ক্লায়েন্ট feedback এলে → পরের রাউন্ডের scope ঠিক করে এই ফাইল হালনাগাদ।

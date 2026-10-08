@@ -1,9 +1,13 @@
 import Order from "@/app/backend/model/order.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/app/data/cachedData";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
-//===== Delete single order by id =========
-export const DELETE = async ({ params }) => {
+//===== Delete single order by id (staff only) =========
+export const DELETE = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   try {
     const { orderId } = params;
@@ -11,6 +15,7 @@ export const DELETE = async ({ params }) => {
     if (!deletedOrder) {
       return NextResponse.json({ error: "order not found" }, { status: 404 });
     }
+    revalidateTag(CACHE_TAGS.stats);
     return NextResponse.json({
       message: "order deleted successfully",
       status: 200,
@@ -20,8 +25,9 @@ export const DELETE = async ({ params }) => {
   }
 };
 
-// ======== update single order  ============
+// ======== update single order (staff only) ============
 export async function PATCH(req, { params }) {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
 
   const { orderId } = params;
@@ -40,6 +46,7 @@ export async function PATCH(req, { params }) {
       );
     }
 
+    revalidateTag(CACHE_TAGS.stats);
     return NextResponse.json(
       { message: "Order Updated Successfully!" },
       { status: 200 }

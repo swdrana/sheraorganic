@@ -1,5 +1,7 @@
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/app/data/cachedData";
 import Blog from "../../../../backend/model/blog.model";
 import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
 
@@ -13,6 +15,7 @@ export const DELETE = async (req, { params }) => {
     if (!deletedBlog) {
       return NextResponse.json({ error: "blog not found" }, { status: 404 });
     }
+    revalidateTag(CACHE_TAGS.blogs);
     void destroyImages(deletedBlog.img);
     return NextResponse.json({
       message: "blog deleted successfully",
@@ -47,6 +50,7 @@ export const PATCH = async (req, { params }) => {
     existingBlog.title = updateBlogData.title;
     existingBlog.status = updateBlogData.status;
     await existingBlog.save();
+    revalidateTag(CACHE_TAGS.blogs);
     void destroyImages(diffRemoved(previousImage, updateBlogData.img));
     return NextResponse.json({
       message: "blog Update successfully",

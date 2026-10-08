@@ -1,13 +1,13 @@
 import Attribute from "@/app/backend/model/attributes.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS, getCachedAttributeList } from "@/app/data/cachedData";
 
-// get all attributes
+// get all attributes (served from the shared data cache; writes revalidate the tag)
 export const GET = async () => {
-  connectDB();
   try {
-    // get blogs from the server
-    const attributes = await Attribute.find().sort({ _id: -1 });
+    const attributes = await getCachedAttributeList();
     if (attributes.length === 0)
       return NextResponse.json({ error: "attributes not found" });
 
@@ -39,6 +39,7 @@ export const POST = async (req) => {
       // icon:data.icon
     });
     await newAttribute.save();
+    revalidateTag(CACHE_TAGS.attributes);
     return NextResponse.json({ message: "Attribute add success", status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "error", error });

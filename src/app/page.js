@@ -3,7 +3,6 @@ import FeatureProduct from "./components/store/home/FeatureProduct";
 import TrendingProducts from "./components/store/home/TrendingProducts";
 import WeeklyBestDeals from "./components/store/home/WeeklyBestDeals";
 import FacebookPixelTracker from "./components/store/common/others/FacebookPixelTracker";
-import ProductPrefetcher from "./components/store/common/others/ProductPrefetcher";
 import dynamic from "next/dynamic";
 import Hero from "./components/store/home/Hero";
 
@@ -19,20 +18,21 @@ import {
 } from "./data/cachedData";
 
 const page = async () => {
-  // Fetch all initial data directly on the server with 60s cache revalidation
-  const [setting, products, categorys, blogs] = await Promise.all([
+  // Initial data comes straight from the shared server data cache (tag-revalidated)
+  const [setting, allProducts, categorys, blogs] = await Promise.all([
     getCachedSettings(),
     getCachedProducts(),
     getCachedCategories(),
     getCachedBlogs(),
   ]);
+  // Product cards never show the long HTML description; dropping it keeps the home page's RSC
+  // payload small (it was ~30% of the HTML). ProductModal looks it up on demand.
+  const products = (allProducts || []).map(({ description, ...rest }) => rest);
 
   return (
     <>
       {/* Track client-side Facebook Pixel PageView */}
       <FacebookPixelTracker />
-      {/* Prefetch products in the background so /products loads instantly */}
-      <ProductPrefetcher />
 
       {/* Render all sections immediately with server-side data (No client-side skeleton blocks on load!) */}
       <Hero setting={setting} />

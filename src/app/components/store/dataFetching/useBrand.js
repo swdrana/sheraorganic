@@ -1,28 +1,10 @@
 // hooks/usebrands.js
-
+"use client";
 import { getAllBrands } from "@/app/backend/controllers/brand.controller";
-import { useState, useEffect } from "react";
+import { useSharedData } from "./sharedFetch";
 
-const usebrands = () => {
-  const [brands, setbrands] = useState([]);
-  const [brandLoading, setBrandsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await getAllBrands();
-        // console.log("res..in", res);
-        setbrands(res);
-      } catch (error) {
-        console.error("Failed to fetch brands:", error);
-      } finally {
-        setBrandsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+const usebrands = ({ enabled = true } = {}) => {
+  const [brands, brandLoading] = useSharedData("brands", getAllBrands, [], enabled);
   return { brands, brandLoading };
 };
 

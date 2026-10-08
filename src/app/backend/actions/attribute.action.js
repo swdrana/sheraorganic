@@ -1,6 +1,8 @@
 "use server";
 import connectDB from "@/app/utils/database";
 import Attribute from "../model/attributes.model";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/app/data/cachedData";
 
 // add attribute value
 export async function addChildAttributeValue(attributeId, attributeValue) {
@@ -16,6 +18,7 @@ export async function addChildAttributeValue(attributeId, attributeValue) {
 
     // await handleProductAttribute(attributeId, childId);
     // console.log("res..in child attribute delet", res);
+    revalidateTag(CACHE_TAGS.attributes);
     return res;
   } catch (err) {
     console.log("error.... in attribute action", err);
@@ -34,6 +37,7 @@ export async function deleteChildAttribute(attributeId, childId) {
 
     // await handleProductAttribute(attributeId, childId);
     // console.log("res..in child attribute delet", res);
+    revalidateTag(CACHE_TAGS.attributes);
     return res;
   } catch (err) {
     return err;
@@ -66,6 +70,7 @@ export async function updateChildAttributes(attributeId, childId, updateData) {
           },
         }
       );
+      revalidateTag(CACHE_TAGS.attributes);
       return res;
     }
   } catch (err) {
@@ -113,6 +118,7 @@ export async function updateChildAttributesStatus(
           },
         }
       );
+      revalidateTag(CACHE_TAGS.attributes);
       return res;
     }
   } catch (err) {

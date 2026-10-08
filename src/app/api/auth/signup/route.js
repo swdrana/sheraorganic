@@ -4,6 +4,8 @@ import User from "@/app/backend/model/user.model";
 import connectDB from "@/app/utils/database";
 
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/app/data/cachedData";
 
 export async function POST(req) {
   const { name, email, password } = await req.json();
@@ -24,6 +26,7 @@ export async function POST(req) {
     const user = await new User({ name, email, password: password });
     // console.log("user............", user);
     await user.save();
+    revalidateTag(CACHE_TAGS.stats);
     return NextResponse.json(
       { message: "User created", user },
       { status: 201 }

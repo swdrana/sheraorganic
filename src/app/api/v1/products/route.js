@@ -1,13 +1,13 @@
 import Product from "@/app/backend/model/product.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS, getCachedProductList } from "@/app/data/cachedData";
 
-// get all products
+// get all products (served from the shared data cache; writes revalidate the tag)
 export const GET = async () => {
-  connectDB();
   try {
-    // get blogs from the server
-    const products = await Product.find().sort({ _id: -1 });
+    const products = await getCachedProductList();
     // console.log("products..", products);
 
     if (products?.length <= 0)
@@ -55,6 +55,8 @@ export const POST = async (req) => {
     });
     // console.log("new product...", newProduct);
     const product = await newProduct.save();
+    revalidateTag(CACHE_TAGS.products);
+    revalidateTag(CACHE_TAGS.stats);
     return NextResponse.json({ message: "success", product });
   } catch (error) {
     return NextResponse.json({ message: "error", error });

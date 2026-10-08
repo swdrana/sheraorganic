@@ -1,6 +1,8 @@
 import Brand from "@/app/backend/model/brands.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/app/data/cachedData";
 import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
 
 //===== Delete single category by id =========
@@ -13,6 +15,7 @@ export const DELETE = async (req, { params }) => {
     if (!deletedBrand) {
       return NextResponse.json({ error: "brand not found" }, { status: 404 });
     }
+    revalidateTag(CACHE_TAGS.brands);
     void destroyImages(deletedBrand.icon);
     return NextResponse.json({
       message: "brand deleted successfully",
@@ -45,6 +48,7 @@ export const PATCH = async (req, { params }) => {
     existingBrand.name = updateBrandData.name;
     existingBrand.status = updateBrandData.status;
     await existingBrand.save();
+    revalidateTag(CACHE_TAGS.brands);
     void destroyImages(diffRemoved(previousIcon, updateBrandData.icon));
     return NextResponse.json({
       message: "brand Update successfully",

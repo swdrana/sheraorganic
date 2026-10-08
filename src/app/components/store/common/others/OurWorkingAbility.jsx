@@ -1,34 +1,30 @@
 "use client";
 
-import useOrders from "../../../admin/featch/useOrder";
-import useProducts from "../../dataFetching/useProducts";
-import useUsers from "../../dataFetching/useUsers";
-
-const OurWorkingAbility = ({ orders, products, users }) => {
-  // console.log("orders", orders);
+// `stats` = { products, orders, delivered, customers } counts from getStoreStats() (server).
+const OurWorkingAbility = ({ stats }) => {
   const counters = [
     {
       id: 1,
       icon: "/img/icons/icon-1.png",
-      count: `${products?.length}`,
+      count: `${stats?.products ?? 0}`,
       label: "Total Products",
     },
     {
       id: 2,
       icon: "/img/icons/icon-2.png",
-      count: `${orders?.length}`,
+      count: `${stats?.orders ?? 0}`,
       label: "Total Orders",
     },
     {
       id: 3,
       icon: "/img/icons/icon-3.png",
-      count: `${users?.length}`,
+      count: `${stats?.customers ?? 0}`,
       label: "Total Visitors",
     },
     {
       id: 4,
       icon: "/img/icons/icon-4.png",
-      count: `${orders?.filter((o) => o.status === "Delivered")?.length}`,
+      count: `${stats?.delivered ?? 0}`,
       label: "Total Delivery",
     },
   ];

@@ -1,12 +1,14 @@
 import User from "@/app/backend/model/user.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { getApiSession, canAccessUser, unauthorized } from "@/app/backend/utils/apiAuth";
 import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
 
 export async function PATCH(req, { params }) {
+  const { id } = params;
+  if (!canAccessUser(await getApiSession(), id)) return unauthorized();
   connectDB();
 
-  const { id } = params;
   const updateUserData = await req.json(); // Get the status from request body
   // console.log("update updateUserData", updateUserData, id);
   try {
@@ -48,11 +50,11 @@ export async function PATCH(req, { params }) {
 export const GET = async (req, { params }) => {
   // console.log("hit get in signle blog details");
 
+  const { id } = params;
+  if (!canAccessUser(await getApiSession(), id)) return unauthorized();
   connectDB();
   try {
-    const { id } = params;
-    // console.log("user id..", id);
-    const userDetails = await User.findById(id);
+    const userDetails = await User.findById(id).select("-password");
 
     // console.log("product details in api route", productDetails);
     if (!userDetails) {

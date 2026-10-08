@@ -1,3 +1,5 @@
+import { forgetShared } from "@/app/components/store/dataFetching/sharedFetch";
+
 // Helper function to get API URL
 function getApiUrl() {
   const apiUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -34,6 +36,7 @@ export async function addStoreCustomizationSetting(
       );
     }
 
+    forgetShared("settings"); // later useSetting() calls must not see the pre-save copy
     return await response.json();
   } catch (error) {
     console.error("Error adding store customization setting:", error);
@@ -86,6 +89,7 @@ export async function updateStoreCustomizationSetting(
       );
     }
 
+    forgetShared("settings"); // later useSetting() calls must not see the pre-save copy
     return await response.json();
   } catch (error) {
     console.error("Error updating store customization setting:", error);

@@ -7,6 +7,8 @@ import Order from "@/app/backend/model/order.model";
 import { destroyImages } from "@/app/backend/utils/cloudinaryServer";
 import User from "@/app/backend/model/user.model";
 import Setting from "@/app/backend/model/setting.model";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS, getCachedProductDoc } from "@/app/data/cachedData";
 
 //===== Delete single post by id =========
 export const DELETE = async (req, { params }) => {
@@ -17,6 +19,8 @@ export const DELETE = async (req, { params }) => {
     if (!deletedProduct) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
+    revalidateTag(CACHE_TAGS.products);
+    revalidateTag(CACHE_TAGS.stats);
     void destroyImages([
       ...(deletedProduct.image || []),
       ...(deletedProduct.variants || [])
@@ -64,6 +68,7 @@ export const PATCH = async (req, { params }) => {
     existingProduct.flashSale = updateProductData.flashSale;
 
     await existingProduct.save();
+    revalidateTag(CACHE_TAGS.products);
     return NextResponse.json({
       message: "Product updated successfully",
       status: 200,
@@ -78,10 +83,9 @@ export const PATCH = async (req, { params }) => {
 
 //======== single product details =========
 export const GET = async (req, { params }) => {
-  connectDB();
   try {
     const { productId } = params;
-    const productDetails = await Product.findById(productId);
+    const productDetails = await getCachedProductDoc(productId);
 
     if (!productDetails) {
       return NextResponse.json(
@@ -179,6 +183,7 @@ export const PUT = async (req, { params }) => {
       Math.round((totalRatings / product.ratings.length) * 10) / 10;
 
     await product.save();
+    revalidateTag(CACHE_TAGS.products);
     if (!existingRating) {
       const settingDoc = await Setting.findOne({
         name: "storeCustomizationSetting",

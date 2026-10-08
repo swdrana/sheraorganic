@@ -3,6 +3,7 @@ import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { getCachedSettingDoc } from "@/app/data/cachedData";
 
 const revalidateSettings = () => {
   revalidateTag("settings");
@@ -41,12 +42,9 @@ const aboutImageKeys = [
 
 // get all orders
 export const GET = async () => {
-  connectDB();
   try {
-    // get orders from the server
-    const storeCustomizationSetting = await Setting.findOne({
-      name: "storeCustomizationSetting",
-    }).sort({ createdAt: 1 });
+    // served from the shared data cache; POST/PATCH call revalidateSettings()
+    const storeCustomizationSetting = await getCachedSettingDoc();
 
     return NextResponse.json(
       { message: "successfully get all settings", storeCustomizationSetting },

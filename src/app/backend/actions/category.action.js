@@ -2,6 +2,8 @@
 import connectDB from "@/app/utils/database";
 import Category from "../model/category.model";
 import cloudinary from "cloudinary";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/app/data/cachedData";
 import { destroyImages, diffRemoved } from "../utils/cloudinaryServer";
 
 // add category
@@ -20,6 +22,7 @@ export async function addNewCategory(categoryData) {
       // icon:data.icon
     });
     await newCategory.save();
+    revalidateTag(CACHE_TAGS.categories);
 
     return { message: "category add successfully" };
   } catch (err) {
@@ -45,6 +48,7 @@ export async function categoryUpdate(categoryId, updateCategoryData) {
     existingCategory.status = updateCategoryData.status;
     existingCategory.icon = updateCategoryData.icon;
     await existingCategory.save();
+    revalidateTag(CACHE_TAGS.categories);
     void destroyImages(diffRemoved(previousIcon, updateCategoryData.icon));
 
     return { message: "category update successfully" };
@@ -69,6 +73,7 @@ export async function categoryStatusUpdate(categoryId, updateCategoryData) {
     existingCategory.status = updateCategoryData.status;
     existingCategory.icon = updateCategoryData.icon;
     await existingCategory.save();
+    revalidateTag(CACHE_TAGS.categories);
 
     return { message: "category update successfully" };
   } catch (err) {
@@ -95,6 +100,7 @@ export async function deleteCategoryById(id) {
     // console.log("delete category ", id);
     const res = await Category.findByIdAndDelete(id);
     if (!res) return { message: "category not found", status: 404 };
+    revalidateTag(CACHE_TAGS.categories);
     void destroyImages(res.icon);
     // console.log("res in delete action in category action", res);
     return { message: `${res.name} delete successfully ` };

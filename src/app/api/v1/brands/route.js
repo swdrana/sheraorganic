@@ -1,13 +1,13 @@
 import Brand from "@/app/backend/model/brands.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS, getCachedBrandList } from "@/app/data/cachedData";
 
-// get all attributes
+// get all brands (served from the shared data cache; writes revalidate the tag)
 export const GET = async () => {
-  connectDB();
   try {
-    // get blogs from the server
-    const brands = await Brand.find().sort({ _id: -1 });
+    const brands = await getCachedBrandList();
     if (brands.length === 0)
       return NextResponse.json({ error: "brands not found" });
 
@@ -37,6 +37,7 @@ export const POST = async (req) => {
       // icon:data.icon
     });
     await newBrand.save();
+    revalidateTag(CACHE_TAGS.brands);
     return NextResponse.json({ message: "brand add success", status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "error", error });

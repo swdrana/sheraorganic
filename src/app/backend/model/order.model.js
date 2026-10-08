@@ -93,6 +93,14 @@ const orderSchema = new Schema(
     timestamps: true,
   }
 );
+// Lookups done on every storefront visit / order: by code (invoice, tracking), by user
+// (my-account, review reminder), idempotency token (checkout), and date range (admin reports).
+// Non-unique on purpose so index builds can never fail on legacy data.
+orderSchema.index({ orderCode: 1 });
+orderSchema.index({ user: 1, createdAt: -1 });
+orderSchema.index({ clientToken: 1 }, { sparse: true });
+orderSchema.index({ createdAt: -1 });
+
 const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
 
 export default Order;

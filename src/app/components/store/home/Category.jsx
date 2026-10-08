@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 import { Autoplay } from "swiper";
@@ -6,6 +7,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { normalizeCategory, productMatchesCategory } from "@/app/utils/productCategory";
 
 const Category = ({ categorys, products }) => {
+  // Swiper's loop mode clones slides on the client only, so enabling it during hydration made the
+  // server HTML mismatch and React re-rendered the whole page in the browser. Turn it on after mount.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const loop = mounted && categorys?.length > 6;
   // const { categorys, categoryLoading } = useCategory();
   // const { products, productsLoading } = useProducts();
   return (
@@ -24,13 +30,14 @@ const Category = ({ categorys, products }) => {
               </h2>
             </div>
             <Swiper
+              key={loop ? "loop" : "static"}
               modules={[Autoplay]}
               autoplay={{
                 delay: 3000,
                 disableOnInteraction: false,
                 pauseOnMouseEnter: true,
               }}
-              loop={categorys?.length > 6}
+              loop={loop}
               grabCursor
               spaceBetween={10}
               style={{ paddingBottom: 8 }}

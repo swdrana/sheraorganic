@@ -1,13 +1,13 @@
 import Category from "@/app/backend/model/category.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS, getCachedCategoryList } from "@/app/data/cachedData";
 
-// get all categorys
+// get all categorys (served from the shared data cache; writes revalidate the tag)
 export const GET = async () => {
-  connectDB();
   try {
-    // get blogs from the server
-    const categorys = await Category.find().sort({ _id: -1 });
+    const categorys = await getCachedCategoryList();
     if (categorys.length <= 0)
       return NextResponse.json({ error: "categorys not found" });
 
@@ -40,6 +40,7 @@ export const POST = async (req) => {
       icon: data.icon,
     });
     await newCategory.save();
+    revalidateTag(CACHE_TAGS.categories);
     return NextResponse.json({ message: "Category add success", status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "error", error });

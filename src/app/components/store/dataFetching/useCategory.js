@@ -1,29 +1,11 @@
 // hooks/useCategory.js
 "use client";
 import { getAllCategories } from "@/app/backend/controllers/category.controller";
-// import { getAllCategories } from "@/app/controlers/category.controler";
-import { useState, useEffect } from "react";
+import { useSharedData } from "./sharedFetch";
 
+// One shared request for every component on the page (Navbar, Footer, Offcanvas, …).
 const useCategory = () => {
-  const [categorys, setCategorys] = useState([]);
-  const [categoryLoading, setCategoryLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await getAllCategories();
-        // console.log("res..in", res);
-        setCategorys(res);
-      } catch (error) {
-        console.error("Failed to fetch categorys:", error);
-      } finally {
-        setCategoryLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+  const [categorys, categoryLoading] = useSharedData("categories", getAllCategories, []);
   return { categorys, categoryLoading };
 };
 

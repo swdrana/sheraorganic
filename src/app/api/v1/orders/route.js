@@ -5,9 +5,13 @@ import User from "@/app/backend/model/user.model";
 import Setting from "@/app/backend/model/setting.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/app/data/cachedData";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
-// get all orders
+// get all orders (staff only: contains every customer's name, phone and address)
 export const GET = async () => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   try {
     // get orders from the server
@@ -105,6 +109,7 @@ export const POST = async (req) => {
       status: data.status,
     });
     await newOrder.save();
+    revalidateTag(CACHE_TAGS.stats);
     return NextResponse.json({ message: "order create successfully", order: newOrder }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: "error", error }, { status: 500 });

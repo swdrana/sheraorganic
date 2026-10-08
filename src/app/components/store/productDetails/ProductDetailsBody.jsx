@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { Controller } from "swiper"; // Import Controller from modules in Swiper 8.4.0
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { getAllAttributes } from "../../../backend/controllers/attribute.controller";
+import useAttributes from "../dataFetching/useAttributes";
 import { trackAddToCart } from "../../../utilities/facebookPixel";
 import PreLoader from "../common/others/PreLoader";
 import StarRating from "../common/others/StartRating";
@@ -53,6 +53,7 @@ const ProductDetailsBody = ({ id, initialProduct }) => {
   );
 
   const { brands } = usebrands();
+  const { attributes } = useAttributes();
   // console.log("product..", product);
   const { handelAddItem, handleIncrement, handleDecrement, quantity } =
     useAddToCart();
@@ -69,16 +70,6 @@ const ProductDetailsBody = ({ id, initialProduct }) => {
   if (product?.videoUrl) {
     media.splice(1, 0, { type: "video", src: product.videoUrl });
   }
-  const [attributes, setAttributes] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await getAllAttributes();
-      // console.log('res..in',res )
-      setAttributes(res);
-    };
-
-    fetchData();
-  }, []);
 
   const [value, setValue] = useState("");
   const [price, setPrice] = useState(0);

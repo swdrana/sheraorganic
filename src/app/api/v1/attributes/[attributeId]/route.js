@@ -1,11 +1,12 @@
 import Attribute from "@/app/backend/model/attributes.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/app/data/cachedData";
 
 //===== Delete single category by id =========
 export const DELETE = async (req, { params }) => {
   connectDB();
-  console.log("req......===", req?.url);
   try {
     const { attributeId } = params;
     const deletedAttribute = await Attribute.findByIdAndDelete(attributeId);
@@ -15,6 +16,7 @@ export const DELETE = async (req, { params }) => {
         { status: 404 }
       );
     }
+    revalidateTag(CACHE_TAGS.attributes);
     return NextResponse.json({
       message: "Attribute deleted successfully",
       status: 200,
@@ -50,6 +52,7 @@ export const PATCH = async (req, { params }) => {
     existingAttribute.variants = updateAttributeData.variants;
     existingAttribute.status = updateAttributeData.status;
     await existingAttribute.save();
+    revalidateTag(CACHE_TAGS.attributes);
     return NextResponse.json({
       message: "Attribute Update successfully",
       status: 200,

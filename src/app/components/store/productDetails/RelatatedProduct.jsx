@@ -12,11 +12,11 @@ import useSingleProduct from "../dataFetching/useSingleProduct";
 import ProductCard from "../common/card/ProductCard";
 import { productCategoryList } from "@/app/utils/productCategory";
 
-const RelatatedProduct = ({ id }) => {
+const RelatatedProduct = ({ id, initialProduct }) => {
   // Refs for navigation buttons
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  const { product } = useSingleProduct(id);
+  const { product } = useSingleProduct(id, initialProduct);
   const { products } = useProducts();
   const currentCategories = productCategoryList(product);
   const relatadeProducts = products.filter(

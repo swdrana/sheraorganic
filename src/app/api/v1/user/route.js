@@ -1,13 +1,16 @@
 import User from "@/app/backend/model/user.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
+// lookup by email (staff only: returns a customer's contact details)
 export const POST = async (req) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   const email = await req.json();
   //   console.log("product data", data);
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).select("-password");
     // console.log("user in router.js", user);
     if (user) {
       return NextResponse.json({ message: "success", user });
@@ -19,12 +22,12 @@ export const POST = async (req) => {
   }
 };
 
-// get all user
+// get all user (staff only; never returns passwords)
 export const GET = async () => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   try {
-    // get blogs from the server
-    const users = await User.find({ role: "Customer" }).sort({ _id: -1 });
+    const users = await User.find({ role: "Customer" }).select("-password").sort({ _id: -1 });
     // const users = await User.find().sort({ _id: -1 });
     // console.log("users..", users);
 

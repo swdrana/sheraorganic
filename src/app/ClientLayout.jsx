@@ -23,12 +23,18 @@ import { WishlistProvider } from "./components/store/provider/WishlistProvider";
 import { loadStylesheet } from "./utils/loadStylesheet";
 import AnalyticsLoader from "./components/store/common/others/AnalyticsLoader";
 import { useEffect } from "react";
+import { markAdminVisit } from "./components/store/dataFetching/sharedFetch";
 
 export default function ClientLayout({ children }) {
   useEffect(() => {
     loadStylesheet("/css/react-toastify.css");
   }, []);
   const pathname = usePathname() || "";
+  const isAdminPage = pathname.startsWith("/admin");
+  useEffect(() => {
+    // Data cached in the browser before an admin edit must not be reused afterwards.
+    if (isAdminPage) markAdminVisit();
+  }, [isAdminPage, pathname]);
 
   const isStorePage =
     pathname === "/" ||

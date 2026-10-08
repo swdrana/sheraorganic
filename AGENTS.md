@@ -49,7 +49,8 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
   — server actions / fetch wrappers (note: some are client fetch wrappers despite the folder name).
 - `app/hooks/*` — admin form hooks (`useStoreCustomize`, `useProductSubmit`, …).
 - `app/components/store/hooks/*` — storefront hooks (`useAddToCart`, …).
-- `app/data/cachedData.js` — `unstable_cache`-wrapped RSC data loaders (`getCachedSettings`, `getCachedProducts`, …).
+- `app/data/cachedData.js` — the **only** public-data cache: `unstable_cache` loaders + `CACHE_TAGS`
+  (see "Caching & data fetching"). `app/robots.js` / `app/sitemap.js` read it too.
 - `app/controlers/*` (typo) AND `app/backend/controllers/*` — **two** parallel order controllers exist;
   `CheckoutBody` imports `createOrder` from the typo path, `useUserOrders` from the backend path.
 
@@ -59,7 +60,8 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
 
 - `Setting { name: String, setting: {} (Mixed) }`, doc `name: "storeCustomizationSetting"`, nested
   `setting.home / about / contact / terms / faq`.
-- Storefront reads via `getCachedSettings()` (`unstable_cache`, `revalidate: 60`, `tags: ["settings"]`).
+- Storefront reads via `getCachedSettings()` (`cachedData.js`, tag `settings`); `GET /api/v1/store` serves
+  the same cached doc. Client components read it through `useSetting()` (shared, one request per page).
 - Admin edits via `useStoreCustomize.js` → `PATCH /api/v1/store` (`src/app/api/v1/store/route.js`).
   **PATCH uses an explicit dotted `$set` allow-list** — a new `setting.home.*` key MUST be added there
   or it will not persist on update. Adding a field = 4 touchpoints: `HomeCustomization.jsx` (input),
@@ -70,12 +72,43 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
 - Product-picker admin fields store `{ name, id }` (joined/split on `"|"` in the `<select>`), e.g.
   `weekly_best_delas_product_*`. Category-picker fields store just the name string.
 
+### Caching & data fetching (round 4 — CPU fix)
+
+- **Server:** public data (products, categories, brands, attributes, settings, blogs, About stats) is read
+  through `cachedData.js` loaders (`unstable_cache`, revalidate 300s, tags in `CACHE_TAGS`). The public GET
+  routes (`api/v1/{products,categorys,brands,attributes,store,blogs}`, `products/[productId]`) return those
+  loaders' output with the exact old JSON shape. **Every write path must call `revalidateTag(CACHE_TAGS.x)`**
+  (API POST/PATCH/DELETE, server actions in `backend/actions/*`, review PUT, orders/signup → `stats`).
+  A new write path without it = storefront stale for up to 5 min.
+- Loaders throw on DB errors (never cached); pages use the `safe` wrappers (`getCachedProducts`, …).
+- Never add `export const dynamic = "force-dynamic"` to these routes: in Next 14 it sets
+  `fetchCache: force-no-store`, which makes `unstable_cache` bypass the cache. Route files that also export
+  POST/PATCH are already dynamic. Data-cache entries over 2MB are silently not cached (a `[cache]` warn logs
+  at 1.5MB) — the full product list is ~110KB today.
+- `product-details/[id]` reads `getCachedProductById` directly (no HTTP self-fetch). Home strips `description`
+  from product props (ProductModal looks it up on demand).
+- **Browser:** public hooks (`useSetting`, `useCategory`, `useBrand`, `useProducts`, `useAttributes`) go
+  through `components/store/dataFetching/sharedFetch.js` (`useSharedData` / `fetchOnce`): one request per
+  key, reused 5 min across client navigations, never reused after an `/admin` visit (`markAdminVisit` in
+  `ClientLayout`). Don't add new per-component `useEffect` fetches of public data — add a shared hook.
+- Hooks keep server-identical initial state (no hydration mismatch). Swiper `loop` must only switch on
+  after mount (it clones slides client-side; see `home/Category.jsx`).
+- `SessionProvider refetchOnWindowFocus={false}`. `utils/database.js` keeps one connection promise on `global`.
+- Observability: `backend/utils/perf.js` `timed()` logs `[perf] label ms` when ≥ `PERF_SLOW_MS` (500) or
+  always with `PERF_LOG=1`. `next.config` `removeConsole` keeps `error`/`warn`, so these reach Coolify logs.
+
 ### Auth
 
 - `CredentialsProvider`, **plaintext password compare** (`user.password === password`). Session exposes
   `session.user.{id, name, role}`. `authOptions` is exported from `[...nextauth]/route.js`; API routes
   use `getServerSession(authOptions)`. Client fetches that need the session cookie must send
   `credentials: "include"` (see `updateProductRating`).
+- `backend/utils/apiAuth.js`: `isStaff` (role ≠ `Customer`), `canAccessUser` (self or staff), `unauthorized`.
+  Staff-only: GET/POST `/api/v1/user`, GET `/api/v1/orders`, `/orders/by-date`, PATCH/DELETE `/orders/[id]`.
+  Self-or-staff: `/api/v1/user/[id]` (GET/PATCH), `/api/v1/user-order/[id]`. User responses never include
+  `password`. `middleware.js`: `/admin` is staff-only (customers → `/`).
+- The credentials provider uses `backend/utils/userLookup.js` — never put DB lookups that return secrets in a
+  `"use server"` file (its exports become browser-callable actions).
 
 ### Cart & add-to-cart
 
@@ -140,6 +173,8 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
   don't reintroduce the old classes for the new card.
 - `.card-btn` / `.product-btns` in `_product-card.scss` are hover-only (`visibility:hidden`) → invisible on
   touch. Any always-visible card button must not rely on those.
+- `api/v1/*` write routes for products/categories/brands/attributes/blogs/coupons/staff are still
+  unauthenticated (pre-existing; not yet guarded).
 - `.env*.local` is ignored and `.env.local` is no longer tracked. Historical secrets were previously
   committed to GitHub; the owner still needs to rotate them outside the repository.
 - Cloudinary API key/secret are exposed as `NEXT_PUBLIC_*` (browser bundle). Server delete helper prefers
