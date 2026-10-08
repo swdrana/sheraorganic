@@ -143,7 +143,9 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
 - Round 4 ম্যানুয়াল যাচাই: admin-এ category/brand/product/settings edit → storefront-এ সাথে সাথে দেখা যায়;
   লগইন করা customer-এর my-account/order history/checkout ঠিক; admin customers/orders page ঠিক।
 - বাকি ঝুঁকি: products/categories/brands/attributes/blogs/coupons/staff write API এখনো auth ছাড়া;
-  plaintext password (hashing আলাদা round); `/products` grid client-side filter।
+  `/products` grid client-side filter।
+- **মালিকের সিদ্ধান্ত (2026-10-08):** password যেমন আছে (plaintext) তেমনই থাকবে — hashing/migration
+  প্রস্তাব বা পরিবর্তন করা হবে না।
 - পুরনো: production DB-তে পুরনো duplicate `Setting` doc থাকলে একবার
   `MONGODB_URI="<prod-uri>" node scripts/dedupe-settings.js` চালাতে হবে (`Setting.name` unique
   index কার্যকর করতে)। duplicate না থাকলে কিছু করার দরকার নেই।

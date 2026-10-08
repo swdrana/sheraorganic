@@ -99,7 +99,8 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
 
 ### Auth
 
-- `CredentialsProvider`, **plaintext password compare** (`user.password === password`). Session exposes
+- `CredentialsProvider`, **plaintext password compare** (`user.password === password`). Owner decision
+  (2026-10-08): keep plaintext passwords as-is — do not propose or implement hashing. Session exposes
   `session.user.{id, name, role}`. `authOptions` is exported from `[...nextauth]/route.js`; API routes
   use `getServerSession(authOptions)`. Client fetches that need the session cookie must send
   `credentials: "include"` (see `updateProductRating`).
