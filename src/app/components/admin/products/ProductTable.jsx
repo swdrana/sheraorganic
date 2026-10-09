@@ -123,7 +123,7 @@ const ProductTable = ({ products, pageCount, handlePageChange }) => {
                     <tr key={item._id}>
                       <td className="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
                         <div className="w-10 h-10 bg-primary-2 rounded-full p-2 d-flex items-center justify-center">
-                          <img src={item.image[0]} className="w-full h-full" />
+                          <img src={item.image?.[0]} className="w-full h-full" />
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-3 pb-1 pt-5 text-sm text-gray-600 line-clamp-1 max-w-[24ch]">

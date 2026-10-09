@@ -134,6 +134,7 @@ const BlogDrawer = () => {
                               rules={{ required: true }}
                               render={({ field }) => (
                                 <RichTextEditor
+                                  key={blogDetails?._id || "new"}
                                   value={field.value}
                                   onChange={field.onChange}
                                   placeholder="Write blog description here..."

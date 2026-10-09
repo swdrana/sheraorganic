@@ -5,12 +5,23 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 const WishlistContext = createContext();
 
 // Create a Provider Component
+
+// A corrupt/foreign `wishlist` value in localStorage must not crash the whole layout.
+const readStoredWishlist = () => {
+  try {
+    const parsed = JSON.parse(localStorage.getItem("wishlist"));
+    return Array.isArray(parsed) ? parsed.filter((item) => item && item._id) : [];
+  } catch {
+    return [];
+  }
+};
+
 export const WishlistProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
   // console.log("wishlist...", wishlist);
 
   useEffect(() => {
-    const storedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    const storedWishlist = readStoredWishlist();
     setWishlist(storedWishlist);
   }, []);
 
@@ -22,7 +33,7 @@ export const WishlistProvider = ({ children }) => {
       removeWishlist(item);
     } else {
       // If the item does not exist, add it to the wishlist
-      const storedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+      const storedWishlist = readStoredWishlist();
       // console.log("store wishlist..", storedWishlist);
       setWishlist(storedWishlist);
       // console.log("wishlist in else..", wishlist);

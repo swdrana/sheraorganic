@@ -2,23 +2,24 @@
 
 import { useEffect } from "react";
 
-export default function Error({ error, reset }) {
+// Replaces the root layout when it crashes, so it must render its own <html>/<body>.
+export default function GlobalError({ error, reset }) {
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error(error);
   }, [error]);
 
   return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <button
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }
-      >
-        Try again
-      </button>
-    </div>
+    <html lang="en">
+      <body style={{ fontFamily: "sans-serif", textAlign: "center", padding: "48px 16px" }}>
+        <h2>কিছু একটা সমস্যা হয়েছে।</h2>
+        <p>পেজটি আবার লোড করে দেখুন।</p>
+        <button type="button" onClick={() => reset()} style={{ marginRight: 8 }}>
+          আবার চেষ্টা করুন
+        </button>
+        <button type="button" onClick={() => window.location.reload()}>
+          পেজ রিলোড
+        </button>
+      </body>
+    </html>
   );
 }

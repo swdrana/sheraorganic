@@ -85,7 +85,7 @@ const ProductDetailsSidebar = () => {
                   <div className="thumbnail position-relative rounded-2">
                     <a href="#">
                       <img
-                        src={p?.image[0]}
+                        src={p?.image?.[0]}
                         alt="product"
                         className="img-fluid"
                       />

@@ -99,7 +99,7 @@ const useCategorySubmit = (categories) => {
     } else {
       setSubmitting(true);
       // console.log("data...", data);
-      // const result = await uploadImage(data.image[0]);
+      // const result = await uploadImage(data.image?.[0]);
       // console.log("img result.....", result);
       const categoryData = {
         name: data.name,

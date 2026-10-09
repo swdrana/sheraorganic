@@ -13,7 +13,7 @@ const useBlog = () => {
       try {
         const res = await getAllBlogs();
         // console.log("res..in use fetch blog", res);
-        setBlogs(res?.blogs);
+        setBlogs(Array.isArray(res?.blogs) ? res.blogs : []);
       } catch (error) {
         console.error("Failed to fetch blogs:", error);
       } finally {

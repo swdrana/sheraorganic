@@ -17,19 +17,19 @@ const TrendingProducts = ({ products, setting }) => {
   const filteredProducts = products?.filter((p) => {
     if (activeTrendingProduct === "all products") {
       const featuredCategories = [
-        `${setting?.home?.featured_category_one
+        `${(setting?.home?.featured_category_one || "")
           .replace(/\s+/g, "")
           .toLowerCase()}`,
-        `${setting?.home?.featured_category_two
+        `${(setting?.home?.featured_category_two || "")
           .replace(/\s+/g, "")
           .toLowerCase()}`,
-        `${setting?.home?.featured_category_three
+        `${(setting?.home?.featured_category_three || "")
           .replace(/\s+/g, "")
           .toLowerCase()}`,
-        `${setting?.home?.featured_category_four
+        `${(setting?.home?.featured_category_four || "")
           .replace(/\s+/g, "")
           .toLowerCase()}`,
-        `${setting?.home?.featured_category_five
+        `${(setting?.home?.featured_category_five || "")
           .replace(/\s+/g, "")
           .toLowerCase()}`,
       ];
@@ -99,7 +99,7 @@ const TrendingProducts = ({ products, setting }) => {
                   style={{ minWidth: "48px", minHeight: "48px", padding: "10px 20px", margin: "6px" }}
                   className={`${
                     activeTrendingProduct ===
-                    `${setting?.home?.featured_category_one
+                    `${(setting?.home?.featured_category_one || "")
                       .replace(/\s+/g, "")
                       .toLowerCase()}`
                       ? "active"
@@ -107,7 +107,7 @@ const TrendingProducts = ({ products, setting }) => {
                   }`}
                   onClick={() =>
                     setActiveTrendingProduct(
-                      `${setting?.home?.featured_category_one
+                      `${(setting?.home?.featured_category_one || "")
                         .replace(/\s+/g, "")
                         .toLowerCase()}`
                     )
@@ -119,7 +119,7 @@ const TrendingProducts = ({ products, setting }) => {
                   style={{ minWidth: "48px", minHeight: "48px", padding: "10px 20px", margin: "6px" }}
                   className={`${
                     activeTrendingProduct ===
-                    `${setting?.home?.featured_category_two
+                    `${(setting?.home?.featured_category_two || "")
                       .replace(/\s+/g, "")
                       .toLowerCase()}`
                       ? "active"
@@ -127,7 +127,7 @@ const TrendingProducts = ({ products, setting }) => {
                   }`}
                   onClick={() =>
                     setActiveTrendingProduct(
-                      `${setting?.home?.featured_category_two
+                      `${(setting?.home?.featured_category_two || "")
                         .replace(/\s+/g, "")
                         .toLowerCase()}`
                     )
@@ -139,7 +139,7 @@ const TrendingProducts = ({ products, setting }) => {
                   style={{ minWidth: "48px", minHeight: "48px", padding: "10px 20px", margin: "6px" }}
                   className={`${
                     activeTrendingProduct ===
-                    `${setting?.home?.featured_category_three
+                    `${(setting?.home?.featured_category_three || "")
                       .replace(/\s+/g, "")
                       .toLowerCase()}`
                       ? "active"
@@ -147,7 +147,7 @@ const TrendingProducts = ({ products, setting }) => {
                   }`}
                   onClick={() =>
                     setActiveTrendingProduct(
-                      `${setting?.home?.featured_category_three
+                      `${(setting?.home?.featured_category_three || "")
                         .replace(/\s+/g, "")
                         .toLowerCase()}`
                     )
@@ -159,7 +159,7 @@ const TrendingProducts = ({ products, setting }) => {
                   style={{ minWidth: "48px", minHeight: "48px", padding: "10px 20px", margin: "6px" }}
                   className={`${
                     activeTrendingProduct ===
-                    `${setting?.home?.featured_category_four
+                    `${(setting?.home?.featured_category_four || "")
                       .replace(/\s+/g, "")
                       .toLowerCase()}`
                       ? "active"
@@ -167,7 +167,7 @@ const TrendingProducts = ({ products, setting }) => {
                   }`}
                   onClick={() =>
                     setActiveTrendingProduct(
-                      `${setting?.home?.featured_category_four
+                      `${(setting?.home?.featured_category_four || "")
                         .replace(/\s+/g, "")
                         .toLowerCase()}`
                     )
@@ -179,7 +179,7 @@ const TrendingProducts = ({ products, setting }) => {
                   style={{ minWidth: "48px", minHeight: "48px", padding: "10px 20px", margin: "6px" }}
                   className={`${
                     activeTrendingProduct ===
-                    `${setting?.home?.featured_category_five
+                    `${(setting?.home?.featured_category_five || "")
                       .replace(/\s+/g, "")
                       .toLowerCase()}`
                       ? "active"
@@ -187,7 +187,7 @@ const TrendingProducts = ({ products, setting }) => {
                   }`}
                   onClick={() =>
                     setActiveTrendingProduct(
-                      `${setting?.home?.featured_category_five
+                      `${(setting?.home?.featured_category_five || "")
                         .replace(/\s+/g, "")
                         .toLowerCase()}`
                     )

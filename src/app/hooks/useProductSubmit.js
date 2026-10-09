@@ -9,6 +9,20 @@ import { addProduct } from "../backend/controllers/product.controller";
 import { productUpdate } from "../backend/actions/product.action";
 import swal from "sweetalert";
 
+// Tags are stored as [String] but older saves hold one JSON-encoded string ('["a","b"]').
+const parseTags = (tag) => {
+  const list = Array.isArray(tag) ? tag : tag ? [tag] : [];
+  if (list.length === 1 && typeof list[0] === "string" && list[0].trim().startsWith("[")) {
+    try {
+      const parsed = JSON.parse(list[0]);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  return list.filter((item) => typeof item === "string");
+};
+
 const useProductSubmit = (attribue = []) => {
   const {
     register,
@@ -339,7 +353,7 @@ const useProductSubmit = (attribue = []) => {
         ).map((name) => ({ label: name, value: name }))
       );
       setDefaultCategory([productDetails?.category]);
-      setTag(JSON.parse(productDetails.tag));
+      setTag(parseTags(productDetails?.tag));
       setImageUrl(productDetails?.image);
       setVariants(productDetails?.variants);
       setIsCombination(productDetails?.isCombination);
@@ -355,7 +369,10 @@ const useProductSubmit = (attribue = []) => {
   useEffect(() => {
     if (!isProductDrawerOpen || !productDetails?._id) return;
 
-    const productVariants = productDetails?.variants || [];
+    // Skip malformed (null / non-object) variant entries from older saves.
+    const productVariants = (productDetails?.variants || []).filter(
+      (productVariant) => productVariant && typeof productVariant === "object"
+    );
     const variantKeys = new Set(
       productVariants.flatMap((productVariant) => Object.keys(productVariant))
     );

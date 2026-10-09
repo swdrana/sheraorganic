@@ -31,12 +31,26 @@ const getYtThumb = (url) => {
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
 };
 
+// The not-found check lives in this wrapper so the details component below always runs the same
+// hooks (an early return between hooks crashed the page when a refetch returned null).
 const ProductDetailsBody = ({ id, initialProduct }) => {
+  const single = useSingleProduct(id, initialProduct);
+  if (!single.product) {
+    return (
+      <div className="alert alert-warning text-center py-10" role="alert">
+        Product Not Found
+      </div>
+    );
+  }
+  return <ProductDetailsContent single={single} />;
+};
+
+const ProductDetailsContent = ({ single }) => {
   const [firstSwiper, setFirstSwiper] = useState(null);
   const [secondSwiper, setSecondSwiper] = useState(null);
   const [loadingHuteiThak, set] = useState(true);
 
-  const { product, productLoading, refetch } = useSingleProduct(id, initialProduct);
+  const { product, productLoading, refetch } = single;
   const { data: session } = useSession();
   const { userOrders } = useUserOrders();
   const deliveredProductIds = new Set(
@@ -58,13 +72,6 @@ const ProductDetailsBody = ({ id, initialProduct }) => {
   const { handelAddItem, handleIncrement, handleDecrement, quantity } =
     useAddToCart();
   const { items, inCart } = useCart();
-  if (!product) {
-    return (
-      <div className="alert alert-warning text-center py-10" role="alert">
-        Product Not Found
-      </div>
-    );
-  }
   const images = Array.isArray(product?.image) ? product.image : [];
   const media = images.map((src) => ({ type: "image", src }));
   if (product?.videoUrl) {

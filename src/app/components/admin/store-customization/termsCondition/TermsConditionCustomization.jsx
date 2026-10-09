@@ -6,6 +6,7 @@ import useSetting from "../../../store/dataFetching/useSetting";
 import { toast } from "react-toastify";
 import { loadStylesheet } from "@/app/utils/loadStylesheet";
 
+import EditorErrorBoundary from "../../shared/EditorErrorBoundary";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const TermsConditionCustomization = () => {
   useEffect(() => {
@@ -48,7 +49,9 @@ const TermsConditionCustomization = () => {
           {" "}
           <label htmlFor="description">Terms Condition</label>
         </h3>
+        <EditorErrorBoundary value={termsValue} onChange={setTermsValue}>
         <ReactQuill
+          key={settingLoading ? "loading" : "ready"}
           value={termsValue}
           onChange={setTermsValue}
           style={{ height: "500px", overflowY: "auto" }}
@@ -74,6 +77,7 @@ const TermsConditionCustomization = () => {
             "image",
           ]}
         />
+        </EditorErrorBoundary>
         <button className="rounded-md bg-dark px-4 py-1 text-sm font-semibold text-white shadow-sm mt-5" onClick={handleSave}>
           Save
         </button>

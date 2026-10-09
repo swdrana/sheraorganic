@@ -67,10 +67,12 @@ const ProductDetails = ({ productId }) => {
           <h2 className="text-lg font-semibold mb-5">Products Details</h2>
           {loading ? (
             <Loading />
+          ) : !productDetails ? (
+            <p className="text-sm text-gray-500">Product not found.</p>
           ) : (
             <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-10">
               <img
-                src={productDetails?.image[0]}
+                src={productDetails?.image?.[0]}
                 alt="product"
                 className="h-64 w-64"
               />

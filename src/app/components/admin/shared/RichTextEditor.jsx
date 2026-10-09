@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import { loadStylesheet } from "@/app/utils/loadStylesheet";
 import { useEffect } from "react";
+import EditorErrorBoundary from "./EditorErrorBoundary";
 
 const RichTextEditor = ({ value, onChange, placeholder }) => {
   useEffect(() => {
@@ -28,6 +29,7 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
 
   return (
     <div className="bg-white">
+      <EditorErrorBoundary value={value} onChange={onChange}>
       <ReactQuill
         theme="snow"
         value={value || ''}
@@ -37,6 +39,7 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
         placeholder={placeholder}
         className="h-64 mb-12"
       />
+      </EditorErrorBoundary>
     </div>
   );
 };

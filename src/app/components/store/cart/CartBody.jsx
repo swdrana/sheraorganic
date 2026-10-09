@@ -91,7 +91,7 @@ const CartBody = () => {
                           <td>
                             <div className="border border-success border-opacity-25 w-[120px] h-[100px] p-3 rounded-md overflow-hidden">
                               <img
-                                src={item.image[0]}
+                                src={item.image?.[0]}
                                 alt="product-thumb"
                                 className="w-full h-[100%] object-contain"
                               />
@@ -143,7 +143,7 @@ const CartBody = () => {
                         <div className="col-4">
                           <div className="border border-success border-opacity-25 rounded-md overflow-hidden" style={{width: '80px', height: '80px'}}>
                             <img
-                              src={item.image[0]}
+                              src={item.image?.[0]}
                               alt="product-thumb"
                               className="w-100 h-100 object-fit-contain"
                             />

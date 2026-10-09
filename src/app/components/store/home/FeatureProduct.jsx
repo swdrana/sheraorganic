@@ -11,13 +11,13 @@ const FeatureProduct = ({ products, setting }) => {
   // console.log("setting..", setting);
   const featureBrandProductOne = products?.filter(
     (p) =>
-      p.brand.replace(/\s+/g, "").toLowerCase() ===
-      setting?.home?.featured_brand_one.replace(/\s+/g, "").toLowerCase()
+      (p.brand || "").replace(/\s+/g, "").toLowerCase() ===
+      (setting?.home?.featured_brand_one || "").replace(/\s+/g, "").toLowerCase()
   );
   const featureBrandProductTwo = products?.filter(
     (p) =>
-      p.brand.replace(/\s+/g, "").toLowerCase() ===
-      setting?.home?.featured_brand_two.replace(/\s+/g, "").toLowerCase()
+      (p.brand || "").replace(/\s+/g, "").toLowerCase() ===
+      (setting?.home?.featured_brand_two || "").replace(/\s+/g, "").toLowerCase()
   );
   return (
     <>

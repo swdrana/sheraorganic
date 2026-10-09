@@ -192,6 +192,9 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
   `swdrana <tctr2s@gmail.com>`, plain message, **NO `Co-Authored-By`, no AI/agent trailer, no
   "generated with" line — ever, anywhere.** GitHub must show the owner as the sole contributor.
   Never add a co-author, never change `git config user.*`, never open a PR from a bot identity.
+- **One push per round — every push is a full Coolify build on a CPU-throttled shared VPS.** Do all work,
+  `npm run build` + `lint` + `test` + local `next start` smoke tests first, then push once. Never push
+  docs-only/fix-up commits separately (keep them local until the next real push).
 - **Push only after the owner explicitly approves this round's work** (e.g. "verified, push it").
   Then `git push origin main` with the owner's own credentials/remote — nothing else changes. Do not
   open PRs or merge. If not explicitly told to push, commit locally and let the owner push.

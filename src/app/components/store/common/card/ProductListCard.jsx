@@ -36,7 +36,7 @@ const ProductListCard = ({ product }) => {
           <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} />
           <div className="thumbnail position-relative text-center p-4 flex-shrink-0">
             <img
-              src={product.image[0]}
+              src={product.image?.[0]}
               alt="Rambutan Sweet Delicious Fruit"
               className="img-fluid"
             />

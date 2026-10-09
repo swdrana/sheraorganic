@@ -2,12 +2,23 @@
 
 import { useEffect, useState } from "react";
 
+
+// A corrupt/foreign `wishlist` value in localStorage must not crash the whole layout.
+const readStoredWishlist = () => {
+  try {
+    const parsed = JSON.parse(localStorage.getItem("wishlist"));
+    return Array.isArray(parsed) ? parsed.filter((item) => item && item._id) : [];
+  } catch {
+    return [];
+  }
+};
+
 const useAddWishlist = () => {
   const [wishlist, setWishlist] = useState([]);
   // console.log("wishlist...", wishlist);
 
   useEffect(() => {
-    const storedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    const storedWishlist = readStoredWishlist();
     setWishlist(storedWishlist);
   }, []);
 
@@ -19,7 +30,7 @@ const useAddWishlist = () => {
       removeWishlist(item);
     } else {
       // If the item does not exist, add it to the wishlist
-      const storedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+      const storedWishlist = readStoredWishlist();
       // console.log("store wishlist..", storedWishlist);
       setWishlist(storedWishlist);
       // console.log("wishlist in else..", wishlist);

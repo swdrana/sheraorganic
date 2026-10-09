@@ -8,7 +8,7 @@
 > gotcha বদলালে `AGENTS.md`-ও একই ভাবে হালনাগাদ করো। machine-local (`~/.claude`) মেমোরিতে
 > এই প্রজেক্টের কিছু আলাদা করে রাখা হয় না — সব knowledge এখানেই।
 
-শেষ হালনাগাদ: 2026-10-08
+শেষ হালনাগাদ: 2026-10-10
 
 ---
 
@@ -130,6 +130,23 @@ Swiper `loop` hydration mismatch করে পুরো page client-এ re-rende
 VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU; সার্ভার load ৩৪–৩৯ (২ core), CPU steal ~৮৫%,
 একসাথে ৩টি Coolify build (`coolify-helper`) চলছিল — slowness-এর মূল কারণ সার্ভার-স্তরে (build/অন্য app),
 আমাদের app নয়।
+
+## Round 5 — Admin "Edit Product" white screen + crash hardening (2026-10-10)
+
+- কারণ: description editor (react-quill / Quill 1.3) কিছু saved description (২৫টির মধ্যে ১০টি) import করতে
+  গিয়ে `IndexSizeError: splitText` দিত; react-quill এটা React commit-এর ভিতরে করত → পুরো admin page সাদা।
+  এটি পুরনো bug (editor কোড শুরু থেকে অপরিবর্তিত), round 4-এর পরিবর্তন থেকে নয়।
+- Fix: `DescriptionInput` এখন Quill সরাসরি চালায় (uncontrolled, product-প্রতি remount), import ব্যর্থ হলে
+  DOM fallback; খালি description-এ আগের product-এর লেখা আর থেকে যায় না। Blog/Terms editor-এ
+  `EditorErrorBoundary` (crash হলে HTML textarea)। `app/error.js` + ঠিক করা `global-error.js` — crash হলে সাদা
+  page-এর বদলে "আবার চেষ্টা করুন"।
+- Codex audit (`.codex-10`) + review (`.codex-2`, `.codex-9`) থেকে guard: product-details hook order,
+  `image?.[0]`, wishlist localStorage parse, blog list, profile form, home featured brand/category,
+  order search, tag parse, null variant।
+- যাচাই: build/lint/test সবুজ; local production build-এ admin (auth বাদ দেওয়া throwaway copy) — আগে crash
+  হওয়া product সহ edit drawer খোলে, description লোড হয়, typing চলে, product বদলালে সঠিক description,
+  নতুন product-এ খালি।
+- Deploy নিয়ম: প্রতি round-এ একবারই push (`AGENTS.md` + `.agent/DEPLOY_RULES.md`)।
 
 ## এখন কী বাকি
 

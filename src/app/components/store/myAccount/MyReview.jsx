@@ -133,7 +133,7 @@ const MyReview = () => {
                                           className="link d-inline-block flex-shrink-0 w-30"
                                         >
                                           <img
-                                            src={order?.image[0]}
+                                            src={order?.image?.[0]}
                                             alt="image"
                                             className="img-fluid"
                                           />
@@ -189,7 +189,7 @@ const MyReview = () => {
                                         className="link d-inline-block flex-shrink-0 w-30"
                                       >
                                         <img
-                                          src={order?.image[0]}
+                                          src={order?.image?.[0]}
                                           alt="image"
                                           className="img-fluid"
                                         />

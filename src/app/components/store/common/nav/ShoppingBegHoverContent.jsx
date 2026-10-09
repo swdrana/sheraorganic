@@ -48,7 +48,7 @@ const ShoppingBegHoverContent = () => {
                     <div className="thumb-wrapper">
                       <a href="#">
                         <img
-                          src={item.image[0]}
+                          src={item.image?.[0]}
                           alt="products"
                           className="img-fluid"
                         />

@@ -249,7 +249,7 @@ const Orders = ({ orderCode }) => {
                           <td className="text-sm">{i + 1}</td>
                           <td className="flex items-center">
                             <img
-                              src={o?.image[0]}
+                              src={o?.image?.[0]}
                               alt="product"
                               className="img-fluid w-12 h-12 object-cover"
                             />

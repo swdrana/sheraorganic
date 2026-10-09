@@ -24,6 +24,7 @@ const useUserSubmit = () => {
   console.log("user..", user);
   //   console.log("id in use user submit", id);
   useEffect(() => {
+    if (!user) return;
     setValue("name", user.name);
     setValue("address", user.address);
     setValue("phone", user.contact);

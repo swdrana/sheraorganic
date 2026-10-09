@@ -31,21 +31,21 @@ const useOrderFilter = (allOrder) => {
     // Filter order based on status
     if (method) {
       updateOrder = updateOrder.filter(
-        (order) => order?.paymentMethod.toLowerCase() === method.toLowerCase()
+        (order) => (order?.paymentMethod || "").toLowerCase() === method.toLowerCase()
       );
     }
 
     // Filter order based on status
     if (status) {
       updateOrder = updateOrder.filter(
-        (order) => order?.status.toLowerCase() === status.toLowerCase()
+        (order) => (order?.status || "").toLowerCase() === status.toLowerCase()
       );
     }
 
     // Apply additional filtering based on search text if present
     if (searchText) {
       updateOrder = updateOrder.filter((order) =>
-        order?.user_info?.name.toLowerCase().includes(searchText.toLowerCase())
+        (order?.user_info?.name || "").toLowerCase().includes(searchText.toLowerCase())
       );
     }
 

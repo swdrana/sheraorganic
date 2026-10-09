@@ -285,7 +285,7 @@ const ProductModal = () => {
                         >
                           <SwiperSlide className="swiper-slide text-center">
                             <img
-                              src={productDetails?.image[0]}
+                              src={productDetails?.image?.[0]}
                               alt="jam"
                               className="img-fluid"
                             />
@@ -335,7 +335,7 @@ const ProductModal = () => {
                         >
                           <SwiperSlide className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center">
                             <img
-                              src={productDetails?.image[0]}
+                              src={productDetails?.image?.[0]}
                               alt="jam"
                               className="img-fluid"
                             />

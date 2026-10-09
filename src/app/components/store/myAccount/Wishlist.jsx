@@ -45,7 +45,7 @@ const Wishlist = () => {
                     <div className="thumbnail position-relative text-center p-4">
                       <Link href={`/product-details/${product._id}`}>
                         <img
-                          src={product.image[0]}
+                          src={product.image?.[0]}
                           alt="apple"
                           className="img-fluid"
                         />{" "}

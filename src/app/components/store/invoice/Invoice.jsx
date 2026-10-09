@@ -214,7 +214,7 @@ const Invoice = ({ invoiceNo }) => {
                       <td className="text-sm">{i + 1}</td>
                       <td className="">
                         <img
-                          src={o?.image[0]}
+                          src={o?.image?.[0]}
                           alt="product"
                           className="img-fluid product-item"
                         />
