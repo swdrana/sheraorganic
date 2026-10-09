@@ -148,7 +148,23 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
   নতুন product-এ খালি।
 - Deploy নিয়ম: প্রতি round-এ একবারই push (`AGENTS.md` + `.agent/DEPLOY_RULES.md`)।
 
+## Round 6 — অর্ডার কনফার্মেশন ইমেইল + mail fix (2026-10-10)
+
+- নতুন অর্ডার save হলে customer-কে বাংলা অর্ডার ইমেইল যায় (পণ্য, পরিমাণ, দাম, মোট, ঠিকানা, ইনভয়েস লিংক):
+  `backend/utils/orderEmail.js` (`buildOrderEmail` + `sendOrderConfirmation`), `orders` POST থেকে background-এ
+  — mail fail হলে order আটকায় না, শুধু `[mail]` error log। প্রাপক: checkout-এর email, খালি থাকলে
+  লগইন করা user-এর account email; কোনোটাই না থাকলে পাঠানো হয় না। idempotent repeat (একই clientToken)-এ
+  আবার যায় না।
+- `backend/utils/mailer.js`: একটাই pooled Gmail transporter, `escapeHtml`, `isEmail`।
+- Contact form (`recive-mail`) — `responseHeaders is not defined` crash ঠিক, HTML escape, visitor address `replyTo`-তে।
+  Subscribe route-ও একই helper-এ। `send-email` route মুছে ফেলা হয়েছে (যে কেউ shop-এর Gmail দিয়ে যেকোনো
+  ঠিকানায় mail পাঠাতে পারত; কোথাও ব্যবহার হতো না)।
+- Env: client-এর নতুন Gmail App Password — `GMAIL_USER`/`GMAIL_PASSWORD` local `.env.local` + Coolify-তে
+  বসানো (value শুধু `.agent/private.md`-এ, repo-তে নয়)। SMTP login যাচাই হয়েছে।
+
 ## এখন কী বাকি
+
+- **Round 6 যাচাই:** live-এ email দিয়ে একটা test order → inbox/spam-এ অর্ডার ইমেইল আসে কিনা; Contact form থেকে একটা message।
 
 - **ম্যানুয়াল যাচাই:** Admin > Product-এ category select, নতুন combination create, Generate-এর পরে
   selector clear, existing variant product edit/hydration, deselect/regenerate এবং duplicate না হওয়া।

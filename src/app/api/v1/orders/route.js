@@ -8,6 +8,7 @@ import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { CACHE_TAGS } from "@/app/data/cachedData";
 import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
+import { sendOrderConfirmation } from "@/app/backend/utils/orderEmail";
 
 // get all orders (staff only: contains every customer's name, phone and address)
 export const GET = async () => {
@@ -110,6 +111,8 @@ export const POST = async (req) => {
     });
     await newOrder.save();
     revalidateTag(CACHE_TAGS.stats);
+    // Customer's order email goes out in the background (never delays or fails the order).
+    sendOrderConfirmation(newOrder.toObject());
     return NextResponse.json({ message: "order create successfully", order: newOrder }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: "error", error }, { status: 500 });

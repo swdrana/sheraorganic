@@ -134,6 +134,14 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
 - `order.cart` is a `Mixed` array; items carry the full product doc + `_id`, `name`, `image[]`,
   `quantity`, `price`. "Delivered" status is set by admin only (`SelectStatus.jsx` → `PATCH /api/v1/orders/[orderId]`).
 
+### Email (Gmail SMTP)
+
+- `backend/utils/mailer.js` = the only sender (`sendMail`, `escapeHtml`, `isEmail`); env `GMAIL_USER` +
+  `GMAIL_PASSWORD` (a Gmail **App Password**; a normal password fails with EAUTH 535).
+- New order → `sendOrderConfirmation(order)` (`backend/utils/orderEmail.js`) fire-and-forget from `orders`
+  POST; it never throws. Contact form → `recive-mail`, footer → `subscribe-gmail` (both to the shop inbox).
+- Never add a route that sends to a caller-supplied `to` address (open relay); always escape user text in HTML.
+
 ### Reviews
 
 - `product.ratings[]` subdocs: `{ user (ObjectId), productId, name, rating (1-5), comment, reviewDate }`
