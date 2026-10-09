@@ -47,6 +47,7 @@ const useProductSubmit = (attribue = []) => {
   // react hook
   const [imageUrl, setImageUrl] = useState([]);
   const [tag, setTag] = useState([]);
+  const [seoKeywords, setSeoKeywords] = useState([]);
   const [values, setValues] = useState({});
   let [variants, setVariants] = useState([]);
   const [variant, setVariant] = useState([]);
@@ -75,6 +76,8 @@ const useProductSubmit = (attribue = []) => {
   );
   const name = watch("name");
   const slug = watch("slug");
+  const seoTitle = watch("seoTitle") || "";
+  const seoDescription = watch("seoDescription") || "";
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [flashSaleProduct, setFlashSaleProduct] = useState(false);
@@ -150,6 +153,9 @@ const useProductSubmit = (attribue = []) => {
         sku: data.sku || "",
         barcode: data.barcode || "",
         name: data.name,
+        seoTitle: (data.seoTitle || "").trim(),
+        seoDescription: (data.seoDescription || "").trim(),
+        seoKeywords,
         description: productDes || "",
         videoUrl: data.videoUrl,
         // ...descriptionTranslates,
@@ -207,6 +213,9 @@ const useProductSubmit = (attribue = []) => {
         if (isCombination) {
           setUpdatedId(res?.product?._id);
           setValue("name", res?.product?.name);
+          setValue("seoTitle", res?.product?.seoTitle || "");
+          setValue("seoDescription", res?.product?.seoDescription || "");
+          setSeoKeywords(res?.product?.seoKeywords || []);
           setValue("videoUrl", res?.product?.videoUrl);
           setProductDes(res?.product?.description);
           setValue("slug", res?.product?.slug);
@@ -277,6 +286,9 @@ const useProductSubmit = (attribue = []) => {
       setValue("sku");
       setValue("name");
       setValue("slug");
+      setValue("seoTitle", "");
+      setValue("seoDescription", "");
+      setSeoKeywords([]);
 
       setProductDes("");
       setValue("quantity");
@@ -332,6 +344,9 @@ const useProductSubmit = (attribue = []) => {
       setSameAsTitle(!productDetails.slug);
       setUpdatedId(productDetails._id);
       setValue("name", productDetails.name);
+      setValue("seoTitle", productDetails.seoTitle || "");
+      setValue("seoDescription", productDetails.seoDescription || "");
+      setSeoKeywords(productDetails.seoKeywords || []);
       // setProductDes(productDetails.description);
       setValue("slug", productDetails.slug);
       setValue("show", productDetails?.show);
@@ -372,6 +387,9 @@ const useProductSubmit = (attribue = []) => {
       setSameAsTitle(true);
       setValue("name", "");
       setValue("slug", "");
+      setValue("seoTitle", "");
+      setValue("seoDescription", "");
+      setSeoKeywords([]);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -687,6 +705,11 @@ const useProductSubmit = (attribue = []) => {
     onSubmit,
     errors,
     slug,
+    name,
+    seoTitle,
+    seoDescription,
+    seoKeywords,
+    setSeoKeywords,
     sameAsTitle,
     setSameAsTitle,
     normalizeSlug,

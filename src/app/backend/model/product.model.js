@@ -26,6 +26,15 @@ const productSchema = new Schema(
       type: String,
       required: false,
     },
+    seoTitle: {
+      type: String,
+      required: false,
+    },
+    seoDescription: {
+      type: String,
+      required: false,
+    },
+    seoKeywords: { type: [String], default: undefined },
     slug: {
       type: String,
       required: true,

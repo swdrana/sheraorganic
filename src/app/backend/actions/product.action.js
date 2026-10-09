@@ -6,6 +6,7 @@ import { revalidateTag } from "next/cache";
 import { CACHE_TAGS } from "@/app/data/cachedData";
 import { destroyImages, diffRemoved } from "../utils/cloudinaryServer";
 import { resolveProductSlug } from "../utils/productSlug";
+import { cleanSeo } from "../utils/productSeo";
 
 // category update
 export async function productUpdate(id, updateProductData) {
@@ -33,6 +34,10 @@ export async function productUpdate(id, updateProductData) {
       ];
       product.name = updateProductData.name;
       product.description = updateProductData.description;
+      const seo = cleanSeo(updateProductData);
+      product.seoTitle = seo.seoTitle;
+      product.seoDescription = seo.seoDescription;
+      product.seoKeywords = seo.seoKeywords;
 
       product.productId = updateProductData.productId;
       product.sku = updateProductData.sku;
@@ -81,6 +86,7 @@ export async function productAdd(ProductData) {
     });
     const newProduct = new Product({
       ...ProductData,
+      ...cleanSeo(ProductData),
       slug,
       productId: ProductData.productId
         ? ProductData.productId

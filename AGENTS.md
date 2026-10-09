@@ -174,6 +174,9 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
   `slugHistory`. Admin drawer: "Same as title" checkbox (new products on; editing keeps the URL stable).
 - `scripts/generate-product-slugs.mjs` (dry run / `--apply <backup.json>`) regenerated all slugs from
   titles on 2026-10-10.
+- Per-product SEO: `seoTitle`, `seoDescription`, `seoKeywords` ([String]); admin "SEO" group with the
+  `KeywordsInput` chip field (comma / Bengali comma / Enter = new chip). Server cleans them with
+  `cleanSeo` (`backend/utils/productSeo.js`). Metadata falls back to name / description / legacy `tag`.
 - Product page has `generateMetadata` (title/description/canonical/OG), Product + BreadcrumbList JSON-LD,
   the name as `h1`, and the slim `ProductBreadcrumb` instead of the big page banner.
 

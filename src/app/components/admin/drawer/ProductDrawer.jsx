@@ -17,6 +17,7 @@ import Uploader from "../imageUploader/Uploader";
 import SwitchToggle from "../form/switch/SwitchToggle";
 import usebrands from "../featch/brands";
 import DescriptionInput from "../form/input/DescriptionInput";
+import KeywordsInput from "../form/input/KeywordsInput";
 import { slugify } from "@/app/utils/productUrl";
 
 const ProductDrawer = ({ attribue = [], categoriesList = [] }) => {
@@ -25,6 +26,11 @@ const ProductDrawer = ({ attribue = [], categoriesList = [] }) => {
     language,
     register,
     slug,
+    name,
+    seoTitle,
+    seoDescription,
+    seoKeywords,
+    setSeoKeywords,
     sameAsTitle,
     setSameAsTitle,
     normalizeSlug,
@@ -444,6 +450,41 @@ const ProductDrawer = ({ attribue = [], categoriesList = [] }) => {
                                   />
                                   Same as title
                                 </label>
+                              </div>
+                            </div>
+                            {/* Product SEO */}
+                            <div className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
+                              <div>
+                                <h3 className="text-sm font-semibold leading-6 text-gray-900 sm:mt-1.5">SEO</h3>
+                              </div>
+                              <div className="sm:col-span-2 space-y-5">
+                                <div>
+                                  <label htmlFor="product-seo-title" className="block text-sm font-medium text-gray-900 mb-2">SEO title</label>
+                                  <input
+                                    id="product-seo-title"
+                                    type="text"
+                                    maxLength={60}
+                                    placeholder={name || productDetails?.name || "Product name"}
+                                    className="w-full rounded-lg bg-slate-500 bg-opacity-5 border border-gray-400 px-4 py-3 focus:ring-0 outline-none"
+                                    {...register("seoTitle")}
+                                  />
+                                  <p className="mt-1 text-sm text-gray-500">{seoTitle.length}/60 — খালি রাখলে product-এর নাম ব্যবহার হবে</p>
+                                </div>
+                                <div>
+                                  <label htmlFor="product-seo-description" className="block text-sm font-medium text-gray-900 mb-2">SEO description</label>
+                                  <textarea
+                                    id="product-seo-description"
+                                    rows={3}
+                                    maxLength={160}
+                                    className="w-full rounded-lg bg-slate-500 bg-opacity-5 border border-gray-400 px-4 py-3 focus:ring-0 outline-none"
+                                    {...register("seoDescription")}
+                                  />
+                                  <p className="mt-1 text-sm text-gray-500">{seoDescription.length}/160 — খালি রাখলে description-এর শুরু ব্যবহার হবে</p>
+                                </div>
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-900 mb-2">SEO keywords / tags</label>
+                                  <KeywordsInput value={seoKeywords} onChange={setSeoKeywords} />
+                                </div>
                               </div>
                             </div>
                           </div>

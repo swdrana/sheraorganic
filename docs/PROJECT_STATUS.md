@@ -170,6 +170,8 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
   Admin-এ "URL path" ফিল্ড + "Same as title" টিক (টিক দিলে title থেকে auto; না দিলে title বদলালেও URL একই)।
   ২৫টা product-এর URL title থেকে তৈরি (পুরনো slug backup: `.agent/backups/product-slugs-before-*.json`)।
   পুরনো ID link ও পুরনো slug (cart/wishlist-এ জমা) 308 redirect হয়।
+- Admin-এ product-প্রতি "SEO" অংশ: SEO title, SEO description, SEO keywords/tags (কমা দিলেই আলাদা chip);
+  খালি থাকলে নাম/description ব্যবহার হয়।
 - SEO: প্রতিটা product-এর আলাদা title/description/canonical/OG, Product + Breadcrumb schema, h1, sitemap-এ নতুন URL।
 - Codex: `.codex-2` admin form, `.codex-8` server slug, `.codex-10` link audit, `.codex-9` final review।
 - বাকি ঝুঁকি: একই মুহূর্তে দুইজন admin save করলে slug duplicate হতে পারে (unique DB index নেই)।

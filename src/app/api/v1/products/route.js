@@ -1,5 +1,6 @@
 import Product from "@/app/backend/model/product.model";
 import { resolveProductSlug } from "@/app/backend/utils/productSlug";
+import { cleanSeo } from "@/app/backend/utils/productSeo";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
@@ -42,6 +43,7 @@ export const POST = async (req) => {
       sku: data.sku,
       barcode: data.barcode,
       description: data.description,
+      ...cleanSeo(data),
       category: data.category,
       categories: data.categories || [],
       image: data.image,

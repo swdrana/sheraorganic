@@ -121,13 +121,30 @@ export async function generateMetadata({ params }) {
   const { product } = await loadProduct(params.id);
   if (!product) return {};
   const url = `${SITE_URL}${productPathEncoded(product)}`;
-  const title = `${product.name} | Shera Organic`;
+  const baseTitle = product.seoTitle || product.name;
+  const title = baseTitle.includes("Shera Organic") ? baseTitle : `${baseTitle} | Shera Organic`;
   const description =
-    plainText(product.description) || `${product.name} — Shera Organic থেকে অর্ডার করুন।`;
+    product.seoDescription || plainText(product.description) || `${product.name} — Shera Organic থেকে অর্ডার করুন।`;
+  // Old saves hold tags as one JSON-encoded string, either bare or inside the [String] array.
+  const decodeTags = (value) => {
+    if (typeof value !== "string") return [value];
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : [value];
+    } catch {
+      return [value];
+    }
+  };
+  const tags = (Array.isArray(product.tag) ? product.tag : [product.tag]).flatMap(decodeTags);
+  const keywords = (Array.isArray(product.seoKeywords) && product.seoKeywords.length
+    ? product.seoKeywords
+    : tags)
+    .filter((keyword) => typeof keyword === "string" && keyword.trim());
   const images = (product.image || []).filter(Boolean).slice(0, 1);
   return {
     title,
     description,
+    ...(keywords.length ? { keywords } : {}),
     alternates: { canonical: url },
     openGraph: { type: "website", url, title, description, siteName: "Shera Organic", images },
     twitter: { card: "summary_large_image", title, description, images },

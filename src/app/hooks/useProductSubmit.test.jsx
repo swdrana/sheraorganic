@@ -206,6 +206,70 @@ describe("useProductSubmit", () => {
     expect(mocks.productUpdate.mock.calls[0][1].slug).toBe(product.slug);
   });
 
+  it("hydrates SEO fields and includes them in the update payload", async () => {
+    mocks.context.productDetails = {
+      ...product,
+      seoTitle: "Organic rice title",
+      seoDescription: "Organic rice description",
+      seoKeywords: ["organic", "rice"],
+    };
+    mocks.productUpdate.mockResolvedValue({ message: "Updated" });
+    const { result, rerender } = renderHook(() => useProductSubmit(attributes));
+
+    expect(result.current.seoTitle).toBe("Organic rice title");
+    expect(result.current.seoDescription).toBe("Organic rice description");
+    expect(result.current.seoKeywords).toEqual(["organic", "rice"]);
+
+    await act(async () =>
+      result.current.onSubmit({
+        ...formData,
+        seoTitle: "  Updated title  ",
+        seoDescription: "  Updated description  ",
+      })
+    );
+    expect(mocks.productUpdate.mock.calls[0][1]).toMatchObject({
+      seoTitle: "Updated title",
+      seoDescription: "Updated description",
+      seoKeywords: ["organic", "rice"],
+    });
+
+    mocks.context.isProductDrawerOpen = false;
+    rerender();
+    expect(result.current.seoTitle).toBe("");
+    expect(result.current.seoDescription).toBe("");
+    expect(result.current.seoKeywords).toEqual([]);
+  });
+
+  it("starts new and older products with empty SEO fields and submits them on create", async () => {
+    mocks.context.productDetails = product;
+    const { result, rerender } = renderHook(() => useProductSubmit(attributes));
+    expect(result.current.seoTitle).toBe("");
+    expect(result.current.seoDescription).toBe("");
+    expect(result.current.seoKeywords).toEqual([]);
+
+    mocks.context.isProductDrawerOpen = false;
+    rerender();
+    mocks.context.productDetails = {};
+    mocks.context.isProductDrawerOpen = true;
+    rerender();
+    act(() => {
+      result.current.setImageUrl(product.image);
+      result.current.setBrand(product.brand);
+      result.current.setSelectedCategory([{ label: "Food", value: "Food" }]);
+      result.current.setSeoKeywords(["fresh"]);
+    });
+    await act(async () => result.current.onSubmit({
+      ...formData,
+      seoTitle: "  New title  ",
+      seoDescription: "  New description  ",
+    }));
+    expect(mocks.addProduct.mock.calls[0][0]).toMatchObject({
+      seoTitle: "New title",
+      seoDescription: "New description",
+      seoKeywords: ["fresh"],
+    });
+  });
+
   it("resets the title checkbox when switching between products and a new form", () => {
     const { result, rerender } = renderHook(() => useProductSubmit(attributes));
 
