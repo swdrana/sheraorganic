@@ -30,6 +30,7 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
+    slugHistory: { type: [String], default: undefined },
     brand: {
       type: String,
       required: true,
@@ -134,6 +135,8 @@ const productSchema = new Schema(
     timestamps: true,
   }
 );
+
+productSchema.index({ slug: 1 });
 
 const Product =
   mongoose.models?.Product || mongoose.model("Product", productSchema);

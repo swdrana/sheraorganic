@@ -17,6 +17,7 @@ import useAddToCart from "../../hooks/useAddToCart";
 import VariantList from "../../productDetails/VariantList";
 import Price from "../../productDetails/Price";
 import { trackAddToCart } from "@/app/utilities/facebookPixel";
+import { productPath } from "@/app/utils/productUrl";
 
 const ProductModal = () => {
   const [firstSwiper, setFirstSwiper] = useState(null);
@@ -461,7 +462,7 @@ const ProductModal = () => {
                       </div>
                       <Link
                         className="btn btn-sm btn-primary"
-                        href={`/product-details/${productDetails._id}`}
+                        href={productPath(productDetails)}
                         onClick={() => setOpenProductModal(false)}
                       >
                         More Info

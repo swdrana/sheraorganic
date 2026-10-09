@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { revalidateTag } from "next/cache";
 import { CACHE_TAGS } from "@/app/data/cachedData";
 import { destroyImages, diffRemoved } from "../utils/cloudinaryServer";
+import { resolveProductSlug } from "../utils/productSlug";
 
 // category update
 export async function productUpdate(id, updateProductData) {
@@ -15,6 +16,17 @@ export async function productUpdate(id, updateProductData) {
     // console.log("product", product);
 
     if (product) {
+      const slug = await resolveProductSlug({
+        requested: updateProductData.slug,
+        name: updateProductData.name,
+        excludeId: id,
+      });
+      if (slug !== product.slug) {
+        const slugHistory = new Set(product.slugHistory || []);
+        if (product.slug) slugHistory.add(product.slug);
+        slugHistory.delete(slug);
+        product.slugHistory = [...slugHistory];
+      }
       const previousImages = [
         ...(product.image || []),
         ...(product.variants || []).map((variant) => variant?.image).filter(Boolean),
@@ -25,7 +37,7 @@ export async function productUpdate(id, updateProductData) {
       product.productId = updateProductData.productId;
       product.sku = updateProductData.sku;
       product.barcode = updateProductData.barcode;
-      product.slug = updateProductData.slug;
+      product.slug = slug;
       product.categories = updateProductData.categories || [];
       product.category =
         updateProductData.category || updateProductData.categories?.[0];
@@ -63,8 +75,13 @@ export async function productAdd(ProductData) {
   connectDB();
   // console.log("productId", id, "update ProductData", updateProductData);
   try {
+    const slug = await resolveProductSlug({
+      requested: ProductData.slug,
+      name: ProductData.name,
+    });
     const newProduct = new Product({
       ...ProductData,
+      slug,
       productId: ProductData.productId
         ? ProductData.productId
         : new mongoose.Types.ObjectId(),

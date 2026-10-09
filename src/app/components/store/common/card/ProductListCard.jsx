@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import useAddToCart from "../../hooks/useAddToCart";
 import { trackAddToCart } from "@/app/utilities/facebookPixel";
+import { productPath } from "@/app/utils/productUrl";
 const ProductListCard = ({ product }) => {
   const { handelAddItem, handleIncrement, handleDecrement } = useAddToCart();
   const { data: session } = useSession();
@@ -33,7 +34,7 @@ const ProductListCard = ({ product }) => {
     <>
       <div className="col-xl-12">
         <div className="vertical-product-card rounded-2 position-relative d-md-flex align-items-center bg-white hr-product">
-          <Link href={`/product-details/${product._id}`} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} />
+          <Link href={productPath(product)} className="position-absolute top-0 start-0 w-100 h-100" style={{ zIndex: 1 }} prefetch={true} />
           <div className="thumbnail position-relative text-center p-4 flex-shrink-0">
             <img
               src={product.image?.[0]}
@@ -54,7 +55,7 @@ const ProductListCard = ({ product }) => {
               </Link>
             </div>
 
-            <Link className="h5 mb-3" href={`/product-details/${product._id}`}>
+            <Link className="h5 mb-3" href={productPath(product)}>
               {product.name}
             </Link>
 

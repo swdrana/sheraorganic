@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCart } from "react-use-cart";
+import { productPath } from "@/app/utils/productUrl";
 
 const ShoppingBegHoverContent = () => {
   const { items, removeItem, updateItemQuantity, cartTotal } = useCart();
@@ -55,7 +56,7 @@ const ShoppingBegHoverContent = () => {
                       </a>
                     </div>
                     <div className="items-content ms-3">
-                      <Link href={`/product-details/${item._id}`}>
+                      <Link href={productPath(item)}>
                         <h6 className="tt-line-clamp tt-clamp-1 max-text-30 mb-1">
                           {item.name}
                         </h6>

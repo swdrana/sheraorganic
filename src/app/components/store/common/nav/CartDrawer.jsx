@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useCart } from "react-use-cart";
 import { useMainContext } from "../../provider/MainContextStore";
+import { productPath } from "@/app/utils/productUrl";
 
 const CartDrawer = () => {
   const { openCartDrawer, setOpenCartDrawer } = useMainContext();
@@ -69,7 +70,7 @@ const CartDrawer = () => {
                   />
                   <div className="flex-grow-1">
                     <Link
-                      href={`/product-details/${item._id}`}
+                      href={productPath(item)}
                       onClick={() => setOpenCartDrawer(false)}
                       className="d-block text-dark small"
                     >

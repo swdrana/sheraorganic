@@ -8,6 +8,7 @@ import { productCategoryList } from "@/app/utils/productCategory";
 import useAddToCart from "../../hooks/useAddToCart";
 import useAddWishlist from "../../hooks/useAddWishlist";
 import StarRating from "../others/StartRating";
+import { productPath } from "@/app/utils/productUrl";
 
 const ProductCard = ({
   product,
@@ -63,7 +64,7 @@ const ProductCard = ({
           ></i>
         </button>
         <Link
-          href={`/product-details/${product._id}`}
+          href={productPath(product)}
           className="pcv2-body text-decoration-none text-dark d-flex flex-column flex-grow-1"
         >
           <span className="pcv2-thumb">

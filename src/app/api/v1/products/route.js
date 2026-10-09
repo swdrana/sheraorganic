@@ -1,4 +1,5 @@
 import Product from "@/app/backend/model/product.model";
+import { resolveProductSlug } from "@/app/backend/utils/productSlug";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
@@ -32,6 +33,7 @@ export const POST = async (req) => {
   const data = await req.json();
   // console.log("product data", data);
   try {
+    const slug = await resolveProductSlug({ requested: data.slug, name: data.name });
     const newProduct = new Product({
       // set every value individually
 
@@ -47,7 +49,7 @@ export const POST = async (req) => {
       prices: data.prices,
       isCombination: data.isCombination,
       variants: data.variants,
-      slug: data.slug,
+      slug,
       stock: data.stock,
       brand: data.brand,
       videoUrl: data.videoUrl,

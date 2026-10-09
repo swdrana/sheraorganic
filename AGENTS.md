@@ -40,7 +40,7 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
 - `app/ClientLayout.jsx` — mounts chrome (Navbar / Footer / Offcanvas / CartDrawer / ProductModal / …)
   inside providers when `isStorePage`.
 - `app/(store)/**` — storefront pages: `products/`, `products/[slug]` (search/category via `=`-split slug),
-  `product-details/[id]`, `cart/`, `checkout/`, `my-account/`, `login/`, `singup/` (sic), `thank-you/[orderCode]`,
+  `product-details/[id]` (segment = product URL path, see "Product URLs"), `cart/`, `checkout/`, `my-account/`, `login/`, `singup/` (sic), `thank-you/[orderCode]`,
   `invoice/[invoiceNo]`, `blog/`, etc.
 - `app/admin/**` — admin dashboard routes (`store-customization`, `product`, `order`, `customers`, …).
 - `app/api/v1/**` — REST route handlers. `app/api/auth/[...nextauth]/route.js` exports `authOptions`.
@@ -160,6 +160,22 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
   order redeems at most one and injects an `isGift: true`, ৳0 order cart line server-side.
 - `.product-card-v2` is the canonical storefront grid card; the specialized trending/feature/weekly card
   components were removed.
+
+### Product URLs (round 7 — SEO)
+
+- `/product-details/<slug>`: `product.slug` is the admin "URL path" — unique, Bengali+English allowed,
+  normalized by `slugify` (`utils/productUrl.js`: letters/digits of any script kept, everything else → `-`).
+  Always link with `productPath(product)` (or `productPathEncoded` for sitemap/canonical/redirects — HTTP
+  headers must be ASCII). Never build `/product-details/${id}` by hand.
+- The page resolves the segment from the cached product list via `findProductByParam`: current slug →
+  render; legacy Mongo id or an old slug in `product.slugHistory` → `permanentRedirect` to the current path.
+- Server writes call `resolveProductSlug` (`backend/utils/productSlug.js`): unique among other products'
+  current + historical slugs, never a bare 24-hex string. `productUpdate` pushes the previous slug into
+  `slugHistory`. Admin drawer: "Same as title" checkbox (new products on; editing keeps the URL stable).
+- `scripts/generate-product-slugs.mjs` (dry run / `--apply <backup.json>`) regenerated all slugs from
+  titles on 2026-10-10.
+- Product page has `generateMetadata` (title/description/canonical/OG), Product + BreadcrumbList JSON-LD,
+  the name as `h1`, and the slim `ProductBreadcrumb` instead of the big page banner.
 
 ### Multi-category (round-2)
 

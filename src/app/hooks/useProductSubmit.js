@@ -8,6 +8,7 @@ import { useMainContext } from "../components/admin/context/mainContext";
 import { addProduct } from "../backend/controllers/product.controller";
 import { productUpdate } from "../backend/actions/product.action";
 import swal from "sweetalert";
+import { slugify } from "@/app/utils/productUrl";
 
 // Tags are stored as [String] but older saves hold one JSON-encoded string ('["a","b"]').
 const parseTags = (tag) => {
@@ -28,6 +29,8 @@ const useProductSubmit = (attribue = []) => {
     register,
     handleSubmit,
     setValue,
+    watch,
+    getValues,
     clearErrors,
     formState: { errors },
   } = useForm();
@@ -67,7 +70,11 @@ const useProductSubmit = (attribue = []) => {
   const [defaultCategory, setDefaultCategory] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [slug, setSlug] = useState("");
+  const [sameAsTitle, setSameAsTitle] = useState(
+    !productDetails?._id || !productDetails?.slug
+  );
+  const name = watch("name");
+  const slug = watch("slug");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [flashSaleProduct, setFlashSaleProduct] = useState(false);
@@ -149,9 +156,9 @@ const useProductSubmit = (attribue = []) => {
         brand: brand,
         flashSale: flashSaleProduct,
 
-        slug: data.slug
-          ? data.slug
-          : data.name.toLowerCase().replace(/[^A-Z0-9]+/gi, "-"),
+        slug: sameAsTitle
+          ? slugify(data.name)
+          : slugify(data.slug) || slugify(data.name),
 
         categories: selectedCategory?.map((option) => option.value) || [],
         category: selectedCategory?.[0]?.value || category,
@@ -265,7 +272,7 @@ const useProductSubmit = (attribue = []) => {
 
   useEffect(() => {
     if (!isProductDrawerOpen) {
-      setSlug("");
+      setSameAsTitle(true);
       handleProductTap("Basic Info", true);
       setValue("sku");
       setValue("name");
@@ -322,7 +329,7 @@ const useProductSubmit = (attribue = []) => {
 
     if (productDetails._id) {
       setIsBasicComplete(true);
-      setSlug(productDetails.slug);
+      setSameAsTitle(!productDetails.slug);
       setUpdatedId(productDetails._id);
       setValue("name", productDetails.name);
       // setProductDes(productDetails.description);
@@ -361,10 +368,18 @@ const useProductSubmit = (attribue = []) => {
       setTotalStock(productDetails?.stock);
       setOriginalPrice(productDetails?.prices?.originalPrice);
       setPrice(productDetails?.prices?.price);
+    } else {
+      setSameAsTitle(true);
+      setValue("name", "");
+      setValue("slug", "");
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productDetails, isProductDrawerOpen]);
+
+  useEffect(() => {
+    if (sameAsTitle) setValue("slug", slugify(name));
+  }, [name, sameAsTitle, setValue]);
 
   useEffect(() => {
     if (!isProductDrawerOpen || !productDetails?._id) return;
@@ -662,11 +677,7 @@ const useProductSubmit = (attribue = []) => {
     setTotalStock(Number(totalStock));
   };
 
-  //for handle product slug
-  const handleProductSlug = (value) => {
-    setValue("slug", value.toLowerCase().replace(/[^A-Z0-9]+/gi, "-"));
-    setSlug(value.toLowerCase().replace(/[^A-Z0-9]+/gi, "-"));
-  };
+  const normalizeSlug = () => setValue("slug", slugify(getValues("slug")));
 
   return {
     tag,
@@ -676,6 +687,9 @@ const useProductSubmit = (attribue = []) => {
     onSubmit,
     errors,
     slug,
+    sameAsTitle,
+    setSameAsTitle,
+    normalizeSlug,
     openModal,
     attribue,
     setValues,
@@ -700,7 +714,6 @@ const useProductSubmit = (attribue = []) => {
     setSelectedCategory,
     setDefaultCategory,
     defaultCategory,
-    handleProductSlug,
     handleIsCombination,
     handleEditVariant,
     handleRemoveVariant,

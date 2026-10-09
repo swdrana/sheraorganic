@@ -4,6 +4,7 @@ import Link from "next/link";
 import StarRating from "../common/others/StartRating";
 import useProducts from "../dataFetching/useProducts";
 import { useMainContext } from "../provider/MainContextStore";
+import { productPath } from "@/app/utils/productUrl";
 
 const ProductDetailsSidebar = () => {
   const { products } = useProducts();
@@ -104,7 +105,7 @@ const ProductDetailsSidebar = () => {
                   </div>
                   <div className="card-content mt-3 mt-sm-0">
                     <Link
-                      href={`/product-details/${p._id}`}
+                      href={productPath(p)}
                       className="d-block fs-sm fw-bold text-heading title tt-line-clamp tt-clamp-2 d-block"
                     >
                       {p.name}

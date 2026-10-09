@@ -6,6 +6,7 @@ import Link from "next/link";
 import StarRating from "../common/others/StartRating";
 import { useMainContext } from "../provider/MainContextStore";
 import ProductModal from "../common/others/ProductModal";
+import { productPath } from "@/app/utils/productUrl";
 
 const Wishlist = () => {
   const { handleWishlist, wishlist, removeWishlist } = useAddWishlist();
@@ -43,7 +44,7 @@ const Wishlist = () => {
                       />
                     </div>
                     <div className="thumbnail position-relative text-center p-4">
-                      <Link href={`/product-details/${product._id}`}>
+                      <Link href={productPath(product)}>
                         <img
                           src={product.image?.[0]}
                           alt="apple"
@@ -84,7 +85,7 @@ const Wishlist = () => {
                     </div>
                     <div className="card-content">
                       <Link
-                        href={`/product-details/${product._id}`}
+                        href={productPath(product)}
                         className="card-title tt-line-clamp tt-clamp-2 fw-bold d-block mb-2"
                       >
                         {product.name}{" "}

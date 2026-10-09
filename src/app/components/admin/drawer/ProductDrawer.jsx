@@ -17,12 +17,17 @@ import Uploader from "../imageUploader/Uploader";
 import SwitchToggle from "../form/switch/SwitchToggle";
 import usebrands from "../featch/brands";
 import DescriptionInput from "../form/input/DescriptionInput";
+import { slugify } from "@/app/utils/productUrl";
 
 const ProductDrawer = ({ attribue = [], categoriesList = [] }) => {
   const {
     values,
     language,
     register,
+    slug,
+    sameAsTitle,
+    setSameAsTitle,
+    normalizeSlug,
     onSubmit,
     errors,
     setValues,
@@ -412,21 +417,33 @@ const ProductDrawer = ({ attribue = [], categoriesList = [] }) => {
                                 />
                               </div>
                             </div>
-                            {/* product slug */}
+                            {/* Product URL path */}
                             <div className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
                               <div>
-                                <label className="block text-sm font-medium leading-6 text-gray-900 sm:mt-1.5">
-                                  Product slug
+                                <label htmlFor="product-url-path" className="block text-sm font-medium leading-6 text-gray-900 sm:mt-1.5">
+                                  URL path
                                 </label>
                               </div>
                               <div className="sm:col-span-2">
                                 <input
+                                  id="product-url-path"
                                   type="text"
-                                  // setValue={}
-                                  // defaultValue={productDetails ? productDetails?.name : ""}
                                   className="w-full rounded-lg bg-slate-500 bg-opacity-5 border border-gray-400 px-4 py-3 focus:ring-0 outline-none"
                                   {...register("slug")}
+                                  readOnly={sameAsTitle}
+                                  onBlur={normalizeSlug}
                                 />
+                                <p className="mt-1 text-sm text-gray-500 break-all">
+                                  sheraorganic.com/product-details/{slugify(slug)}
+                                </p>
+                                <label className="mt-2 flex items-center gap-2 text-sm text-gray-700">
+                                  <input
+                                    type="checkbox"
+                                    checked={sameAsTitle}
+                                    onChange={(event) => setSameAsTitle(event.target.checked)}
+                                  />
+                                  Same as title
+                                </label>
                               </div>
                             </div>
                           </div>

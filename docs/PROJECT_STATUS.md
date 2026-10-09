@@ -162,7 +162,21 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
 - Env: client-এর নতুন Gmail App Password — `GMAIL_USER`/`GMAIL_PASSWORD` local `.env.local` + Coolify-তে
   বসানো (value শুধু `.agent/private.md`-এ, repo-তে নয়)। SMTP login যাচাই হয়েছে।
 
+## Round 7 — Product page: SEO URL + উপরের ফাঁকা জায়গা কমানো (2026-10-10)
+
+- Product details-এর উপরের বড় "Product Details" banner বাদ, তার জায়গায় এক লাইনের breadcrumb
+  (Home › Products › Category › Product); মোবাইলে product এখন header-এর ঠিক নিচ থেকে শুরু।
+- URL: `/product-details/<URL path>` — ID নেই। প্রতিটা product-এর unique "URL path" (বাংলা+ইংরেজি)।
+  Admin-এ "URL path" ফিল্ড + "Same as title" টিক (টিক দিলে title থেকে auto; না দিলে title বদলালেও URL একই)।
+  ২৫টা product-এর URL title থেকে তৈরি (পুরনো slug backup: `.agent/backups/product-slugs-before-*.json`)।
+  পুরনো ID link ও পুরনো slug (cart/wishlist-এ জমা) 308 redirect হয়।
+- SEO: প্রতিটা product-এর আলাদা title/description/canonical/OG, Product + Breadcrumb schema, h1, sitemap-এ নতুন URL।
+- Codex: `.codex-2` admin form, `.codex-8` server slug, `.codex-10` link audit, `.codex-9` final review।
+- বাকি ঝুঁকি: একই মুহূর্তে দুইজন admin save করলে slug duplicate হতে পারে (unique DB index নেই)।
+
 ## এখন কী বাকি
+
+- **Round 7 যাচাই:** live-এ কয়েকটা product খুলে URL/breadcrumb দেখা; Google Search Console-এ sitemap আবার submit।
 
 - **Round 6 যাচাই:** live-এ email দিয়ে একটা test order → inbox/spam-এ অর্ডার ইমেইল আসে কিনা; Contact form থেকে একটা message।
 

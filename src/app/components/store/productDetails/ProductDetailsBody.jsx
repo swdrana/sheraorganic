@@ -254,7 +254,7 @@ const ProductDetailsContent = ({ single }) => {
       {productLoading ? (
         <PreLoader />
       ) : (
-        <section className="product-details-area ptb-120">
+        <section className="product-details-area pt-2 pb-120">
           <div className="container">
             <div className="row g-4">
               <div className="col-xl-9">
@@ -359,7 +359,7 @@ const ProductDetailsContent = ({ single }) => {
                       </div>
                       <div className="col-xl-6">
                         <div className="product-info">
-                          <h2 className="h5 mt-1 mb-3">{product?.name}</h2>
+                          <h1 className="h5 mt-1 mb-3">{product?.name}</h1>
                           <div className="d-flex align-items-center flex-nowrap star-rating fs-xxs mb-2">
                             <StarRating rating={product?.averageRating} />
                             <span className="flex-shrink-0">

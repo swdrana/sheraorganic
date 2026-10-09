@@ -162,4 +162,65 @@ describe("useProductSubmit", () => {
     expect(mocks.addProduct).not.toHaveBeenCalled();
     expect(mocks.toastError).toHaveBeenCalledWith("Category is required!");
   });
+
+  it("defaults new products to the title path and follows name changes", async () => {
+    const { result } = renderHook(() => useProductSubmit(attributes));
+
+    expect(result.current.sameAsTitle).toBe(true);
+    act(() => {
+      result.current.register("name").onChange({
+        target: { name: "name", value: "বাংলা Organic Oil" },
+        type: "change",
+      });
+    });
+    expect(result.current.slug).toBe("বাংলা-organic-oil");
+
+    act(() => {
+      result.current.setImageUrl(product.image);
+      result.current.setBrand(product.brand);
+      result.current.setSelectedCategory([{ label: "Food", value: "Food" }]);
+    });
+    await act(async () =>
+      result.current.onSubmit({ ...formData, name: "বাংলা Organic Oil", slug: "custom" })
+    );
+    expect(mocks.addProduct.mock.calls[0][0].slug).toBe("বাংলা-organic-oil");
+  });
+
+  it("keeps an existing path when its title changes", async () => {
+    mocks.context.productDetails = product;
+    mocks.productUpdate.mockResolvedValue({ message: "Updated" });
+    const { result } = renderHook(() => useProductSubmit(attributes));
+
+    expect(result.current.sameAsTitle).toBe(false);
+    act(() => {
+      result.current.register("name").onChange({
+        target: { name: "name", value: "Changed title" },
+        type: "change",
+      });
+    });
+    expect(result.current.slug).toBe(product.slug);
+
+    await act(async () =>
+      result.current.onSubmit({ ...formData, name: "Changed title" })
+    );
+    expect(mocks.productUpdate.mock.calls[0][1].slug).toBe(product.slug);
+  });
+
+  it("resets the title checkbox when switching between products and a new form", () => {
+    const { result, rerender } = renderHook(() => useProductSubmit(attributes));
+
+    act(() => result.current.setSameAsTitle(false));
+    mocks.context.productDetails = product;
+    rerender();
+    expect(result.current.sameAsTitle).toBe(false);
+
+    mocks.context.productDetails = { ...product, _id: "another-id", slug: "" };
+    rerender();
+    expect(result.current.sameAsTitle).toBe(true);
+
+    mocks.context.productDetails = {};
+    rerender();
+    expect(result.current.sameAsTitle).toBe(true);
+    expect(result.current.slug).toBe("");
+  });
 });
