@@ -1,3 +1,5 @@
+import { getCachedSettings } from "@/app/data/cachedData";
+import { normalizeBrand } from "@/app/utils/brand";
 import nodemailer from "nodemailer";
 
 // Server-only Gmail sender (GMAIL_USER + a Gmail App Password in GMAIL_PASSWORD; a normal Google
@@ -20,11 +22,13 @@ const getTransporter = () => {
   return transporter;
 };
 
-export const sendMail = (options) =>
-  getTransporter().sendMail({
-    from: `"Shera Organic" <${process.env.GMAIL_USER}>`,
+export async function sendMail(options, brand) {
+  const resolved = brand || normalizeBrand(await getCachedSettings());
+  return getTransporter().sendMail({
     ...options,
+    from: { name: resolved.site_name, address: process.env.GMAIL_USER },
   });
+}
 
 const HTML_ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 export const escapeHtml = (value) =>

@@ -1,6 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { trackAddToCart } from "@/app/utilities/facebookPixel";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
@@ -15,7 +14,6 @@ const ProductCard = ({
   columnClassName = "col-6 col-lg-4 col-xxl-3",
 }) => {
   const { handelAddItem } = useAddToCart();
-  const { data: session } = useSession();
   const { handleWishlist, wishlist } = useAddWishlist();
 
   const handleAddToCartWithTracking = () => {
@@ -26,11 +24,6 @@ const ProductCard = ({
       ],
       currency: "BDT",
       value: product.prices?.price,
-      user_data: {
-        em: session?.user?.email || "",
-        fn: session?.user?.name?.split(" ")[0] || "",
-        ln: session?.user?.name?.split(" ")[1] || "",
-      },
     });
     handelAddItem({ ...product, id: product._id });
   };

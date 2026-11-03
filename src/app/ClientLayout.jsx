@@ -23,9 +23,10 @@ import { WishlistProvider } from "./components/store/provider/WishlistProvider";
 import { loadStylesheet } from "./utils/loadStylesheet";
 import AnalyticsLoader from "./components/store/common/others/AnalyticsLoader";
 import { useEffect } from "react";
+import { SettingsContext } from "./components/store/dataFetching/useSetting";
 import { markAdminVisit } from "./components/store/dataFetching/sharedFetch";
 
-export default function ClientLayout({ children }) {
+export default function ClientLayout({ children, initialSettings, tracking }) {
   useEffect(() => {
     loadStylesheet("/css/react-toastify.css");
   }, []);
@@ -52,6 +53,7 @@ export default function ClientLayout({ children }) {
     pathname === "/coupons";
 
   return (
+    <SettingsContext.Provider value={initialSettings}>
     <AuthProvider>
       <CartProviderContext>
         <ToastContainer />
@@ -59,7 +61,7 @@ export default function ClientLayout({ children }) {
           <WishlistProvider>
             <MainContextProvider>
               <MainContextProviderStore>
-                <AnalyticsLoader />
+                <AnalyticsLoader tracking={tracking} />
                 {isStorePage && (
                   <>
                     <Offcanvas />
@@ -82,5 +84,6 @@ export default function ClientLayout({ children }) {
         </ThemeProvider>
       </CartProviderContext>
     </AuthProvider>
+    </SettingsContext.Provider>
   );
 }

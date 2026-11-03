@@ -1,7 +1,5 @@
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-if (!BASE_URL) {
-  throw new Error("Environment variable NEXT_PUBLIC_BASE_URL is not defined");
-}
+// Relative browser URLs also allow env-free builds; do not throw while importing a component.
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
 
 // Add category
 export async function addCategory(newCategory) {

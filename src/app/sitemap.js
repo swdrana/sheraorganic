@@ -1,13 +1,18 @@
 import { getCachedCategories, getCachedProducts } from "@/app/data/cachedData";
 import { categoryPath, productPathEncoded } from "@/app/utils/productUrl";
 
-const BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || "https://sheraorganic.com").replace(/\/$/, "");
+import { getSiteUrl } from "@/app/utils/siteUrl";
 
 export const revalidate = 3600;
 
 const visible = (item) => item?.status !== "hide";
 
 export default async function sitemap() {
+  const BASE_URL = getSiteUrl();
+  if (!BASE_URL) {
+    console.warn("[sitemap] NEXT_PUBLIC_BASE_URL missing/invalid; URLs omitted");
+    return [];
+  }
   const [products, categories] = await Promise.all([
     getCachedProducts(),
     getCachedCategories(),

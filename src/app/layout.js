@@ -3,27 +3,32 @@ import "./globals.css";
 import ClientLayout from "./ClientLayout";
 import { getCachedSettings } from "@/app/data/cachedData";
 
-export async function generateMetadata() {
-  let favicon = "/favicon.ico";
-  try {
-    const setting = await getCachedSettings();
-    if (setting?.home?.favicon) {
-      favicon = setting.home.favicon;
-    }
-  } catch (e) {
-    console.error("Error loading settings for metadata:", e);
-  }
+import { normalizeBrand } from "./utils/brand";
+import { normalizeTracking } from "./utils/tracking";
+import { getSiteUrl } from "./utils/siteUrl";
 
+export async function generateMetadata() {
+  const setting = await getCachedSettings();
+  const brand = normalizeBrand(setting);
+  const base = getSiteUrl();
   return {
-    title: "SheraOrganic Online Store",
-    description: "Welcome to SheraOrganic - Safe and Organic Food Store",
-    icons: {
-      icon: favicon,
+    ...(base ? { metadataBase: new URL(base) } : { metadataBase: null }),
+    title: brand.meta_title || brand.site_name,
+    description: brand.meta_description,
+    icons: { icon: setting?.home?.favicon || "/favicon.ico" },
+    openGraph: {
+      title: brand.meta_title || brand.site_name,
+      description: brand.meta_description,
+      siteName: brand.site_name,
+      ...(base ? { url: base } : {}),
+      images: brand.og_image ? [brand.og_image] : [],
     },
   };
 }
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const setting = await getCachedSettings();
+  const tracking = normalizeTracking(setting);
   return (
     <html lang="en">
       <head>
@@ -38,7 +43,7 @@ export default function RootLayout({ children }) {
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 
         {/* Preconnect for Facebook (async / lazyOnload anyway) */}
-        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        {tracking.enabled && tracking.fb_pixel_id && <link rel="dns-prefetch" href="https://connect.facebook.net" />}
 
         {/* Preload FontAwesome fonts to avoid render blocking critical chain */}
         <link
@@ -87,7 +92,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
 
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout initialSettings={setting} tracking={tracking}>{children}</ClientLayout>
       </body>
     </html>
   );

@@ -5,13 +5,14 @@ import AboutCustomization from "./aboutCustomization/AboutCustomization";
 import HomeCustomization from "./homoCustomization/HomeCustomization";
 import ContactCustomization from "./contactCustomization/ContactCustomization";
 import TermsConditionCustomization from "./termsCondition/TermsConditionCustomization";
+import SiteSettings from "./SiteSettings";
 const StoreCustomization = () => {
   return (
     <>
       <h2 className="text-lg font-semibold">Store Customization</h2>
       <div className="mt-8">
         <Tabs>
-          <TabList className="border-b-0 rounded-lg inline-flex items-center">
+          <TabList className="border-b-0 rounded-lg inline-flex flex-wrap items-center">
             <Tab className="px-6 py-2 rounded-lg cursor-pointer outline-none">
               Home
             </Tab>
@@ -25,6 +26,8 @@ const StoreCustomization = () => {
             <Tab className="px-6 py-2 rounded-lg cursor-pointer outline-none">
               Contact-us
             </Tab>
+            <Tab className="px-6 py-2 rounded-lg cursor-pointer outline-none">Brand & Theme</Tab>
+            <Tab className="px-6 py-2 rounded-lg cursor-pointer outline-none">Tracking</Tab>
           </TabList>
 
           <TabPanel>
@@ -40,6 +43,8 @@ const StoreCustomization = () => {
           <TabPanel>
             <ContactCustomization />
           </TabPanel>
+          <TabPanel><SiteSettings group="brand" /></TabPanel>
+          <TabPanel><SiteSettings group="tracking" /></TabPanel>
         </Tabs>
       </div>
     </>

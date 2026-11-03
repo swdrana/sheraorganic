@@ -2,7 +2,8 @@
 import useSetting from "../../dataFetching/useSetting";
 
 const NavbarTop = () => {
-  const { setting, settingLoading } = useSetting();
+  const { setting } = useSetting();
+  if (!setting?.home?.store_title && !setting?.home?.gmail && !setting?.home?.address) return null;
 
   return (
     <>
@@ -11,17 +12,17 @@ const NavbarTop = () => {
           <div className="row align-items-center">
             <div className="col-xxl-4 col-xl-3">
               <div className="topbar-info d-none d-xl-block">
-                <p className="text-white fs-sm fw-medium mb-0">
-                  {setting?.home?.store_title || "Welcome to our Organic store"}
-                </p>
+                {setting?.home?.store_title && <p className="text-white fs-sm fw-medium mb-0">
+                  {setting?.home?.store_title}
+                </p>}
               </div>
             </div>
             <div className="col-xxl-8 col-xl-9">
               <ul className="d-flex align-items-center justify-content-center justify-content-xl-end topbar-info-right">
-                <li className="nav-item">
+                {setting?.home?.gmail && <li className="nav-item">
                   <a
                     className="d-flex align-items-center gap-1"
-                    href="mailto:groshop@support.com"
+                    href={`mailto:${setting?.home?.gmail}`}
                   >
                     <span className="me-1">
                       <svg
@@ -37,10 +38,10 @@ const NavbarTop = () => {
                         />
                       </svg>
                     </span>
-                    {setting?.home?.gmail || "groshop@support.com"}
+                    {setting?.home?.gmail}
                   </a>
-                </li>
-                <li className="nav-item d-flex align-items-center gap-1">
+                </li>}
+                {setting?.home?.address && <li className="nav-item d-flex align-items-center gap-1">
                   <span className="me-1">
                     <svg
                       width="12"
@@ -69,8 +70,8 @@ const NavbarTop = () => {
                       />
                     </svg>
                   </span>
-                  {setting?.home?.address || "Washington, New York, USA - 254230"}
-                </li>
+                  {setting?.home?.address}
+                </li>}
               </ul>
             </div>
           </div>

@@ -440,7 +440,7 @@ const ProductDrawer = ({ attribue = [], categoriesList = [] }) => {
                                   onBlur={normalizeSlug}
                                 />
                                 <p className="mt-1 text-sm text-gray-500 break-all">
-                                  sheraorganic.com/product-details/{slugify(slug)}
+                                  {process.env.NEXT_PUBLIC_BASE_URL || ""}/product-details/{slugify(slug)}
                                 </p>
                                 <label className="mt-2 flex items-center gap-2 text-sm text-gray-700">
                                   <input
