@@ -78,6 +78,27 @@ admin settings or env. When reporting to the owner, name the store by the friend
 - Product-picker admin fields store `{ name, id }` (joined/split on `"|"` in the `<select>`), e.g.
   `weekly_best_delas_product_*`. Category-picker fields store just the name string.
 
+### Decoration themes (Job B — 2026-11)
+
+- `setting.brand.decoration_theme` = `grocery | tech | none`; `utils/theme.js` normalizes it,
+  with missing/invalid values falling back to grocery. Root `layout.js` reads cached settings before
+  rendering and seeds `components/store/theme/DecorThemeProvider`; use `useDecorTheme()` rather than
+  fetching settings again or switching themes after mount. The hero preload follows the same theme.
+- `theme/decorSets.js` owns per-slot image paths and original sizing; `<Decor slot="..." />` preserves
+  grocery img attributes/classes/order, chooses isolated `/themes/tech/...` art, or omits niche art for
+  none. Neutral backgrounds, circles, maps, textures, curves and borders remain in every theme.
+  Use `reserveSpace` for in-flow images that must keep their box when hidden; tech replacement images
+  use the original aspect ratio. Never overwrite `/img` grocery art with tech assets.
+- The supplied bdXmart checkout's icon library currently matches this checkout byte-for-byte. Live
+  grocery counter icons therefore use actual tech/cart art; neutral hand/customer/delivery icons have
+  isolated tech copies. Its laptop login banner is neutral enough for grocery/tech; none hides it.
+- Weekly deals use `home.weekly_best_deals_img` in every theme; the legacy vegetables fallback is
+  grocery-only. Missing tech/none images reserve the original banner box.
+- Quick view uses `ProductMediaGallery` + `utils/productMedia.js`: product images only, video after the
+  first image, no template fallback photos. Payment SVGs are local under `/img/payments/`.
+- Theme settings persistence/admin fields belong to the separate brand-settings job; this theme work
+  does not modify the settings API or admin UI.
+
 ### Caching & data fetching (round 4 — CPU fix)
 
 - **Server:** public data (products, categories, brands, attributes, settings, blogs, About stats) is read
@@ -242,5 +263,4 @@ admin settings or env. When reporting to the owner, name the store by the friend
 ## History
 
 Round-by-round status (done / in progress / planned) lives in **`docs/PROJECT_STATUS.md`** — keep it
-there, not here. Round 1 is merged & pushed; Round 2 is implemented and locally committed pending owner
-verification/push.
+there, not here.

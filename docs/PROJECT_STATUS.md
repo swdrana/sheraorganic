@@ -8,7 +8,7 @@
 > gotcha বদলালে `AGENTS.md`-ও একই ভাবে হালনাগাদ করো। machine-local (`~/.claude`) মেমোরিতে
 > এই প্রজেক্টের কিছু আলাদা করে রাখা হয় না — সব knowledge এখানেই।
 
-শেষ হালনাগাদ: 2026-10-10
+শেষ হালনাগাদ: 2026-11-03
 
 ---
 
@@ -22,6 +22,38 @@
    **Claude নিজে push করে না**।
 
 `plan/` ফোল্ডার git-এ **untracked** — কখনো `git add` করা হয় না। `docs/` এবং `AGENTS.md` tracked।
+
+---
+
+## বর্তমান রাউন্ড — Job B: decoration theme (স্থানীয়; push নয়)
+
+- `brand.decoration_theme` থেকে server-rendered `grocery / tech / none`; পুরনো settings-এ grocery।
+  Root layout-এর provider ও hero preload একই theme ব্যবহার করে; client fetch/mount-এর জন্য অপেক্ষা নেই।
+- Hero/slider, Trending, Blog, Feature, Feedback, Footer decoration, Breadcrumb, Contact, AboutTop,
+  live AboutUs এবং WorkingAbility-এর niche artwork slot map-এ। Neutral shape/map/curve/texture অপরিবর্তিত।
+  Tech assets আলাদা `public/themes/tech/`-এ; grocery-এর img attributes/classes/order রাখা হয়েছে।
+- Login/signup banner theme-aware; `none`-এ illustration লুকায়। Weekly deals-এর saved admin image এখন
+  দেখায়; unset হলে vegetables কেবল grocery-তে; tech/none-এ আগের অনুপাতের খালি box থাকে।
+- Quick view-এ template jam/thumbnail বাদ; নিজের সব image এবং প্রথম ছবির পরে video।
+  Checkout-এর COD/wallet SVG template server থেকে local `public/img/payments/`-এ নেওয়া হয়েছে।
+- bdXmart-এর দেওয়া checkout-এর icons byte-identical; খাবারযুক্ত counter icon tech-এ microchip/cart দিয়ে
+  বদলানো হয়েছে, neutral icon-এর আলাদা tech copy আছে। বাড়তি food photo কপি করা হয়নি।
+- সীমা: settings API/admin/metadata/SEO/email/Navbar/dead template page বদলানো হয়নি। Theme setting-এর
+  persistence ও admin selector Job A-এর কাজ; এই worktree তা যোগ করে না। SCSS বদলায়নি।
+- যাচাই: lint exit 0 (আগের warnings); single-thread Vitest ১১ file / ৫৯ test pass; production build
+  ৫৫/৫৫ page, postbuild successful। আগের controller-এর BASE_URL guard-এর জন্য command-only
+  `NEXT_PUBLIC_BASE_URL=http://127.0.0.1:3199 CIRCLE_NODE_TOTAL=2 npm run build` চালানো হয়েছে;
+  `.env`/DB credential ছাড়া। DB-unavailable fallback-এর timeout log প্রত্যাশিত।
+- Headless Chrome-এ বাস্তব components-এর isolated SSR fixture, production CSS, ৩৭৫px আগে ও ১৪৪০px পরে:
+  প্রতিটি theme-এ ৩৩ section/container box একই; overflow/broken image ০। Grocery mobile screenshot
+  পুরনো commit-এর সাথে pixel-identical; desktop DOM একই (নিরপেক্ষ alt text ছাড়া), মাত্র ১৫ text-raster
+  pixel variance, কোনো layout/asset পরিবর্তন নয়। Root layout-এর tech preload ও no-grocery first render যাচাই।
+- Local `next start`: `/`, `/about`, `/contact`, `/login`, `/singup`, `/checkout`, COD/wallet SVG ও tech SVG
+  সব HTTP 200। কোনো order/auth/settings write করা হয়নি; local server/Chrome বন্ধ করা হয়েছে।
+- MANUAL VERIFY: Job A integrate করার পরে admin-এ theme save → বাস্তব DB/data দিয়ে fresh page load ও
+  navigation-এ grocery/tech/none; hydrated slider; quick view-এর image thumbnail/video playback/product
+  switch; settings থেকে weekly custom image প্রতিটি theme-এ দেখা। SSR fixture মাপ/চেহারা যাচাই সম্পন্ন।
+- Delivery: একটিমাত্র local commit; push করা হয়নি।
 
 ---
 
@@ -177,6 +209,9 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
 - বাকি ঝুঁকি: একই মুহূর্তে দুইজন admin save করলে slug duplicate হতে পারে (unique DB index নেই)।
 
 ## এখন কী বাকি
+
+- **বর্তমান Job B:** implementation/gates/local smoke সম্পন্ন, local commit। Job A-এর settings/admin
+  integration ও বাস্তব data দিয়ে interactive browser verification বাকি। Push করা হয়নি।
 
 - **Round 7 যাচাই:** live-এ কয়েকটা product খুলে URL/breadcrumb দেখা; Google Search Console-এ sitemap আবার submit।
 

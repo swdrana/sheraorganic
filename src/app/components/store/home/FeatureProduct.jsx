@@ -1,4 +1,6 @@
 "use client";
+import Decor from "@/app/components/store/theme/Decor";
+
 import Link from "next/link";
 import ProductCard from "../common/card/ProductCard";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
@@ -22,14 +24,14 @@ const FeatureProduct = ({ products, setting }) => {
   return (
     <>
       <section className="featured-products pt-120 pb-200 bg-shade position-relative overflow-hidden z-1">
-        <img
-          src="/img/shapes/roll-1.png"
+        <Decor
+          slot="feature.roll-1"
           alt="roll"
           className="position-absolute roll-1 z--1"
           data-parallax='{"y": -120}'
         />
-        <img
-          src="/img/shapes/roll-2.webp"
+        <Decor
+          slot="feature.roll-2"
           alt="roll"
           className="position-absolute roll-2 z--1"
           data-parallax='{"y": 120}'

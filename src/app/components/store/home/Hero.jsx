@@ -1,4 +1,6 @@
 "use client";
+import Decor from "@/app/components/store/theme/Decor";
+
 import Link from "next/link";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 import HeroSwiper from "./HeroSwiper";
@@ -8,8 +10,8 @@ const Hero = ({ setting }) => {
     <>
       <section className="gshop-hero pt-120 bg-white position-relative z-1 overflow-hidden">
         {/* Background shapes — load lazily (not LCP) */}
-        <img
-          src="/img/shapes/leaf-shadow.webp"
+        <Decor
+          slot="hero.leaf-shadow"
           alt="leaf"
           className="position-absolute leaf-shape z--1 rounded-circle"
           width="200"
@@ -17,8 +19,8 @@ const Hero = ({ setting }) => {
           style={{ width: "200px", height: "197px" }}
           loading="lazy"
         />
-        <img
-          src="/img/shapes/mango.png"
+        <Decor
+          slot="hero.mango"
           alt="mango"
           className="position-absolute mango z--1"
           data-parallax='{"y": -120}'

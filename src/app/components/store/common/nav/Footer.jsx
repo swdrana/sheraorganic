@@ -1,4 +1,6 @@
 "use client";
+import Decor from "@/app/components/store/theme/Decor";
+
 import { useState } from "react";
 import useCategory from "../../dataFetching/useCategory";
 import FooterNav from "./FooterNav";
@@ -55,18 +57,18 @@ const Footer = () => {
         ></span>
       </div>
       <footer className="gshop-footer position-relative pt-8 bg-dark z-1 overflow-hidden">
-        <img
-          src="/img/shapes/tomato.svg"
+        <Decor
+          slot="footer.tomato"
           alt="tomato"
           className="position-absolute z--1 tomato vector-shape"
         />
-        <img
-          src="/img/shapes/pata-lg.svg"
+        <Decor
+          slot="footer.pata-lg"
           alt="pata"
           className="position-absolute z--1 pata-lg vector-shape"
         />
-        <img
-          src="/img/shapes/pata-xs.svg"
+        <Decor
+          slot="footer.pata-xs"
           alt="pata"
           className="position-absolute z--1 pata-xs vector-shape"
         />
@@ -75,29 +77,29 @@ const Footer = () => {
           alt="frame"
           className="position-absolute z--1 frame-circle vector-shape"
         />
-        <img
-          src="/img/shapes/leaf.svg"
+        <Decor
+          slot="footer.leaf"
           alt="leaf"
           className="position-absolute z--1 leaf vector-shape"
         />
 
-        <img
-          src="/img/shapes/leaf.svg"
+        <Decor
+          slot="footer.leaf"
           alt="pata"
           className="position-absolute leaf-2 z--1 vector-shape"
         />
-        <img
-          src="/img/shapes/pata-xs.svg"
+        <Decor
+          slot="footer.pata-xs"
           alt="pata"
           className="position-absolute pata-xs-2 z--1 vector-shape"
         />
-        <img
-          src="/img/shapes/tomato-slice.svg"
+        <Decor
+          slot="footer.tomato-slice"
           alt="tomato slice"
           className="position-absolute tomato-slice vector-shape z--1"
         />
-        <img
-          src="/img/shapes/tomato-half.svg"
+        <Decor
+          slot="footer.tomato-half"
           alt="tomato"
           className="position-absolute tomato-half z--1 vector-shape"
         />

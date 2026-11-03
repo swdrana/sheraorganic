@@ -1,29 +1,31 @@
 "use client";
+import Decor from "@/app/components/store/theme/Decor";
+
 
 // `stats` = { products, orders, delivered, customers } counts from getStoreStats() (server).
 const OurWorkingAbility = ({ stats }) => {
   const counters = [
     {
       id: 1,
-      icon: "/img/icons/icon-1.png",
+      icon: "ability.icon-1",
       count: `${stats?.products ?? 0}`,
       label: "Total Products",
     },
     {
       id: 2,
-      icon: "/img/icons/icon-2.png",
+      icon: "ability.icon-2",
       count: `${stats?.orders ?? 0}`,
       label: "Total Orders",
     },
     {
       id: 3,
-      icon: "/img/icons/icon-3.png",
+      icon: "ability.icon-3",
       count: `${stats?.customers ?? 0}`,
       label: "Total Visitors",
     },
     {
       id: 4,
-      icon: "/img/icons/icon-4.png",
+      icon: "ability.icon-4",
       count: `${stats?.delivered ?? 0}`,
       label: "Total Delivery",
     },
@@ -37,20 +39,20 @@ const OurWorkingAbility = ({ stats }) => {
           alt="bg shape"
           className="position-absolute start-0 bottom-0 z--1 w-100"
         />
-        <img
-          src="/img/shapes/roll-color.png"
+        <Decor
+          slot="ability.roll-color"
           alt="roll"
           className="position-absolute roll-color z--1"
           // For parallax: data-parallax='{"y": -50}' can be managed by a parallax library if needed
         />
-        <img
-          src="/img/shapes/roll-color-curve.png"
+        <Decor
+          slot="ability.roll-color-curve"
           alt="roll"
           className="position-absolute roll-color-curve z--1"
           // For parallax: data-parallax='{"y": 50}'
         />
-        <img
-          src="/img/shapes/onion-color.png"
+        <Decor
+          slot="ability.onion-color"
           alt="onion"
           className="position-absolute onion-color z--1"
           // For parallax: data-parallax='{"x": -30}'
@@ -72,7 +74,7 @@ const OurWorkingAbility = ({ stats }) => {
               <div key={counter.id} className="col-xl-3 col-lg-4 col-sm-6">
                 <div className="horizontal-counter d-flex align-items-center gap-3 bg-white rounded p-4">
                   <span className="icon-wrapper d-inline-flex align-items-center justify-content-center flex-shrink-0">
-                    <img src={counter.icon} alt="icon" className="img-fluid" />
+                    <Decor slot={counter.icon} reserveSpace alt="icon" className="img-fluid" />
                   </span>
                   <div className="numbers">
                     <h3 className="mb-1">

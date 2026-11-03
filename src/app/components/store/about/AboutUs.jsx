@@ -1,3 +1,4 @@
+import Decor from "@/app/components/store/theme/Decor";
 const AboutUs = ({ setting }) => {
   return (
     <>
@@ -6,8 +7,8 @@ const AboutUs = ({ setting }) => {
           <div className="row g-4 align-items-center">
             <div className="col-xl-5">
               <div className="about-us-left position-relative">
-                <img
-                  src="/img/abut-us.png"
+                <Decor
+                  slot="about-us.abut-us" reserveSpace
                   alt="not found"
                   className="img-fluid"
                 />
@@ -56,8 +57,8 @@ const AboutUs = ({ setting }) => {
                   <div className="col-md-6">
                     <div className="horizontal-icon-box d-flex align-items-center gap-4 bg-white rounded p-4 hover-shadow flex-wrap flex-xxl-nowrap">
                       <span className="icon-wrapper position-relative flex-shrink-0">
-                        <img
-                          src="/img/icons/hand-icon.svg"
+                        <Decor
+                          slot="about-us.hand-icon"
                           alt="hand icon"
                           className="img-fluid"
                         />
@@ -73,8 +74,8 @@ const AboutUs = ({ setting }) => {
                   <div className="col-md-6">
                     <div className="horizontal-icon-box d-flex align-items-center gap-4 bg-white rounded p-4 hover-shadow flex-wrap flex-xxl-nowrap">
                       <span className="icon-wrapper position-relative flex-shrink-0">
-                        <img
-                          src="/img/icons/hand-icon.svg"
+                        <Decor
+                          slot="about-us.hand-icon"
                           alt="hand icon"
                           className="img-fluid"
                         />
@@ -90,8 +91,8 @@ const AboutUs = ({ setting }) => {
                   <div className="col-md-6">
                     <div className="horizontal-icon-box d-flex align-items-center gap-4 bg-white rounded p-4 hover-shadow flex-wrap flex-xxl-nowrap">
                       <span className="icon-wrapper position-relative flex-shrink-0">
-                        <img
-                          src="/img/icons/hand-icon.svg"
+                        <Decor
+                          slot="about-us.hand-icon"
                           alt="hand icon"
                           className="img-fluid"
                         />
@@ -107,8 +108,8 @@ const AboutUs = ({ setting }) => {
                   <div className="col-md-6">
                     <div className="horizontal-icon-box d-flex align-items-center gap-4 bg-white rounded p-4 hover-shadow flex-wrap flex-xxl-nowrap">
                       <span className="icon-wrapper position-relative flex-shrink-0">
-                        <img
-                          src="/img/icons/hand-icon.svg"
+                        <Decor
+                          slot="about-us.hand-icon"
                           alt="hand icon"
                           className="img-fluid"
                         />

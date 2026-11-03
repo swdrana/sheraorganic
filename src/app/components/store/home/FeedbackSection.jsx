@@ -1,4 +1,6 @@
 "use client";
+import Decor from "@/app/components/store/theme/Decor";
+
 import React, { useRef, useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCoverflow, Navigation, Controller } from "swiper";
@@ -53,28 +55,28 @@ const FeedbackSection = ({ setting }) => {
           alt="map"
           className="position-absolute start-50 top-50 translate-middle z--1"
         />
-        <img
-          src="/img/shapes/fd-1.webp"
+        <Decor
+          slot="feedback.fd-1"
           alt="shape"
           className="position-absolute z--1 fd-1"
         />
-        <img
-          src="/img/shapes/fd-2.webp"
+        <Decor
+          slot="feedback.fd-2"
           alt="shape"
           className="position-absolute z--1 fd-2"
         />
-        <img
-          src="/img/shapes/fd-3.png"
+        <Decor
+          slot="feedback.fd-3"
           alt="shape"
           className="position-absolute z--1 fd-3"
         />
-        <img
-          src="/img/shapes/fd-4.png"
+        <Decor
+          slot="feedback.fd-4"
           alt="shape"
           className="position-absolute z--1 fd-4"
         />
-        <img
-          src="/img/shapes/fd-5.webp"
+        <Decor
+          slot="feedback.fd-5"
           alt="shape"
           className="position-absolute z--1 fd-5"
         />
