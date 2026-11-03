@@ -119,6 +119,10 @@ admin settings or env. When reporting to the owner, name the store by the friend
 - Catalog/admin writes for products, categories, brands, attributes, blogs, coupons and staff are staff-only in
   both route handlers and direct `"use server"` actions. Exceptions remain guest order POST, signup, verified
   review PUT, contact/subscribe mail, auth, and the separately maintained store-settings route.
+- Staff GET list/detail require staff and exclude `password`; staff records use the `User` model in both
+  routes and `staffUpdate`. Only `Admin`/`CEO` may create staff or change roles (other staff may submit
+  an unchanged role); forbidden role changes return 403. The unused unrestricted `updateUser` action
+  has been removed. Signup responses also omit passwords.
 - The credentials provider uses `backend/utils/userLookup.js` — never put DB lookups that return secrets in a
   `"use server"` file (its exports become browser-callable actions).
 
@@ -210,6 +214,8 @@ admin settings or env. When reporting to the owner, name the store by the friend
 - `src/assets/scss/base/_helpers.scss` forces `.vertical-product-card.trend_style .thumbnail { height: 250px }`
   (and `.next_style` 125px) — this clips card images. Round-2's new `.product-card-v2` class sidesteps it;
   don't reintroduce the old classes for the new card.
+- About page spacing/decorations live in `pages/_about.scss`: preserve `.about-section` and
+  `.service-section` when removing service templates; `AboutFeedback` also references `.feedback-slider-2`.
 - `.card-btn` / `.product-btns` in `_product-card.scss` are hover-only (`visibility:hidden`) → invisible on
   touch. Any always-visible card button must not rely on those.
 - Catalog/admin write routes and direct mutation server actions must call the shared staff authorization helpers

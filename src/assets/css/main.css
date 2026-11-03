@@ -38961,6 +38961,43 @@ blockquote::before {
   background-color: #ff7c08;
 }
 
+.service-section {
+  padding-bottom: 220px;
+}
+.service-section .bg-shape {
+  height: 120px;
+}
+
+.about-section {
+  padding-bottom: 170px;
+}
+.about-section .roll-color {
+  left: 40px;
+  bottom: 45%;
+}
+.about-section .roll-color-curve {
+  right: 40px;
+  bottom: 70%;
+}
+.about-section .onion-color {
+  right: 60px;
+  bottom: 100px;
+}
+
+.feedback-slider-2 .slider-arrows button {
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255, 124, 8, 0.1);
+  color: #ff7c08;
+  border-radius: 50%;
+  margin-left: 16px;
+  transition: all 0.3s ease-in-out;
+}
+.feedback-slider-2 .slider-arrows button:hover {
+  background-color: #ff7c08;
+  color: #fff;
+}
+
 .ab-about-section .mango {
   right: 10%;
   bottom: 10px;

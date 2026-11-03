@@ -34,3 +34,10 @@ export const requireUserAccess = async (userId) => {
 
 export const unauthorized = () =>
   NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+// Only the store owners may assign or change account roles.
+export const canManageRoles = (session) =>
+  ["Admin", "CEO"].includes(session?.user?.role);
+
+export const forbidden = () =>
+  NextResponse.json({ message: "Forbidden" }, { status: 403 });
