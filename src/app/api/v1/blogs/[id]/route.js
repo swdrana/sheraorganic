@@ -4,9 +4,11 @@ import { revalidateTag } from "next/cache";
 import { CACHE_TAGS } from "@/app/data/cachedData";
 import Blog from "../../../../backend/model/blog.model";
 import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
 //===== Delete single category by id =========
 export const DELETE = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   //   console.log("req......===", req?.url);
   try {
@@ -29,6 +31,7 @@ export const DELETE = async (req, { params }) => {
 
 // ======== update single blog  ============
 export const PATCH = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
 
   const updateBlogData = await req.json();

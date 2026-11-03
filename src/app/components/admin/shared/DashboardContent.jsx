@@ -17,7 +17,6 @@ import Customers from "../customers/Customers";
 import Settings from "../settings/Settings";
 import CustomerOrder from "../customerOrder/CustomerOrder";
 import Brands from "../brands/Brands";
-import ProductForm from "../test/ProductForm";
 import BlogsBody from "../blogs/BlogsBody";
 import PackingReports from "../packingReports/PackingReports";
 
@@ -54,7 +53,6 @@ const DashboardContent = ({
                 <StoreCustomization />
               )}
               {pathname === "/admin/customers" && <Customers />}
-              {pathname === "/admin/test" && <ProductForm />}
               {pathname === "/admin/brands" && <Brands />}
               {pathname === "/admin/settings" && <Settings />}
               {pathname === "/admin/blogs" && <BlogsBody />}

@@ -110,10 +110,15 @@ admin settings or env. When reporting to the owner, name the store by the friend
   `session.user.{id, name, role}`. `authOptions` is exported from `[...nextauth]/route.js`; API routes
   use `getServerSession(authOptions)`. Client fetches that need the session cookie must send
   `credentials: "include"` (see `updateProductRating`).
-- `backend/utils/apiAuth.js`: `isStaff` (role ≠ `Customer`), `canAccessUser` (self or staff), `unauthorized`.
+- `backend/utils/apiAuth.js`: staff is an explicit allow-list: `Admin`, `CEO`, `Manager`, `Super Admin`,
+  `Accountant`. `Customer`, `Driver`, `Security Guard`, missing and unknown roles are not staff. It also exports
+  `canAccessUser` (self or staff), `unauthorized`, and server-action guards. Keep the same list in `middleware.js`.
   Staff-only: GET/POST `/api/v1/user`, GET `/api/v1/orders`, `/orders/by-date`, PATCH/DELETE `/orders/[id]`.
   Self-or-staff: `/api/v1/user/[id]` (GET/PATCH), `/api/v1/user-order/[id]`. User responses never include
   `password`. `middleware.js`: `/admin` is staff-only (customers → `/`).
+- Catalog/admin writes for products, categories, brands, attributes, blogs, coupons and staff are staff-only in
+  both route handlers and direct `"use server"` actions. Exceptions remain guest order POST, signup, verified
+  review PUT, contact/subscribe mail, auth, and the separately maintained store-settings route.
 - The credentials provider uses `backend/utils/userLookup.js` — never put DB lookups that return secrets in a
   `"use server"` file (its exports become browser-callable actions).
 
@@ -207,8 +212,8 @@ admin settings or env. When reporting to the owner, name the store by the friend
   don't reintroduce the old classes for the new card.
 - `.card-btn` / `.product-btns` in `_product-card.scss` are hover-only (`visibility:hidden`) → invisible on
   touch. Any always-visible card button must not rely on those.
-- `api/v1/*` write routes for products/categories/brands/attributes/blogs/coupons/staff are still
-  unauthenticated (pre-existing; not yet guarded).
+- Catalog/admin write routes and direct mutation server actions must call the shared staff authorization helpers
+  before parsing input, connecting to MongoDB or changing cache state. Do not rely on middleware alone.
 - `.env*.local` is ignored and `.env.local` is no longer tracked. Historical secrets were previously
   committed to GitHub; the owner still needs to rotate them outside the repository.
 - Cloudinary API key/secret are exposed as `NEXT_PUBLIC_*` (browser bundle). Server delete helper prefers

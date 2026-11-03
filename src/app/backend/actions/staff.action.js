@@ -1,8 +1,10 @@
 "use server";
 import connectDB from "@/app/utils/database";
 import Staff from "../model/staff.model";
+import { requireStaff } from "../utils/apiAuth";
 
 export async function staffUpdate(id, updateStaffData) {
+  await requireStaff();
   connectDB();
   // console.log("staffId", id, "update ProductData", updateStaffData);
   try {

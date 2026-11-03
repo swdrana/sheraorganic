@@ -7,9 +7,11 @@ import { CACHE_TAGS } from "@/app/data/cachedData";
 import { destroyImages, diffRemoved } from "../utils/cloudinaryServer";
 import { resolveProductSlug } from "../utils/productSlug";
 import { cleanSeo } from "../utils/productSeo";
+import { requireStaff } from "../utils/apiAuth";
 
 // category update
 export async function productUpdate(id, updateProductData) {
+  await requireStaff();
   connectDB();
   // console.log("productId", id, "update ProductData", updateProductData);
   try {
@@ -77,6 +79,7 @@ export async function productUpdate(id, updateProductData) {
 }
 
 export async function productAdd(ProductData) {
+  await requireStaff();
   connectDB();
   // console.log("productId", id, "update ProductData", updateProductData);
   try {

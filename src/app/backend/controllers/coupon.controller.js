@@ -1,12 +1,11 @@
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-if (!BASE_URL) {
-  throw new Error("Environment variable NEXT_PUBLIC_BASE_URL is not defined");
-}
+const getBaseUrl = () => process.env.NEXT_PUBLIC_BASE_URL || null;
 
 // Add coupon
 export async function addCoupon(newCoupon) {
+  const baseUrl = getBaseUrl();
+  if (!baseUrl) return null;
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/coupons`, {
+    const response = await fetch(`${baseUrl}/api/v1/coupons`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,8 +26,10 @@ export async function addCoupon(newCoupon) {
 
 // Get all coupons
 export async function getAllCoupons() {
+  const baseUrl = getBaseUrl();
+  if (!baseUrl) return [];
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/coupons`, {
+    const response = await fetch(`${baseUrl}/api/v1/coupons`, {
       next: { tags: ["coupon"] },
     });
 
@@ -46,8 +47,10 @@ export async function getAllCoupons() {
 
 // Update coupon
 export async function updateCoupon({ updateCouponData, id }) {
+  const baseUrl = getBaseUrl();
+  if (!baseUrl) return null;
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/coupons/${id}`, {
+    const response = await fetch(`${baseUrl}/api/v1/coupons/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -70,8 +73,10 @@ export async function updateCoupon({ updateCouponData, id }) {
 
 // Delete coupon
 export async function deleteCoupon(id) {
+  const baseUrl = getBaseUrl();
+  if (!baseUrl) return null;
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/coupons/${id}`, {
+    const response = await fetch(`${baseUrl}/api/v1/coupons/${id}`, {
       method: "DELETE",
     });
 

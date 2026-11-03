@@ -5,10 +5,12 @@ import cloudinary from "cloudinary";
 import { revalidateTag } from "next/cache";
 import { CACHE_TAGS } from "@/app/data/cachedData";
 import { destroyImages, diffRemoved } from "../utils/cloudinaryServer";
+import { requireStaff } from "../utils/apiAuth";
 
 // add category
 // category update
 export async function addNewCategory(categoryData) {
+  await requireStaff();
   connectDB();
   // console.log("category data", categoryData);
   try {
@@ -32,6 +34,7 @@ export async function addNewCategory(categoryData) {
 
 // category update
 export async function categoryUpdate(categoryId, updateCategoryData) {
+  await requireStaff();
   connectDB();
   // console.log("categoryId", categoryId, "update data", updateCategoryData);
   try {
@@ -58,6 +61,7 @@ export async function categoryUpdate(categoryId, updateCategoryData) {
 }
 
 export async function categoryStatusUpdate(categoryId, updateCategoryData) {
+  await requireStaff();
   connectDB();
   // console.log("categoryId", categoryId, "update data", updateCategoryData);
   try {
@@ -95,6 +99,7 @@ export async function getCategoryById(categoryId) {
 
 // delete category
 export async function deleteCategoryById(id) {
+  await requireStaff();
   connectDB();
   try {
     // console.log("delete category ", id);
@@ -110,6 +115,7 @@ export async function deleteCategoryById(id) {
 }
 
 export async function imageUpload(req, res) {
+  await requireStaff();
   if (req.method === "POST") {
     const { image } = req.body;
 

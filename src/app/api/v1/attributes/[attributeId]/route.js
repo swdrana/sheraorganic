@@ -3,9 +3,11 @@ import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { CACHE_TAGS } from "@/app/data/cachedData";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
 //===== Delete single category by id =========
 export const DELETE = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   try {
     const { attributeId } = params;
@@ -28,6 +30,7 @@ export const DELETE = async (req, { params }) => {
 
 // ======== update single Attribute  ============
 export const PATCH = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
 
   const updateAttributeData = await req.json();

@@ -2,9 +2,11 @@ import Coupon from "@/app/backend/model/coupon.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
 //===== Delete single Coupon by id =========
 export const DELETE = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   // console.log("req in coupon delete", req);
   try {
@@ -25,6 +27,7 @@ export const DELETE = async (req, { params }) => {
 
 // ======== update single Coupon  ============
 export const PATCH = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
 
   const updateCouponData = await req.json();

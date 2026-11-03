@@ -1,12 +1,11 @@
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-if (!BASE_URL) {
-  throw new Error("Environment variable NEXT_PUBLIC_BASE_URL is not defined");
-}
+const getBaseUrl = () => process.env.NEXT_PUBLIC_BASE_URL || null;
 
 // Add category
 export async function addCategory(newCategory) {
+  const baseUrl = getBaseUrl();
+  if (!baseUrl) return null;
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/categorys`, {
+    const response = await fetch(`${baseUrl}/api/v1/categorys`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,8 +26,10 @@ export async function addCategory(newCategory) {
 
 // Get all categories
 export async function getAllCategories() {
+  const baseUrl = getBaseUrl();
+  if (!baseUrl) return [];
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/categorys`, {
+    const response = await fetch(`${baseUrl}/api/v1/categorys`, {
       next: { tags: ["category"] },
     });
 
@@ -46,8 +47,10 @@ export async function getAllCategories() {
 
 // Update category
 export async function updateCategory({ id, updateCategoryData }) {
+  const baseUrl = getBaseUrl();
+  if (!baseUrl) return null;
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/categorys/${id}`, {
+    const response = await fetch(`${baseUrl}/api/v1/categorys/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -70,8 +73,10 @@ export async function updateCategory({ id, updateCategoryData }) {
 
 // Delete category
 export async function deleteCategory(id) {
+  const baseUrl = getBaseUrl();
+  if (!baseUrl) return null;
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/categorys/${id}`, {
+    const response = await fetch(`${baseUrl}/api/v1/categorys/${id}`, {
       method: "DELETE",
     });
 

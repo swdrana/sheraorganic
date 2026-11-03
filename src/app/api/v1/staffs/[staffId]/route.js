@@ -1,9 +1,11 @@
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import User from "../../../../backend/model/user.model";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
 //===== Delete single staff by id =========
 export const DELETE = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   // console.log("req in staff", req);
   connectDB();
   try {
@@ -23,6 +25,7 @@ export const DELETE = async (req, { params }) => {
 
 // ======== update single staff  ============
 export const PATCH = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
 
   const updateStaffData = await req.json();

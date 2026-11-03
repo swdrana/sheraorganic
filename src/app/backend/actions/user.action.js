@@ -1,8 +1,10 @@
 "use server";
 import connectDB from "@/app/utils/database";
 import User from "../model/user.model";
+import { requireUserAccess } from "../utils/apiAuth";
 
 export async function updateUser(userId, updateUserData) {
+  await requireUserAccess(userId);
   await connectDB();
   // console.log("userId, updateUserData", userId, updateUserData);
   try {

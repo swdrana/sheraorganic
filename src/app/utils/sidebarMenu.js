@@ -106,10 +106,6 @@ const sidebar = [
         path: "/admin/404",
         name: "404",
       },
-      {
-        path: "/admin/coming-soon",
-        name: "Coming Soon",
-      },
     ],
   },
   // {

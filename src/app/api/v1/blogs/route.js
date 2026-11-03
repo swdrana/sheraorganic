@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import Blog from "../../../backend/model/blog.model";
 import { revalidateTag } from "next/cache";
 import { CACHE_TAGS, getCachedBlogList } from "@/app/data/cachedData";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
 // get all Blogs (served from the shared data cache; writes revalidate the tag)
 export const GET = async () => {
@@ -28,6 +29,7 @@ export const GET = async () => {
 
 // post request for Blogs post | save a Blogs in database
 export const POST = async (req) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   const data = await req.json();
   // console.log("Blog data", data);

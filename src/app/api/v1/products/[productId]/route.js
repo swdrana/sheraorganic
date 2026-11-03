@@ -9,9 +9,11 @@ import User from "@/app/backend/model/user.model";
 import Setting from "@/app/backend/model/setting.model";
 import { revalidateTag } from "next/cache";
 import { CACHE_TAGS, getCachedProductDoc } from "@/app/data/cachedData";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
 //===== Delete single post by id =========
 export const DELETE = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   try {
     const { productId } = params;
@@ -41,6 +43,7 @@ export const DELETE = async (req, { params }) => {
 
 // ======== update single product  ============
 export const PATCH = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
 
   const updateProductData = await req.json();

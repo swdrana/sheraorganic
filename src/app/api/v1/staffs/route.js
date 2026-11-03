@@ -1,6 +1,7 @@
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import User from "../../../backend/model/user.model";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
 // get all staffs
 export const GET = async () => {
@@ -25,6 +26,7 @@ export const GET = async () => {
 
 // post request for staffs post | save a staffs in database
 export const POST = async (req) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   const data = await req.json();
   // console.log("data in staff", data);
