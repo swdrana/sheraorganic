@@ -14,6 +14,12 @@ Grostore-based **Next.js 14 (App Router) + MongoDB (Mongoose)** e-commerce store
 "Shera Organic" (organic grocery, Bangladesh). Live at https://sheraorganic.com (Vercel). Primary UI
 language for customer-facing copy is **Bengali**; code identifiers are English.
 
+**Two stores, one codebase (from 2026-11):** **মেহেদী (Mehedi)** = Shera Organic (sheraorganic.com,
+ghanizbd.com redirects to it, grocery) and **রায়হান (Raihan)** = bdXmart/Nobomukh (nobomukh.com, tech). Each
+deployment has its own env + MongoDB DB; nothing brand- or niche-specific may be hardcoded — it comes from
+admin settings or env. When reporting to the owner, name the store by the friend ("মেহেদীর সাইট"). Plan:
+`plan/multi-store-plan.md` (local).
+
 **Mobile-first is the rule** — most users are on mobile. Fix/verify mobile layout first, desktop second.
 
 ## Stack & tooling
