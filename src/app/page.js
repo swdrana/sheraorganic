@@ -2,7 +2,6 @@ import Category from "./components/store/home/Category";
 import FeatureProduct from "./components/store/home/FeatureProduct";
 import TrendingProducts from "./components/store/home/TrendingProducts";
 import WeeklyBestDeals from "./components/store/home/WeeklyBestDeals";
-import FacebookPixelTracker from "./components/store/common/others/FacebookPixelTracker";
 import dynamic from "next/dynamic";
 import Hero from "./components/store/home/Hero";
 
@@ -32,7 +31,6 @@ const page = async () => {
   return (
     <>
       {/* Track client-side Facebook Pixel PageView */}
-      <FacebookPixelTracker />
 
       {/* Render all sections immediately with server-side data (No client-side skeleton blocks on load!) */}
       <Hero setting={setting} />

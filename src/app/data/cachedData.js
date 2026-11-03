@@ -34,6 +34,8 @@ const CACHE_WARN_BYTES = 1.5 * 1024 * 1024;
 
 const load = (label, query) =>
   timed(`db:${label}`, async () => {
+    // Fail before a buffered Mongoose query when building without deployment secrets.
+    if (!process.env.MONGODB_URI) throw new Error("MONGODB_URI is not configured");
     await connectDB();
     const json = JSON.stringify(await query());
     if (json.length > CACHE_WARN_BYTES) {
@@ -91,6 +93,8 @@ export const getCachedBlogList = unstable_cache(
 export const getCachedStoreStats = unstable_cache(
   () =>
     timed("db:stats", async () => {
+      // Fail before a buffered Mongoose query when building without deployment secrets.
+      if (!process.env.MONGODB_URI) throw new Error("MONGODB_URI is not configured");
       await connectDB();
       const [products, orders, delivered, customers] = await Promise.all([
         Product.countDocuments(),

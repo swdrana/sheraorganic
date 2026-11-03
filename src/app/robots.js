@@ -1,8 +1,9 @@
-const BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || "https://sheraorganic.com").replace(/\/$/, "");
+import { getSiteUrl } from "@/app/utils/siteUrl";
 
 // Search engines may crawl the public storefront; API endpoints, admin, and per-user /
 // transactional pages are useless in search results and only cost server time when crawled.
 export default function robots() {
+  const BASE_URL = getSiteUrl();
   return {
     rules: [
       {
@@ -21,7 +22,6 @@ export default function robots() {
         ],
       },
     ],
-    sitemap: `${BASE_URL}/sitemap.xml`,
-    host: BASE_URL,
+    ...(BASE_URL ? { sitemap: `${BASE_URL}/sitemap.xml`, host: BASE_URL } : {}),
   };
 }

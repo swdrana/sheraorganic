@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildOrderEmail } from "./orderEmail";
+import { buildOrderEmail, sendOrderConfirmation } from "./orderEmail";
 
 vi.mock("@/app/backend/model/user.model", () => ({ default: {} }));
+vi.mock("@/app/data/cachedData", () => ({ getCachedSettings: vi.fn().mockResolvedValue({ brand: { site_name: "Nobomukh" } }) }));
 
 const order = {
   orderCode: 10234,
@@ -19,7 +20,7 @@ const order = {
 
 describe("buildOrderEmail", () => {
   it("lists items, totals and the invoice link", () => {
-    const { subject, html, text } = buildOrderEmail(order);
+    const { subject, html, text } = buildOrderEmail(order, {}, "https://example.test");
     expect(subject).toContain("#10234");
     expect(html).toContain("Honey-500g");
     expect(html).toContain("৳900");
@@ -40,4 +41,21 @@ describe("buildOrderEmail", () => {
     const { html } = buildOrderEmail({ ...order, discount: 0 });
     expect(html).not.toContain("ডিসকাউন্ট");
   });
+  it("uses only the supplied brand and escapes it", () => {
+    const { subject, html } = buildOrderEmail(order, { site_name: "<Tech>", email_brand_color: "#abcdef" }, "https://example.test");
+    expect(subject).toContain("<Tech>");
+    expect(html).toContain("&lt;Tech&gt;");
+    expect(html).toContain("background:#abcdef");
+    expect(html).not.toMatch(/Shera|sheraorganic/);
+  });
+  it("omits absolute links without a base URL and remains neutral", () => {
+    const { html, text, subject } = buildOrderEmail(order, {}, "");
+    expect(html).not.toContain('href=');
+    expect(text).not.toContain("ইনভয়েস:");
+    expect(subject).not.toContain(" — ");
+  });
+  it("never throws even when the order is malformed", async () => {
+    await expect(sendOrderConfirmation(null)).resolves.toBeUndefined();
+  });
+
 });

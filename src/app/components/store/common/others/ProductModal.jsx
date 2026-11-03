@@ -4,7 +4,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Controller } from "swiper"; // Import Controller from modules in Swiper 8.4.0
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 
 import StarRating from "./StartRating";
 
@@ -159,7 +158,6 @@ const ProductModal = () => {
   }, [productDetails, attributes]);
 
   // console.log("variantTitle", variantTitle);
-  const { data: session } = useSession();
 
   const handleAddToCart = (p) => {
     if (p.variants.length === 1 && p.variants[0].quantity < 1)
@@ -218,12 +216,7 @@ const ProductModal = () => {
           item_price: newItem.prices.price
         }],
         currency: 'BDT',
-        value: newItem.prices.price * quantity,
-        user_data: {
-          em: session?.user?.email || '',
-          fn: session?.user?.name?.split(' ')[0] || '',
-          ln: session?.user?.name?.split(' ')[1] || ''
-        }
+        value: newItem.prices.price * quantity
       });
       
       // console.log("newitem for add to cart.......", newItem);

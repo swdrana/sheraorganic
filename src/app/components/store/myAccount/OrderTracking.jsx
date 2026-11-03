@@ -1,5 +1,7 @@
 "use client";
 
+import useSetting from "../dataFetching/useSetting";
+import { normalizeBrand } from "@/app/utils/brand";
 import { useState } from "react";
 import useOrderCode from "../dataFetching/useOrderCode";
 import { set } from "react-hook-form";
@@ -7,6 +9,8 @@ import Loading from "../common/others/Loading";
 import useUserOrders from "../dataFetching/useUserOrders";
 
 const OrderTracking = () => {
+  const { setting } = useSetting();
+  const { site_name } = normalizeBrand(setting);
   const [code, setCode] = useState("");
   const { userOrders, userOrdersLoading } = useUserOrders();
   const [searchOrder, setSearchOrder] = useState({});
@@ -34,7 +38,7 @@ const OrderTracking = () => {
             <div className="input-group mb-3 d-flex justify-content-center">
               <div className="input-group-prepend">
                 <span className="input-group-text rounded-0 rounded-start">
-                  #G-Store:
+                  {site_name ? `${site_name}:` : "অর্ডার কোড:"}
                 </span>
               </div>
               <input
@@ -103,13 +107,13 @@ const OrderTracking = () => {
                       <td> 14 Feb 2023 - 13:19 </td>
                       <td>
                         Your package has been delivered. Thank you for shopping
-                        at Grostore!
+                        {site_name ? ` at ${site_name}` : ""}!
                       </td>
                     </tr>
                     <tr>
                       <td> 13 Feb 2023 - 13:39</td>
                       <td>
-                        Your package has been handed over to Grostore Delivery.
+                        Your package has been handed over for delivery{site_name ? ` by ${site_name}` : ""}.
                       </td>
                     </tr>
                     <tr>
@@ -126,8 +130,7 @@ const OrderTracking = () => {
                     <tr>
                       <td>12 Feb 2023 - 13:05</td>
                       <td>
-                        Thank you for shopping at GroStore! Your order is being
-                        verified.
+                        Thank you for shopping{site_name ? ` at ${site_name}` : ""}! Your order is being verified.
                       </td>
                     </tr>
                   </tbody>

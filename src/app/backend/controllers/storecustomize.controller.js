@@ -2,12 +2,7 @@ import { forgetShared } from "@/app/components/store/dataFetching/sharedFetch";
 
 // Helper function to get API URL
 function getApiUrl() {
-  const apiUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  if (!apiUrl) {
-    console.error("API URL (NEXT_PUBLIC_BASE_URL) is not defined.");
-    return null;
-  }
-  return apiUrl;
+  return process.env.NEXT_PUBLIC_BASE_URL || "";
 }
 
 // Add store customization setting
@@ -15,7 +10,6 @@ export async function addStoreCustomizationSetting(
   storeCustomizationSettingData
 ) {
   const apiUrl = getApiUrl();
-  if (!apiUrl) return null;
 
   // console.log(
   //   "Adding store customization setting:",
@@ -24,6 +18,7 @@ export async function addStoreCustomizationSetting(
   try {
     const response = await fetch(`${apiUrl}/api/v1/store`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -47,7 +42,6 @@ export async function addStoreCustomizationSetting(
 // Get all store customization settings
 export async function getStoreCustomizationSetting() {
   const apiUrl = getApiUrl();
-  if (!apiUrl) return null;
 
   try {
     const response = await fetch(`${apiUrl}/api/v1/store`, {
@@ -72,11 +66,11 @@ export async function updateStoreCustomizationSetting(
   storeCustomizationSettingData
 ) {
   const apiUrl = getApiUrl();
-  if (!apiUrl) return null;
 
   try {
     const response = await fetch(`${apiUrl}/api/v1/store`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

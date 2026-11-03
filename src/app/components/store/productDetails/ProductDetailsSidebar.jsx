@@ -1,12 +1,19 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
+import useSetting from "../dataFetching/useSetting";
+import { normalizeBrand } from "@/app/utils/brand";
 import StarRating from "../common/others/StartRating";
 import useProducts from "../dataFetching/useProducts";
 import { useMainContext } from "../provider/MainContextStore";
 import { productPath } from "@/app/utils/productUrl";
 
 const ProductDetailsSidebar = () => {
+  const { setting, settingLoading } = useSetting();
+  const brand = normalizeBrand(setting);
+  const legacyBanner = brand.decoration_theme === "grocery" && !brand.product_sidebar_banner_img && !brand.product_sidebar_banner_title && !brand.product_sidebar_banner_subtitle;
+  const showBanner = (!settingLoading || Object.keys(setting || {}).length > 0) && brand.product_sidebar_banner_show && (legacyBanner || brand.product_sidebar_banner_img || brand.product_sidebar_banner_title || brand.product_sidebar_banner_subtitle);
   const { products } = useProducts();
   const featureProducts = products.filter((p) => p.averageRating >= 3);
   const { setOpenProductModal, setProductDetails } = useMainContext();
@@ -48,19 +55,19 @@ const ProductDetailsSidebar = () => {
               </div>
             </div>
           </div>
-          <div className="sidebar-widget banner-widget mt-4 p-0 border-0">
+          {showBanner && <div className="sidebar-widget banner-widget mt-4 p-0 border-0">
             <div
               className="vertical-banner text-center bg-white rounded-2"
-              data-background="/img/banner/banner-4.jpg"
-              style={{ backgroundImage: 'url("/img/banner/banner-4.jpg")' }}
+              data-background={legacyBanner ? "/img/banner/banner-4.jpg" : brand.product_sidebar_banner_img}
+              style={{ backgroundImage: `url("${legacyBanner ? "/img/banner/banner-4.jpg" : brand.product_sidebar_banner_img}")` }}
             >
-              <h5 className="mb-1">Fresh &amp; Organic Spice</h5>
-              <div className="d-flex align-items-center justify-content-center gap-2">
-                <span className="hot-badge bg-danger fw-bold fs-xs position-relative text-white">
+              <h5 className="mb-1">{legacyBanner ? "Fresh & Organic Spice" : brand.product_sidebar_banner_title}</h5>
+              {(legacyBanner || brand.product_sidebar_banner_subtitle) && <div className="d-flex align-items-center justify-content-center gap-2">
+                {legacyBanner && <span className="hot-badge bg-danger fw-bold fs-xs position-relative text-white">
                   HOT
-                </span>
-                <span className="offer-title text-danger fw-bold">30% Off</span>
-              </div>
+                </span>}
+                <span className="offer-title text-danger fw-bold">{legacyBanner ? "30% Off" : brand.product_sidebar_banner_subtitle}</span>
+              </div>}
               <Link
                 href="/products"
                 className="explore-btn text-primary fw-bold"
@@ -71,7 +78,7 @@ const ProductDetailsSidebar = () => {
                 </span>
               </Link>
             </div>
-          </div>
+          </div>}
           <div className="sidebar-widget products-widget py-5 px-4 bg-white mt-4">
             <div className="widget-title d-flex">
               <h6 className="mb-0 flex-shrink-0">Featured Products</h6>

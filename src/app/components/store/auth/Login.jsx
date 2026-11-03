@@ -3,6 +3,7 @@
 import Loading from "@/app/components/store/common/others/Loading";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
+import { normalizeBrand } from "@/app/utils/brand";
 import { useRouter } from "next/navigation"; // For App Router in Next.js 13
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -162,7 +163,7 @@ const Login = ({ setting }) => {
                 </div>
                 <h2 className="mb-4 h3">
                   Hey there! <br />
-                  Welcome back <span className="text-secondary">Shera Organic Shop.</span>
+                  Welcome back <span className="text-secondary">{normalizeBrand(setting).login_welcome || normalizeBrand(setting).site_name}</span>
                 </h2>
                 <div className="row g-3">
                   <div className="col-sm-12">

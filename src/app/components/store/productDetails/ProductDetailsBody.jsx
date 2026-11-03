@@ -234,17 +234,10 @@ const ProductDetailsContent = ({ single }) => {
       handelAddItem(newItem);
 
       // Facebook Pixel tracking
-      trackAddToCart(
-        session?.user?._id || null,
-        session?.user?.displayName || null,
-        session?.user?.email || null,
-        session?.user?.phoneNumber || null,
-        session?.user?.shipping || null,
-        product._id,
-        product.name,
-        product.category,
-        salePrice || product.prices.price
-      );
+      trackAddToCart({
+        contents: [{ id: product._id, quantity, item_price: salePrice || product.prices.price }],
+        value: (salePrice || product.prices.price) * quantity,
+      });
     } else {
       return toast.error("Please select all variant first!");
     }

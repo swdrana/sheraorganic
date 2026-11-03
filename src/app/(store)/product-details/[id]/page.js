@@ -1,8 +1,11 @@
+import { breadcrumbJsonLd, productDescription } from "@/app/utils/productMetadata";
+import { normalizeBrand } from "@/app/utils/brand";
+import { getSiteUrl } from "@/app/utils/siteUrl";
 import { notFound, permanentRedirect } from "next/navigation";
 import ProductDetailsBody from "@/app/components/store/productDetails/ProductDetailsBody";
 import ProductBreadcrumb from "@/app/components/store/productDetails/ProductBreadcrumb";
 import RelatatedProduct from "@/app/components/store/productDetails/RelatatedProduct";
-import { getCachedCategories, getCachedProductList } from "@/app/data/cachedData";
+import { getCachedCategories, getCachedProductList, getCachedSettings } from "@/app/data/cachedData";
 import {
   categoryPath,
   findProductByParam,
@@ -19,7 +22,7 @@ const decodeURIComponentSafe = (value) => {
   }
 };
 
-const SITE_URL = (process.env.NEXT_PUBLIC_BASE_URL || "https://sheraorganic.com").replace(/\/+$/, "");
+const SITE_URL = getSiteUrl();
 
 // The URL is /product-details/<url path> (the product's unique `slug`). Lookup uses the cached
 // product list: current slug, else a legacy /product-details/<mongo id> link or an old slug, which
@@ -71,9 +74,9 @@ function productJsonLd(product, url, category) {
       };
   const ratings = Array.isArray(product.ratings) ? product.ratings : [];
   const breadcrumb = [
-    { name: "Home", item: SITE_URL },
-    { name: "Products", item: `${SITE_URL}/products` },
-    ...(category ? [{ name: category.name, item: `${SITE_URL}${category.href}` }] : []),
+    { name: "Home", item: SITE_URL || undefined },
+    { name: "Products", item: SITE_URL ? `${SITE_URL}/products` : undefined },
+    ...(category ? [{ name: category.name, item: SITE_URL ? `${SITE_URL}${category.href}` : undefined }] : []),
     { name: product.name, item: url },
   ];
   return [
@@ -96,16 +99,7 @@ function productJsonLd(product, url, category) {
           }
         : {}),
     },
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: breadcrumb.map((crumb, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        name: crumb.name,
-        item: crumb.item,
-      })),
-    },
+    breadcrumbJsonLd(breadcrumb),
   ];
 }
 
@@ -120,11 +114,11 @@ async function findCategory(product) {
 export async function generateMetadata({ params }) {
   const { product } = await loadProduct(params.id);
   if (!product) return {};
-  const url = `${SITE_URL}${productPathEncoded(product)}`;
+  const brand = normalizeBrand(await getCachedSettings());
+  const url = SITE_URL ? `${SITE_URL}${productPathEncoded(product)}` : undefined;
   const baseTitle = product.seoTitle || product.name;
-  const title = baseTitle.includes("Shera Organic") ? baseTitle : `${baseTitle} | Shera Organic`;
-  const description =
-    product.seoDescription || plainText(product.description) || `${product.name} — Shera Organic থেকে অর্ডার করুন।`;
+  const title = !brand.site_name || baseTitle.includes(brand.site_name) ? baseTitle : `${baseTitle} | ${brand.site_name}`;
+  const description = productDescription(product, brand.site_name, plainText(product.description));
   // Old saves hold tags as one JSON-encoded string, either bare or inside the [String] array.
   const decodeTags = (value) => {
     if (typeof value !== "string") return [value];
@@ -145,8 +139,8 @@ export async function generateMetadata({ params }) {
     title,
     description,
     ...(keywords.length ? { keywords } : {}),
-    alternates: { canonical: url },
-    openGraph: { type: "website", url, title, description, siteName: "Shera Organic", images },
+    ...(url ? { alternates: { canonical: url } } : {}),
+    openGraph: { type: "website", url, title, description, siteName: brand.site_name, images },
     twitter: { card: "summary_large_image", title, description, images },
   };
 }
@@ -161,7 +155,7 @@ const page = async ({ params }) => {
 
   const id = String(product._id);
   const category = await findCategory(product);
-  const jsonLd = productJsonLd(product, `${SITE_URL}${productPathEncoded(product)}`, category);
+  const jsonLd = productJsonLd(product, SITE_URL ? `${SITE_URL}${productPathEncoded(product)}` : undefined, category);
 
   return (
     <>

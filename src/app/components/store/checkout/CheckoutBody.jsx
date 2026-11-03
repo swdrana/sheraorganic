@@ -105,14 +105,7 @@ const CheckoutBody = () => {
         })),
         currency: 'BDT',
         num_items: items.length,
-        value: grandTotal,
-        user_data: {
-          em: email,
-          ph: phone,
-          fn: (name || "").split(" ")[0],
-          ln: (name || "").split(" ")[1] || "",
-          ct: address
-        }
+        value: grandTotal
       });
 
       const userInfo = {
@@ -162,15 +155,8 @@ const CheckoutBody = () => {
           })),
           currency: 'BDT',
           num_items: items.length,
-          value: grandTotal,
-          user_data: {
-            em: email,
-            ph: phone,
-            fn: (name || "").split(" ")[0],
-            ln: (name || "").split(" ")[1] || "",
-            ct: address
-          }
-        });
+          value: grandTotal
+        }, res.order.orderCode);
         
         emptyCart();
         // Cookies.remove("couponInfo");

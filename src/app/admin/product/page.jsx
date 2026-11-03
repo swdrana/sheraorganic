@@ -1,7 +1,7 @@
 import React from "react";
 import DashboardContent from "@/app/components/admin/shared/DashboardContent";
 export const metadata = {
-  title: "Nextcart-Admin-product",
+  title: "Admin — Products",
 };
 const page = () => {
   return (

@@ -56,7 +56,7 @@ const UpdateProfile = () => {
                 <label>Email Address</label>
                 <input
                   type="email"
-                  placeholder="themetags@gmail.com"
+                  placeholder="name@example.com"
                   {...register("email")}
                 />
               </div>
@@ -101,7 +101,7 @@ const UpdateProfile = () => {
             <div className="col-sm-6">
               <div className="label-input-field">
                 <label>Email Address</label>
-                <input type="email" placeholder="themetags@gmail.com" />
+                <input type="email" placeholder="name@example.com" />
               </div>
             </div>
             <div className="col-sm-6">
