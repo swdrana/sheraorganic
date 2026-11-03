@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
-import { settingsUpdate } from "@/app/utils/storeSettings";
+import { settingsUpdate, SettingsValidationError } from "@/app/utils/storeSettings";
 import Setting from "@/app/backend/model/setting.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
@@ -94,6 +94,9 @@ async function saveSettings(req) {
     revalidateSettings();
     return NextResponse.json({ message: "store customization saved" });
   } catch (error) {
+    if (error instanceof SettingsValidationError) {
+      return NextResponse.json({ message: error.message, invalidFields: error.fields }, { status: 400 });
+    }
     console.error("[settings] save failed:", error);
     return NextResponse.json({ message: "Unable to save settings" }, { status: 500 });
   }

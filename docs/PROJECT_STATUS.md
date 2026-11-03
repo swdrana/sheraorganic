@@ -12,52 +12,63 @@
 
 ---
 
-## Job A — Brand & Tracking (2026-11-03, local; push হয়নি)
+## Job A — Brand & Tracking review follow-ups (2026-11-03, local; push হয়নি)
+
+আগের কাজ `6154206`-এর উপর review fix; এক নতুন local commit, amend/push নয়। আগের configurable
+brand/tracking, staff-only leaf updates, analytics privacy boundary ও missing-key seed অপরিবর্তিত আছে।
 
 ### হয়েছে
-- `setting.brand` / `setting.tracking` চুক্তি: `utils/brand.js`, `tracking.js`, `siteUrl.js`।
-  ব্র্যান্ডের লেখা না থাকলে ফাঁকা; সাজসজ্জার পুরনো default grocery; tech/none-এ default promo বন্ধ।
-- Store customization-এ **Brand & Theme** ও **Tracking** tab; সব field, দুই Cloudinary uploader,
-  theme select, enabled switch ও ID-format validation। POST/PATCH staff-only; দুটো একই leaf-only
-  `utils/storeSettings.js` allow-list চালায়। Home/brand/tracking একে অন্যকে wipe করে না; অন্য tab-এর ছবি
-  delete হয় না। Cache invalidation আগের মতোই থাকে।
-- Root metadata/OG, product metadata/schema, mail sender/header/subject/body/color, sitemap/robots,
-  navbar phone/social/topbar, login, order tracking, product preview ও sidebar banner settings-নির্ভর।
-  Server initial settings context থাকায় অন্য দোকানের brand বা grocery banner flash হয় না।
-- প্রথম interaction-এ বৈধ ID-এর GTM/GA4/FB/Clarity/TikTok loader; admin-এ বন্ধ। প্রতি route-এ PageView;
-  product-only ecommerce event ও dataLayer; checkout Purchase-এ orderCode eventID। Raw ব্যক্তিগত তথ্য
-  event-এ যায় না। Active caller থেকেও আগের user_data সরানো হয়েছে; untouched template caller-এর তথ্যও
-  central boundary বাদ দেয়। GTM-এ একই vendor থাকলে direct ID আবার বসাবেন না।
-- দুই দোকানের preset-সহ missing-key-only seed script; dry run default; apply-এ backup বাধ্যতামূলক ও
-  পুরনো backup overwrite নিষিদ্ধ। **কোনো DB-তে চালানো হয়নি; শুধু --help ও pure preset tests।**
-- Environment ছাড়া build ঠিক করতে category/coupon controller-এর import-time BASE_URL throw সরানো,
-  settings fetch-এ relative URL fallback/session cookie, cached loaders-এ missing DB env fail-fast।
-- Job B-এর decorative markup/hero preload, Job C-এর নিষিদ্ধ template files এবং production/env/remote
-  কোনোটি বদলানো হয়নি। SCSS বদলায়নি, তাই sass প্রয়োজন হয়নি।
+- Product description/SEO description না থাকলে আগের পণ্যভিত্তিক বাংলা invitation ফিরে এসেছে:
+  `পণ্যের নাম — সাইটের নাম থেকে অর্ডার করুন।`; নাম খালি হলে brand অংশ থাকে না। Site meta description
+  আর product fallback নয়। `utils/productMetadata.js`-এ regression-tested helper।
+- `utils/storeSettings.js` + store API: ভুল tracking ID, colour, Messenger username বা WhatsApp নম্বরে
+  পুরো POST/PATCH **400 + invalidFields**; DB connect/write, image delete বা cache invalidate হয় না।
+  Explicit empty string দিয়ে clear করা যায়; omitted leaf অক্ষুণ্ণ থাকে। `SiteSettings` একই error/field list
+  inline ও error toast-এ দেখায়; success বলে না।
+- `OrderTracking`-এর শেষ GroStore এবং `#G-Store` বদলে configured নাম/neutral label; brand খালি হলে
+  thank-you বাক্যের brand অংশ নেই। `UpdateProfile`-এর email example neutral; `MyAccountHome`-এর
+  template avatar বদলে local `public/img/avatar-neutral.svg`।
+- `TermsCondition` পুরনো commented template বাদ দিয়ে admin-এর Quill HTML (`setting.terms.value`)
+  দেখায়। নতুন `TermsContent` inert template থেকে allow-listed React nodes বানায়; scripts/events/styles,
+  executable URL ও unsafe embeds বাদ; emphasis/list/alignment/font/safe link/image রাখা হয়। Quill CSS
+  lazy load; empty/Quill-empty content-এ ছোট neutral বাংলা notice। নতুন dependency যোগ হয়নি।
+- `layout.js`-এ site-wide OG url বাদ; পণ্যের Breadcrumb JSON-LD-তে base URL না থাকলে `item` key-ই নেই।
+- Client settings audit: **home** → nav/footer/invoice/login, **about** → AboutBody, **contact** → contact page,
+  **terms** → TermsCondition/editor, **brand** → nav/sidebar/login/Brand tab, **tracking** → Tracking tab।
+  Root context client navigation জুড়ে shared; ছয় group-ই fallback হিসেবে ব্যবহৃত। Group বাদ দিলে API fail/loading-এ
+  page/tab-এর initial data হারাতে পারে, তাই unsafe payload trimming করা হয়নি। Analytics-এর normalized prop আগের মতো।
+- Seed script এখন preferred `MONGODB_URI`, fallback `MONGO_URI` নেয়; header/help/AGENTS-এ **deploy-এর আগে seed**
+  করার নির্দেশ। Brand tab আগে save করলে empty keys-ও “set” হয়, missing-only seed সেগুলো আর ভরবে না।
+  শুধু `--help` এবং URI preference/preset preservation-এর pure tests চালানো হয়েছে; কোনো DB seed হয়নি।
+- `src` আবার grep: বাকি নামগুলো seed fixtures/presets, Cloudinary/decorative asset URLs, non-visible CSS class,
+  commented/unused login demo helpers অথবা অন্য job-এর checkout payment icons; live brand copy আর নেই।
+  SCSS বদলায়নি; sass দরকার হয়নি। AGENTS ও এই tracked memory হালনাগাদ।
 
 ### যাচাই
-- `npm run lint`: exit 0; পুরনো warning রয়ে গেছে।
-- `npx vitest run --pool=threads --poolOptions.threads.singleThread`: **83/83**, 14 files pass।
-  API auth/POST-PATCH isolation, normalizers, seed preservation, mail escaping/neutral fallback,
-  loader interaction/admin/route checks, PII-free events ও sidebar default/custom banner covered।
-- `CIRCLE_NODE_TOTAL=2 npm run build`: environment file/DB ছাড়াই pass; worker কমিয়ে চালানো।
-- Local `next start`: `/`, `/login`, `/products`, `/robots.txt`, `/sitemap.xml` → 200;
-  unauthenticated settings PATCH → 401। চালানো server বন্ধ করা হয়েছে।
-- Headless browser, synthetic local staff session + mocked API (real DB নয়): নতুন দুই tab-এ
-  **320/390/1280px × light/dark = 12/12** overflow/control-bounds check pass। Brand-only/tracking-only
-  save payload, invalid GTM submit আটকানো, admin analytics script = 0, নতুন page exception = 0।
-- Fixture দিয়ে navbar phone/WhatsApp/Messenger URL, খালি fallback না দেখা ও login-এর `Nobomukh`
-  welcome যাচাই। Login-এর সব viewport/theme pass; storefront mobile 320/390 pass।
-- সীমাবদ্ধতা: env-free Home admin tab mount-এ পুরনো brand/product API env warning ও sidebar logo 404;
-  নতুন tabs চালাতে page exception/hydration error হয়নি। `/products` 1280px-এ unchanged
-  `.user-menu-wrapper` 31px horizontal overflow দেখা গেছে; এই কাজের বাইরে রেখে দেওয়া হয়েছে।
+- `npm run lint`: **exit 0**, আগের warning আছে। Tail: `info - Need to disable some ESLint rules? ...`
+- `npx vitest run --pool=threads --poolOptions.threads.singleThread`: **16 files / 108 tests pass**।
+  POST/PATCH-এর সব invalid field ও wrong type, side-effect-free reject, explicit clear/valid trim,
+  toast error, Quill HTML sanitization/empty fallback, per-product description ও breadcrumb omission covered।
+- `CIRCLE_NODE_TOTAL=2 npm run build`: **exit 0**, `.env`/DB ছাড়াই।
+  Tail: `Postbuild: prerender-manifest.json already exists.`
+- Local production `next start`: terms page **200**; synthetic local staff session দিয়ে বাস্তব local PATCH-এ
+  malformed fields → **400**, সব invalid field ফেরে; DB access হয়নি। Real credentials/env file ব্যবহার হয়নি।
+- Headless Chrome, synthetic session + intercepted local API: Brand form **320/390/1280px × light/dark = 6/6**
+  overflow/control-bounds pass; 400 error field list inline + toast-এ দেখা গেছে। Terms-এর formatting/alignment,
+  executable HTML/URL বাদ এবং empty notice pass। Terms/profile **320/390px × light/dark** layout pass;
+  neutral avatar/email placeholder ও tracking-এর configured/empty prefix pass। Page exception/hydration warning **0**।
+- সীমাবদ্ধতা: environment-free পুরনো user/brand fetch wrapper-এ missing `NEXT_PUBLIC_BASE_URL` console error;
+  real customer/order data আনা যায়নি। Storefront **1280px**-এ আগের menu overflow terms/profile-এও আছে;
+  পরিবর্তিত profile controls clipped নয়। নতুন Brand form-এ desktop overflow নেই।
+- চালানো local server/browser বন্ধ করা হয়েছে; production server/DB, real env, remote বা checkout/decorative job-এর
+  ফাইল স্পর্শ করা হয়নি।
 
-### MANUAL VERIFY / বাকি
-1. Owner-এর অনুমোদনের পরে আলাদা করে seed-এর dry run/backup/apply এবং deployment। মেহেদীর সাইটে
-   পুরনো নাম/মেটা/social/tracking অক্ষুণ্ণ রাখতে preset seed করতে হবে; এখন missing text ইচ্ছাকৃতভাবে neutral।
-2. বাস্তব staff session + test DB-তে uploader/save/reload/cache, দুই দোকানের product SEO/sidebar ও order
-   tracking দেখুন। SMTP inbox এবং vendor dashboards-এ actual delivery/event যাচাই হয়নি।
-3. বাস্তব দোকানে মোবাইল/desktop visual approval; পুরনো desktop menu overflow আলাদা scope-এ ঠিক করা।
+### MANUAL VERIFY / পরের ধাপ
+1. বাস্তব test DB/staff session-এ Brand/Tracking uploader → save/reload/cache এবং deliberate bad-value reject যাচাই।
+2. বাস্তব customer order code দিয়ে tracking table-এর thank-you text; দুই দোকানের product SEO/canonical/schema,
+   terms-এর নিজের rich text ও avatar/profile মোবাইল/desktop-এ মালিকের visual approval।
+3. Owner-এর আলাদা অনুমোদনে **deploy-এর আগে** seed dry run/backup/apply; SMTP/vendor actual delivery আগের মতো বাকি।
+4. পুরনো desktop menu overflow ও environment-dependent fetch wrapper এই scope-এর বাইরে; আলাদা কাজ লাগবে।
 
 ---
 

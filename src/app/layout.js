@@ -20,7 +20,6 @@ export async function generateMetadata() {
       title: brand.meta_title || brand.site_name,
       description: brand.meta_description,
       siteName: brand.site_name,
-      ...(base ? { url: base } : {}),
       images: brand.og_image ? [brand.og_image] : [],
     },
   };

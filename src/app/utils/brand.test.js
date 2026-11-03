@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { BRAND_KEYS, normalizeBrand } from "./brand";
 import { normalizeTracking, TRACKING_PATTERNS, isValidTrackingId } from "./tracking";
 import { settingsUpdate } from "./storeSettings";
-import { brandPreset, missingSettings } from "../../../scripts/seed-brand-settings.mjs";
+import { brandPreset, missingSettings, seedMongoUri } from "../../../scripts/seed-brand-settings.mjs";
 
 describe("brand normalization", () => {
   it("returns every key, neutral text, and the legacy grocery banner default", () => {
@@ -46,13 +46,18 @@ describe("leaf-only settings writes", () => {
   it("home save cannot wipe brand/tracking; brand save cannot wipe home", () => {
     expect(settingsUpdate({ home: { phone: "017" }, brand: undefined })).toEqual({ name: "storeCustomizationSetting", "setting.home.phone": "017" });
     expect(settingsUpdate({ brand: { site_name: "Nobomukh", unknown: "ignored" } })).toEqual({ name: "storeCustomizationSetting", "setting.brand.site_name": "Nobomukh" });
-    expect(settingsUpdate({ tracking: { enabled: false, gtm_id: "bad", script: "bad" } })).toEqual({ name: "storeCustomizationSetting", "setting.tracking.enabled": false, "setting.tracking.gtm_id": "" });
+    expect(() => settingsUpdate({ tracking: { enabled: false, gtm_id: "bad", script: "bad" } })).toThrow("tracking.gtm_id");
   });
   it("preserves explicit empty strings and false; unknown groups/keys cannot be written", () => {
     expect(settingsUpdate({ brand: { site_name: "", product_sidebar_banner_show: false }, admin: true })).toEqual({ name: "storeCustomizationSetting", "setting.brand.site_name": "", "setting.brand.product_sidebar_banner_show": false });
   });
 });
 describe("seed presets (no DB)", () => {
+  it("prefers MONGODB_URI and supports the legacy MONGO_URI", () => {
+    expect(seedMongoUri({ MONGODB_URI: "preferred", MONGO_URI: "legacy" })).toBe("preferred");
+    expect(seedMongoUri({ MONGO_URI: "legacy" })).toBe("legacy");
+    expect(seedMongoUri({})).toBeUndefined();
+  });
   it("seeds exact existing shop values and safe tech defaults", () => {
     expect(brandPreset("mehedi").tracking.gtm_id).toBe("GTM-MMLFB63S");
     expect(brandPreset("mehedi").brand.messenger_greeting).toBe("Hello! I'm coming from your Website.");

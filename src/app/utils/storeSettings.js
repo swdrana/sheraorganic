@@ -1,8 +1,33 @@
 import { BRAND_KEYS, normalizeBrand } from "./brand";
-import { TRACKING_KEYS, normalizeTracking } from "./tracking";
+import { TRACKING_KEYS, TRACKING_PATTERNS, normalizeTracking } from "./tracking";
+
+// Empty strings intentionally clear a field; malformed supplied values reject the entire write.
+const BRAND_PATTERNS = {
+  email_brand_color: /^#[0-9a-fA-F]{6}$/,
+  messenger_username: /^[a-zA-Z0-9._-]+$/,
+  whatsapp_number: /^\d+$/,
+};
+export class SettingsValidationError extends Error {
+  constructor(fields) {
+    super(`Invalid settings fields: ${fields.join(", ")}`);
+    this.name = "SettingsValidationError";
+    this.fields = fields;
+  }
+}
+export function invalidSettingsFields(setting) {
+  return [["brand", BRAND_PATTERNS], ["tracking", TRACKING_PATTERNS]].flatMap(([group, patterns]) =>
+    Object.entries(patterns).filter(([key, pattern]) => {
+      if (!Object.hasOwn(setting?.[group] || {}, key)) return false;
+      const value = setting[group][key];
+      return typeof value !== "string" || (value.trim() !== "" && !pattern.test(value.trim()));
+    }).map(([key]) => `${group}.${key}`)
+  );
+}
 
 // Both POST (first save) and PATCH use leaf updates. Never replace the Mixed `setting` object.
 export function settingsUpdate(setting) {
+  const invalidFields = invalidSettingsFields(setting);
+  if (invalidFields.length) throw new SettingsValidationError(invalidFields);
   const legacy = {
     name: "storeCustomizationSetting",
     // contact us

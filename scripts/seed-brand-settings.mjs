@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// Seed BEFORE deploying this code. Saving the Brand tab first makes empty values "set";
+// this missing-key-only seed will preserve them. MONGODB_URI is preferred; MONGO_URI is supported.
 import mongoose from "mongoose";
 import { writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
@@ -32,10 +34,12 @@ export function missingSettings(doc, preset) {
   }
   return update;
 }
+export const seedMongoUri = (env) => env.MONGODB_URI || env.MONGO_URI;
+
 async function main() {
   const args = process.argv.slice(2);
   if (args.includes("--help")) {
-    console.log("MONGO_URI=<uri> node scripts/seed-brand-settings.mjs --store=mehedi|raihan [--apply --backup=<new-file.json>]\nDefault is dry run. Only missing keys are added.");
+    console.log("MONGODB_URI=<uri> node scripts/seed-brand-settings.mjs --store=mehedi|raihan [--apply --backup=<new-file.json>]\nDefault is dry run. Only missing keys are added. Seed BEFORE deploying; saving Brand first makes empty values set. MONGO_URI is also supported.");
     return;
   }
   if (args.some((arg) => !/^(--store=(mehedi|raihan)|--apply|--backup=.+)$/.test(arg))) throw new Error("Unknown option; use --help");
@@ -43,9 +47,10 @@ async function main() {
   const apply = args.includes("--apply");
   const backup = args.find((arg) => arg.startsWith("--backup="))?.slice(9);
   if (apply && !backup) throw new Error("--apply requires --backup=<new-file.json>");
-  if (!process.env.MONGO_URI) throw new Error("MONGO_URI is required (no dotenv or production fallback)");
+  const uri = seedMongoUri(process.env);
+  if (!uri) throw new Error("MONGODB_URI or MONGO_URI is required (no dotenv or production fallback)");
   try {
-    await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000, maxPoolSize: 1 });
+    await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000, maxPoolSize: 1 });
     const settings = mongoose.connection.collection("settings");
     const doc = await settings.findOne({ name: "storeCustomizationSetting" }, { sort: { createdAt: 1 } });
     const $set = missingSettings(doc, preset);

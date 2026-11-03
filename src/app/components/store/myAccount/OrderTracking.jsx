@@ -38,7 +38,7 @@ const OrderTracking = () => {
             <div className="input-group mb-3 d-flex justify-content-center">
               <div className="input-group-prepend">
                 <span className="input-group-text rounded-0 rounded-start">
-                  #G-Store:
+                  {site_name ? `${site_name}:` : "অর্ডার কোড:"}
                 </span>
               </div>
               <input
@@ -107,7 +107,7 @@ const OrderTracking = () => {
                       <td> 14 Feb 2023 - 13:19 </td>
                       <td>
                         Your package has been delivered. Thank you for shopping
-                        {site_name ? `at ${site_name}!` : ""}
+                        {site_name ? ` at ${site_name}` : ""}!
                       </td>
                     </tr>
                     <tr>
@@ -130,8 +130,7 @@ const OrderTracking = () => {
                     <tr>
                       <td>12 Feb 2023 - 13:05</td>
                       <td>
-                        Thank you for shopping at GroStore! Your order is being
-                        verified.
+                        Thank you for shopping{site_name ? ` at ${site_name}` : ""}! Your order is being verified.
                       </td>
                     </tr>
                   </tbody>

@@ -1,3 +1,4 @@
+import { breadcrumbJsonLd, productDescription } from "@/app/utils/productMetadata";
 import { normalizeBrand } from "@/app/utils/brand";
 import { getSiteUrl } from "@/app/utils/siteUrl";
 import { notFound, permanentRedirect } from "next/navigation";
@@ -98,16 +99,7 @@ function productJsonLd(product, url, category) {
           }
         : {}),
     },
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: breadcrumb.map((crumb, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        name: crumb.name,
-        item: crumb.item,
-      })),
-    },
+    breadcrumbJsonLd(breadcrumb),
   ];
 }
 
@@ -126,8 +118,7 @@ export async function generateMetadata({ params }) {
   const url = SITE_URL ? `${SITE_URL}${productPathEncoded(product)}` : undefined;
   const baseTitle = product.seoTitle || product.name;
   const title = !brand.site_name || baseTitle.includes(brand.site_name) ? baseTitle : `${baseTitle} | ${brand.site_name}`;
-  const description =
-    product.seoDescription || plainText(product.description) || brand.meta_description || `${product.name} — অর্ডার করুন।`;
+  const description = productDescription(product, brand.site_name, plainText(product.description));
   // Old saves hold tags as one JSON-encoded string, either bare or inside the [String] array.
   const decodeTags = (value) => {
     if (typeof value !== "string") return [value];

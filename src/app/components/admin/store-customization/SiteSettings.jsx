@@ -5,6 +5,7 @@ import useSetting from "@/app/components/store/dataFetching/useSetting";
 import { forgetShared } from "@/app/components/store/dataFetching/sharedFetch";
 import { normalizeBrand, BRAND_TEXT_KEYS } from "@/app/utils/brand";
 import { normalizeTracking, TRACKING_PATTERNS } from "@/app/utils/tracking";
+import { toast } from "react-toastify";
 import Uploader from "../imageUploader/Uploader";
 
 const LABELS = {
@@ -33,11 +34,17 @@ export default function SiteSettings({ group }) {
         method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ setting: { [group]: values } }),
       });
-      if (!response.ok) throw new Error("সেভ হয়নি। অনুমতি ও সংযোগ যাচাই করুন।");
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.invalidFields?.length
+          ? `সঠিক মান দিন: ${error.invalidFields.join(", ")}`
+          : error.message || "সেভ হয়নি। অনুমতি ও সংযোগ যাচাই করুন।");
+      }
       forgetShared("settings");
       setMessage("সেভ হয়েছে।");
     } catch (error) {
       setMessage(error.message);
+      toast.error(error.message);
     } finally {
       setSaving(false);
     }

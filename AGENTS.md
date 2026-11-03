@@ -72,6 +72,8 @@ admin settings or env. When reporting to the owner, name the store by the friend
   **POST and PATCH require a staff session and share the dotted `$set` allow-list** in
   `utils/storeSettings.js`. Never replace the Mixed `setting` object or write omitted leaves: saving Home
   must preserve brand/tracking, and vice versa. Image deletion also checks explicitly updated leaves.
+  Malformed tracking IDs, email colour, Messenger username or WhatsApp number reject the whole write
+  with HTTP 400 + `invalidFields` (no DB/image/cache side effects); only explicit empty strings clear them.
   Home fields retain the 4-touchpoint rule: `HomeCustomization.jsx` input, `useStoreCustomize.js`
   state/submit, load-effect/return, and the `storeSettings.js` dotted map (called by `store/route.js`).
 - Site Settings tabs: `SiteSettings.jsx` edits only `setting.brand` or `setting.tracking` with the existing
@@ -86,14 +88,22 @@ admin settings or env. When reporting to the owner, name the store by the friend
   `AnalyticsLoader` handles route PageViews globally; `utilities/facebookPixel.js` allow-lists product-only
   FB/GA4/dataLayer ecommerce params, drops all caller PII, and uses orderCode as Purchase eventID/transaction_id.
   Avoid configuring the same vendor both directly and inside GTM (duplicate events).
-- `scripts/seed-brand-settings.mjs`: `MONGO_URI` + `--store=mehedi|raihan`, dry run by default. Apply requires
+- `scripts/seed-brand-settings.mjs`: `MONGODB_URI` (preferred) or `MONGO_URI` + `--store=mehedi|raihan`, dry run by default. Apply requires
   `--apply --backup=<new-file.json>`; exclusive private backup first, then only missing brand/tracking leaves.
-  Seed before deployment to preserve Mehedi's existing texts/IDs; no existing values are overwritten.
+  **Seed BEFORE deploying this code** to preserve Mehedi's existing texts/IDs; saving the Brand tab
+  before seeding makes empty values "set", so this missing-key-only seed will not fill them. No existing
+  values are overwritten.
   Out-of-band seed writes use the normal 5-minute cache expiry (or a subsequent deployment).
 - After a settings write you must `revalidateTag("settings")` + `revalidatePath("/", "layout")` or the
   static home page keeps serving stale data. (Round-2 R2-T4 adds this.)
 - Product-picker admin fields store `{ name, id }` (joined/split on `"|"` in the `<select>`), e.g.
   `weekly_best_delas_product_*`. Category-picker fields store just the name string.
+
+### Terms content
+
+- Admin Quill saves HTML in `setting.terms.value`. Storefront `TermsContent` parses it only in an inert
+  template after mount and rebuilds allow-listed React elements/attributes (never raw HTML injection).
+  Keeps Quill lists, emphasis, alignment/fonts, safe links/images; empty content shows a neutral notice.
 
 ### Caching & data fetching (round 4 — CPU fix)
 

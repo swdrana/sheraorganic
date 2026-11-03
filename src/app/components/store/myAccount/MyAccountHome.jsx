@@ -36,7 +36,7 @@ const MyAccountHome = () => {
                 />
               ) : (
                 <img
-                  src="https://res.cloudinary.com/dmadhbgty/image/upload/v1735740878/grostore/cute-boy-smiling-cartoon-kawaii-boy-illustration-boy-avatar-happy-kid_1001605-3447.avif"
+                  src="/img/avatar-neutral.svg"
                   alt="avatar"
                   className="img-fluid rounded"
                 />
