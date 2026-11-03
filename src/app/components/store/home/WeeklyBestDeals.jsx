@@ -59,7 +59,7 @@ const WeeklyBestDeals = ({ setting, products }) => {
                 <div className="banner-img-wrapper d-flex justify-content-end mt--40">
                   {banner ? <img
                     src={banner}
-                    alt={theme === "grocery" && !setting?.home?.weekly_best_deals_img ? "vegetables" : ""}
+                    alt={banner === DECOR_SETS["weekly-banner"].grocery ? "vegetables" : ""}
                     className=""
                     width="400"
                     height="400"

@@ -42,7 +42,8 @@
     border: 1px solid $kingli-cloud;
     padding: 10px;
     box-sizing: border-box;
-    &.swiper-slide-active {
+    &.swiper-slide-thumb-active,
+    .swiper:not(.swiper-thumbs) &.swiper-slide-active {
         border-color: $secondary;
     }
 }

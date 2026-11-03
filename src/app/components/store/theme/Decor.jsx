@@ -3,6 +3,8 @@
 import { useDecorTheme } from "./DecorThemeProvider";
 import { DECOR_SETS, getDecorSrc } from "./decorSets";
 
+const cssWidth = (width) => /^\d+(\.\d+)?$/.test(String(width)) ? `${width}px` : width;
+
 // Keep the grocery img's attributes and its position among siblings unchanged.
 // Tech art occupies the original image box; removing absolute art cannot move content.
 export default function Decor({ slot, reserveSpace = false, ...props }) {
@@ -17,7 +19,7 @@ export default function Decor({ slot, reserveSpace = false, ...props }) {
         style={{
           display: "inline-block",
           verticalAlign: "middle",
-          width: props.width || decor.width,
+          width: cssWidth(props.width || decor.width),
           maxWidth: "100%",
           aspectRatio: `${decor.width} / ${decor.height}`,
           ...props.style,
@@ -37,11 +39,11 @@ export default function Decor({ slot, reserveSpace = false, ...props }) {
       alt=""
       aria-hidden="true"
       style={{
-        width: props.width || decor.width,
+        ...props.style,
+        width: cssWidth(decor.techWidth || props.width || decor.width),
         height: "auto",
         aspectRatio: `${decor.width} / ${decor.height}`,
         objectFit: "contain",
-        ...props.style,
       }}
     />
   );

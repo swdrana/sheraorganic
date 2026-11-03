@@ -1,5 +1,6 @@
 "use client";
 import Decor from "@/app/components/store/theme/Decor";
+import { useDecorTheme } from "@/app/components/store/theme/DecorThemeProvider";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade, Pagination } from "swiper";
@@ -19,6 +20,8 @@ const renderBtn = (text, link, show, fallbackText, fallbackLink, className) => {
 };
 
 const HeroSwiper = ({ setting }) => {
+  const theme = useDecorTheme();
+  const bannerAlt = theme === "grocery" ? "fruits" : "banner";
   return (
     <Swiper
       modules={[Autoplay, EffectFade, Pagination]}
@@ -53,7 +56,7 @@ const HeroSwiper = ({ setting }) => {
             <div className="hero-right text-center position-relative z-1 mt-8 mt-xl-0">
               <img
                 src={optimizeCloudinaryUrl(setting?.home?.slider_one_img, 600, 80)}
-                alt="banner"
+                alt={bannerAlt}
                 className="img-fluid position-absolute end-0 top-50 hero-img"
                 width="500"
                 height="400"
@@ -87,7 +90,7 @@ const HeroSwiper = ({ setting }) => {
           </div>
           <div className="col-xl-6 col-lg-7">
             <div className="hero-right text-center position-relative z-1 mt-8 mt-xl-0">
-              <img src={optimizeCloudinaryUrl(setting?.home?.slider_two_img, 600, 80)} alt="banner" className="img-fluid position-absolute end-0 top-50 hero-img" width="500" height="400" loading="lazy" />
+              <img src={optimizeCloudinaryUrl(setting?.home?.slider_two_img, 600, 80)} alt={bannerAlt} className="img-fluid position-absolute end-0 top-50 hero-img" width="500" height="400" loading="lazy" />
               <Decor slot="hero-slide.tree" alt="tree" className="img-fluid position-absolute tree z-1" width="80" height="411" loading="lazy" />
               <Decor slot="hero-slide.orange-1" alt="orange" className="position-absolute orange-1 z-1" width="80" height="80" loading="lazy" />
               <Decor slot="hero-slide.orange-2" alt="orange" className="position-absolute orange-2 z-1" width="133" height="81" loading="lazy" />
@@ -115,7 +118,7 @@ const HeroSwiper = ({ setting }) => {
           </div>
           <div className="col-xl-6 col-lg-7">
             <div className="hero-right text-center position-relative z-1 mt-8 mt-xl-0">
-              <img src={optimizeCloudinaryUrl(setting?.home?.slider_three_img, 600, 80)} alt="banner" className="img-fluid position-absolute end-0 top-50 hero-img" width="500" height="400" loading="lazy" />
+              <img src={optimizeCloudinaryUrl(setting?.home?.slider_three_img, 600, 80)} alt={bannerAlt} className="img-fluid position-absolute end-0 top-50 hero-img" width="500" height="400" loading="lazy" />
               <Decor slot="hero-slide.tree" alt="tree" className="img-fluid position-absolute tree z-1" width="80" height="411" loading="lazy" />
               <Decor slot="hero-slide.orange-1" alt="orange" className="position-absolute orange-1 z-1" width="80" height="80" loading="lazy" />
               <Decor slot="hero-slide.orange-2" alt="orange" className="position-absolute orange-2 z-1" width="133" height="81" loading="lazy" />

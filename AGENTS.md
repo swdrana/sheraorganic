@@ -88,14 +88,20 @@ admin settings or env. When reporting to the owner, name the store by the friend
   grocery img attributes/classes/order, chooses isolated `/themes/tech/...` art, or omits niche art for
   none. Neutral backgrounds, circles, maps, textures, curves and borders remain in every theme.
   Use `reserveSpace` for in-flow images that must keep their box when hidden; tech replacement images
-  use the original aspect ratio. Never overwrite `/img` grocery art with tech assets.
+  use the original aspect ratio. Per-slot `techWidth` keeps small SVG art within 60px in either dimension
+  and overrides grocery-only inline sizes. Numeric-string widths must be converted to CSS pixels.
+  Never overwrite `/img` grocery art with tech assets. All themes share the WebP hero circle/preload.
 - The supplied bdXmart checkout's icon library currently matches this checkout byte-for-byte. Live
-  grocery counter icons therefore use actual tech/cart art; neutral hand/customer/delivery icons have
-  isolated tech copies. Its laptop login banner is neutral enough for grocery/tech; none hides it.
-- Weekly deals use `home.weekly_best_deals_img` in every theme; the legacy vegetables fallback is
-  grocery-only. Missing tech/none images reserve the original banner box.
+  grocery counter icons therefore use actual tech/cart art. Tech's product counter uses an opaque
+  foreground microchip icon; neutral hand/customer/delivery/cart art reuses `/img` originals. Its laptop
+  login banner is neutral enough for grocery/tech and reuses the original; none hides it.
+- Weekly deals use real `home.weekly_best_deals_img` images in every theme, optimized at 800px for
+  Cloudinary. Any URL containing `/grostore/` is a template seed and counts as unset; the legacy
+  vegetables fallback is grocery-only. Missing tech/none images reserve the original banner box.
 - Quick view uses `ProductMediaGallery` + `utils/productMedia.js`: product images only, video after the
-  first image, no template fallback photos. Payment SVGs are local under `/img/payments/`.
+  first image, no template fallback photos. Thumbnail borders follow `.swiper-slide-thumb-active`;
+  `.swiper-slide-active` applies only outside `.swiper-thumbs` (product details uses Controller).
+  Payment SVGs are local under `/img/payments/`.
 - Theme settings persistence/admin fields belong to the separate brand-settings job; this theme work
   does not modify the settings API or admin UI.
 

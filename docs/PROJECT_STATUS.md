@@ -25,35 +25,40 @@
 
 ---
 
-## বর্তমান রাউন্ড — Job B: decoration theme (স্থানীয়; push নয়)
+## বর্তমান রাউন্ড — Job B theme review follow-ups (স্থানীয়; push নয়)
 
-- `brand.decoration_theme` থেকে server-rendered `grocery / tech / none`; পুরনো settings-এ grocery।
-  Root layout-এর provider ও hero preload একই theme ব্যবহার করে; client fetch/mount-এর জন্য অপেক্ষা নেই।
-- Hero/slider, Trending, Blog, Feature, Feedback, Footer decoration, Breadcrumb, Contact, AboutTop,
-  live AboutUs এবং WorkingAbility-এর niche artwork slot map-এ। Neutral shape/map/curve/texture অপরিবর্তিত।
-  Tech assets আলাদা `public/themes/tech/`-এ; grocery-এর img attributes/classes/order রাখা হয়েছে।
-- Login/signup banner theme-aware; `none`-এ illustration লুকায়। Weekly deals-এর saved admin image এখন
-  দেখায়; unset হলে vegetables কেবল grocery-তে; tech/none-এ আগের অনুপাতের খালি box থাকে।
-- Quick view-এ template jam/thumbnail বাদ; নিজের সব image এবং প্রথম ছবির পরে video।
-  Checkout-এর COD/wallet SVG template server থেকে local `public/img/payments/`-এ নেওয়া হয়েছে।
-- bdXmart-এর দেওয়া checkout-এর icons byte-identical; খাবারযুক্ত counter icon tech-এ microchip/cart দিয়ে
-  বদলানো হয়েছে, neutral icon-এর আলাদা tech copy আছে। বাড়তি food photo কপি করা হয়নি।
-- সীমা: settings API/admin/metadata/SEO/email/Navbar/dead template page বদলানো হয়নি। Theme setting-এর
-  persistence ও admin selector Job A-এর কাজ; এই worktree তা যোগ করে না। SCSS বদলায়নি।
-- যাচাই: lint exit 0 (আগের warnings); single-thread Vitest ১১ file / ৫৯ test pass; production build
-  ৫৫/৫৫ page, postbuild successful। আগের controller-এর BASE_URL guard-এর জন্য command-only
-  `NEXT_PUBLIC_BASE_URL=http://127.0.0.1:3199 CIRCLE_NODE_TOTAL=2 npm run build` চালানো হয়েছে;
-  `.env`/DB credential ছাড়া। DB-unavailable fallback-এর timeout log প্রত্যাশিত।
-- Headless Chrome-এ বাস্তব components-এর isolated SSR fixture, production CSS, ৩৭৫px আগে ও ১৪৪০px পরে:
-  প্রতিটি theme-এ ৩৩ section/container box একই; overflow/broken image ০। Grocery mobile screenshot
-  পুরনো commit-এর সাথে pixel-identical; desktop DOM একই (নিরপেক্ষ alt text ছাড়া), মাত্র ১৫ text-raster
-  pixel variance, কোনো layout/asset পরিবর্তন নয়। Root layout-এর tech preload ও no-grocery first render যাচাই।
-- Local `next start`: `/`, `/about`, `/contact`, `/login`, `/singup`, `/checkout`, COD/wallet SVG ও tech SVG
-  সব HTTP 200। কোনো order/auth/settings write করা হয়নি; local server/Chrome বন্ধ করা হয়েছে।
-- MANUAL VERIFY: Job A integrate করার পরে admin-এ theme save → বাস্তব DB/data দিয়ে fresh page load ও
-  navigation-এ grocery/tech/none; hydrated slider; quick view-এর image thumbnail/video playback/product
-  switch; settings থেকে weekly custom image প্রতিটি theme-এ দেখা। SSR fixture মাপ/চেহারা যাচাই সম্পন্ন।
-- Delivery: একটিমাত্র local commit; push করা হয়নি।
+- আগের `b130529`-এর উপর একটিমাত্র নতুন commit: `fix: theme review follow-ups`; amend/push নয়।
+- `decorSets.js` / `WeeklyBestDeals.jsx`: `/grostore/` থাকা saved seed URL unset হিসেবে গণ্য;
+  মেহেদীর সাইটে আগের `/img/banner/vegetables.webp` ও alt অক্ষুণ্ণ। Real custom Cloudinary banner
+  প্রতিটি theme-এ 800px optimized (400px box-এর 2x); tech/none-এ unset হলে আগের খালি box।
+- `_shop.scss` / regenerated `main.css`: quick-view Thumbs gallery-তে শুধু
+  `.swiper-slide-thumb-active` border পায়; strip-এর `.swiper-slide-active` ভুলভাবে আর highlight হয় না।
+  Product-details-এর Controller gallery আগের active selector ব্যবহার করে।
+- `HeroSwiper.jsx`: grocery-র তিন slide-এ ঠিক `alt="fruits"` ফেরত। Tech hero/preload এখন shared
+  `/img/shapes/hero-circle-lg.webp`; অপ্রয়োজনীয় 41KB PNG বাদ।
+- `Decor.jsx` / `decorSets.js`: numeric string width CSS-এ px পায়। প্রতিটি small tech SVG slot-এর
+  `techWidth` audit করে সর্বোচ্চ 60px box (মূল aspect ratio রেখে), grocery-only inline size override।
+  Counter 1-এর জন্য নিজস্ব opaque green foreground microchip SVG; faded background shape ব্যবহার হয় না।
+- Byte-identical পাঁচটি tech duplicate সরানো: login-banner.jpg, icon-3.png, icon-4.png, hand-icon.svg,
+  cart-color.svg। সংশ্লিষ্ট slots এখন `/img` originals ব্যবহার করে। Grocery asset বদলানো হয়নি।
+- Regression: আসল Swiper + shipped thumbnail CSS দিয়ে gallery render, main slide change, Thumbs tap,
+  video thumbnail selection ও একটিমাত্র highlight পরীক্ষা; theme/seed/custom-image/width/alt test যোগ।
+- Gate: lint exit 0 (পুরনো warnings), single-thread Vitest ১২ file / ৬৫ test pass; production build
+  exit 0, ৫৫/৫৫ page + postbuild successful। Command-only `MONGODB_URI=''`, localhost BASE_URL,
+  `CIRCLE_NODE_TOTAL=2`; expected DB-unavailable logs। কোনো `.env` বা real DB/server ব্যবহার হয়নি।
+- Production CSS-সহ isolated headless Chrome fixture: ৩৭৫px আগে, ১৪৪০px পরে, grocery/tech/none-এ
+  ৩৩ section/container box একই; overflow/broken image ০। Rendered ৩৮টি small tech shape সর্বোচ্চ 60px।
+  Grocery mobile screenshot baseline-এর byte-identical; desktop layout একই। Saved Grostore seed দিয়ে
+  grocery vegetables fallback এবং root preload যাচাই। Hydrated gallery-তে main slide change ও actual
+  mobile touch/desktop click-এ একটিমাত্র thumb highlight; strip active slide ভুল highlight পায় না।
+- Local `next start`: `/`, `/about`, `/contact`, `/login`, `/singup`, `/checkout`, foreground microchip SVG
+  ও shared hero WebP সব HTTP 200। নিজের server/Chrome বন্ধ করা হয়েছে; কোনো write request করা হয়নি।
+- Sass: `npm run sass` main.css বানায়, কিন্তু পুরনো standalone `pages/my-account.scss`-এ undefined
+  `$mint-chiffon` error দেয় এবং watch করে; watcher বন্ধ, ওই generated error CSS restore করা হয়েছে।
+  `npx sass src/assets/scss/main.scss src/assets/css/main.css --no-source-map` exit 0 (deprecation warnings)।
+- Scope: settings API/admin/metadata/SEO/email/Navbar বদলায়নি। Theme persistence/admin selector Job A-এর।
+- MANUAL VERIFY: Job A integrate হলে বাস্তব settings/data দিয়ে grocery/tech/none fresh load ও navigation,
+  real custom weekly image, quick-view video playback ও product switch; admin theme save/revalidation।
 
 ---
 
@@ -210,8 +215,8 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
 
 ## এখন কী বাকি
 
-- **বর্তমান Job B:** implementation/gates/local smoke সম্পন্ন, local commit। Job A-এর settings/admin
-  integration ও বাস্তব data দিয়ে interactive browser verification বাকি। Push করা হয়নি।
+- **বর্তমান Job B review follow-ups:** সাতটি finding ঠিক করা হয়েছে; একটিমাত্র নতুন local commit, push নয়।
+  Job A-এর settings/admin integration ও বাস্তব data দিয়ে manual verification বাকি।
 
 - **Round 7 যাচাই:** live-এ কয়েকটা product খুলে URL/breadcrumb দেখা; Google Search Console-এ sitemap আবার submit।
 
