@@ -1,14 +1,24 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
+export const STAFF_ROLES = Object.freeze([
+  "Admin",
+  "CEO",
+  "Manager",
+  "Super Admin",
+  "Accountant",
+]);
+
+export const isStaffRole = (role) => STAFF_ROLES.includes(role);
+
 export async function middleware(req) {
   const token = await getToken({ req });
   const { pathname } = req.nextUrl;
 
-  // /admin is staff-only (any role except Customer); /my-account needs any signed-in user.
+  // /admin is restricted to the explicit staff allow-list; /my-account needs any signed-in user.
   const isAdminPath = pathname.startsWith("/admin");
   const allowed = isAdminPath
-    ? !!token?.role && token.role !== "Customer"
+    ? isStaffRole(token?.role)
     : !!token;
 
   if (allowed || pathname === "/login") {

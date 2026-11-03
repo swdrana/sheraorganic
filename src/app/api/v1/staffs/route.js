@@ -1,13 +1,15 @@
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import User from "../../../backend/model/user.model";
+import { getApiSession, isStaff, unauthorized, canManageRoles, forbidden } from "@/app/backend/utils/apiAuth";
 
 // get all staffs
 export const GET = async () => {
-  connectDB();
+  if (!isStaff(await getApiSession())) return unauthorized();
+  await connectDB();
   try {
     // get staffs from the server
-    const staffs = await User.find({ role: { $ne: "Customer" } });
+    const staffs = await User.find({ role: { $ne: "Customer" } }).select("-password");
     if (staffs.length <= 0)
       return NextResponse.json({ error: "staff not found" });
 
@@ -25,7 +27,10 @@ export const GET = async () => {
 
 // post request for staffs post | save a staffs in database
 export const POST = async (req) => {
-  connectDB();
+  const session = await getApiSession();
+  if (!isStaff(session)) return unauthorized();
+  if (!canManageRoles(session)) return forbidden();
+  await connectDB();
   const data = await req.json();
   // console.log("data in staff", data);
   try {

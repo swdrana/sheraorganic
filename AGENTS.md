@@ -110,10 +110,19 @@ admin settings or env. When reporting to the owner, name the store by the friend
   `session.user.{id, name, role}`. `authOptions` is exported from `[...nextauth]/route.js`; API routes
   use `getServerSession(authOptions)`. Client fetches that need the session cookie must send
   `credentials: "include"` (see `updateProductRating`).
-- `backend/utils/apiAuth.js`: `isStaff` (role ≠ `Customer`), `canAccessUser` (self or staff), `unauthorized`.
+- `backend/utils/apiAuth.js`: staff is an explicit allow-list: `Admin`, `CEO`, `Manager`, `Super Admin`,
+  `Accountant`. `Customer`, `Driver`, `Security Guard`, missing and unknown roles are not staff. It also exports
+  `canAccessUser` (self or staff), `unauthorized`, and server-action guards. Keep the same list in `middleware.js`.
   Staff-only: GET/POST `/api/v1/user`, GET `/api/v1/orders`, `/orders/by-date`, PATCH/DELETE `/orders/[id]`.
   Self-or-staff: `/api/v1/user/[id]` (GET/PATCH), `/api/v1/user-order/[id]`. User responses never include
   `password`. `middleware.js`: `/admin` is staff-only (customers → `/`).
+- Catalog/admin writes for products, categories, brands, attributes, blogs, coupons and staff are staff-only in
+  both route handlers and direct `"use server"` actions. Exceptions remain guest order POST, signup, verified
+  review PUT, contact/subscribe mail, auth, and the separately maintained store-settings route.
+- Staff GET list/detail require staff and exclude `password`; staff records use the `User` model in both
+  routes and `staffUpdate`. Only `Admin`/`CEO` may create staff or change roles (other staff may submit
+  an unchanged role); forbidden role changes return 403. The unused unrestricted `updateUser` action
+  has been removed. Signup responses also omit passwords.
 - The credentials provider uses `backend/utils/userLookup.js` — never put DB lookups that return secrets in a
   `"use server"` file (its exports become browser-callable actions).
 
@@ -205,10 +214,12 @@ admin settings or env. When reporting to the owner, name the store by the friend
 - `src/assets/scss/base/_helpers.scss` forces `.vertical-product-card.trend_style .thumbnail { height: 250px }`
   (and `.next_style` 125px) — this clips card images. Round-2's new `.product-card-v2` class sidesteps it;
   don't reintroduce the old classes for the new card.
+- About page spacing/decorations live in `pages/_about.scss`: preserve `.about-section` and
+  `.service-section` when removing service templates; `AboutFeedback` also references `.feedback-slider-2`.
 - `.card-btn` / `.product-btns` in `_product-card.scss` are hover-only (`visibility:hidden`) → invisible on
   touch. Any always-visible card button must not rely on those.
-- `api/v1/*` write routes for products/categories/brands/attributes/blogs/coupons/staff are still
-  unauthenticated (pre-existing; not yet guarded).
+- Catalog/admin write routes and direct mutation server actions must call the shared staff authorization helpers
+  before parsing input, connecting to MongoDB or changing cache state. Do not rely on middleware alone.
 - `.env*.local` is ignored and `.env.local` is no longer tracked. Historical secrets were previously
   committed to GitHub; the owner still needs to rotate them outside the repository.
 - Cloudinary API key/secret are exposed as `NEXT_PUBLIC_*` (browser bundle). Server delete helper prefers

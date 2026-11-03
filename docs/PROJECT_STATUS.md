@@ -8,7 +8,7 @@
 > gotcha বদলালে `AGENTS.md`-ও একই ভাবে হালনাগাদ করো। machine-local (`~/.claude`) মেমোরিতে
 > এই প্রজেক্টের কিছু আলাদা করে রাখা হয় না — সব knowledge এখানেই।
 
-শেষ হালনাগাদ: 2026-10-10
+শেষ হালনাগাদ: 2026-11-03
 
 ---
 
@@ -176,6 +176,44 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
 - Codex: `.codex-2` admin form, `.codex-8` server slug, `.codex-10` link audit, `.codex-9` final review।
 - বাকি ঝুঁকি: একই মুহূর্তে দুইজন admin save করলে slug duplicate হতে পারে (unique DB index নেই)।
 
+## Round 8 / Job C — Security hardening + template cleanup (2026-11-03)
+
+- Products, categories, brands, attributes, blogs, coupons ও staff-এর সব mutation API এখন explicit staff
+  session ছাড়া `401`; direct mutation/revalidation server action-ও নিজের ভিতরে session যাচাই করে। Guest order,
+  signup, verified review, contact/subscribe mail ও auth exception অপরিবর্তিত; store settings আলাদা job-এর scope।
+- Staff allow-list এখন শুধু `Admin`, `CEO`, `Manager`, `Super Admin`, `Accountant`; `Customer`, `Driver`,
+  `Security Guard`, unknown/missing role admin access পায় না। API helper ও middleware—দুইটির regression test আছে।
+- Seed endpoint ও শুধু seed-এ ব্যবহৃত demo data সরানো হয়েছে। অচল services/team/campaign/standalone wishlist,
+  blog-grid, alternate shop-grid, sample home/about এবং admin test/coming-soon template code সরানো হয়েছে। Live
+  My Account wishlist এবং product list-view-এর ব্যবহৃত `ProductListCard` রাখা হয়েছে।
+- Template icon assets ও SCSS cleanup করা হয়েছে; review-তে ধরা About styles regression নিচের fix round-এ ঠিক হয়েছে।
+- সব route-এ HSTS, SAMEORIGIN frame policy, `nosniff`, এবং strict-origin referrer policy যোগ হয়েছে।
+- Category/coupon client controller আর missing `NEXT_PUBLIC_BASE_URL`-এ module import-এর সময় throw করে না;
+  তাই env/DB ছাড়াও safe fallbacks দিয়ে production build শেষ হয়।
+
+## Job C fix round — cleanup review (2026-11-03, local only)
+
+- `_services.scss` থেকে মূল `.service-section` ও `.about-section` blocks হুবহু `_about.scss`-এ ফেরানো হয়েছে;
+  অবশিষ্ট সব deleted selector `src`-তে খোঁজা হয়েছে। `AboutFeedback`-এ থাকা `.feedback-slider-2`-ও ফেরানো হয়েছে।
+  `.faq-section`, `.service-nav`, `.download-box`, `.team-card`/children, `.wishlist-table`/children এবং
+  `.stock-btn`-এর matching parent usage নেই; nested generic class অন্য parent-এ থাকায় সেই rules প্রযোজ্য নয়।
+  Dark theme-এর removed wishlist selectors-ও একইভাবে unused। `npm run sass` দিয়ে `main.css` তৈরি, watcher বন্ধ।
+- Staff list/detail GET এখন staff-only এবং `select("-password")`; detail-এর undefined `Staff` বদলে সঠিক
+  `User` model। অন্য API/action user reads audit হয়েছে: existing user reads password বাদ দেয়; signup
+  success response থেকেও password বাদ দেওয়া হয়েছে। Unused unrestricted `user.action.js` মুছে ফেলা হয়েছে।
+- Staff create শুধু Admin/CEO; staff PATCH, `staffUpdate` ও user PATCH-এ অন্য role-এর role change 403।
+  একই role পাঠিয়ে normal edit চলবে। `staffUpdate` routes-এর মতো `User` model ব্যবহার করে।
+- HSTS-এ `max-age=31536000` রাখা, `includeSubDomains` বাদ।
+- Route regression tests: anonymous product write 401 ও input/DB/cache untouched, staff write save/cache
+  invalidation; staff GET guard/projection; privileged/non-privileged role changes।
+- Local verification: lint exit 0 (existing warnings), single-thread Vitest 69/69 pass, production build exit 0
+  (46/46 static pages; MONGODB_URI unset, expected DB fallback errors)। Local `next start`-এ `/about` 200,
+  anonymous staff list/detail GET ও product POST 401; চারটিতেই HSTS max-age only। Production-mode auth
+  smoke-এ শুধু command-scoped dummy NEXTAUTH_SECRET/NEXTAUTH_URL ব্যবহার হয়েছে; কোনো env file বানানো হয়নি।
+  Server/watcher বন্ধ; production DB/server ছোঁয়া হয়নি; কোনো push করা হয়নি।
+- MANUAL VERIFY: mobile আগে, desktop পরে `/about` spacing/decorations; Admin/CEO staff create/role edit,
+  Manager/Accountant-এর normal edit/status এবং forbidden role edit UI।
+
 ## এখন কী বাকি
 
 - **Round 7 যাচাই:** live-এ কয়েকটা product খুলে URL/breadcrumb দেখা; Google Search Console-এ sitemap আবার submit।
@@ -191,8 +229,7 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
   CPU steal/throttle যাচাই; অন্য AI-এর push কমানো।
 - Round 4 ম্যানুয়াল যাচাই: admin-এ category/brand/product/settings edit → storefront-এ সাথে সাথে দেখা যায়;
   লগইন করা customer-এর my-account/order history/checkout ঠিক; admin customers/orders page ঠিক।
-- বাকি ঝুঁকি: products/categories/brands/attributes/blogs/coupons/staff write API এখনো auth ছাড়া;
-  `/products` grid client-side filter।
+- `/products` grid এখনো client-side filter। Store-settings write guard আলাদা multi-store job-এর scope।
 - **মালিকের সিদ্ধান্ত (2026-10-08):** password যেমন আছে (plaintext) তেমনই থাকবে — hashing/migration
   প্রস্তাব বা পরিবর্তন করা হবে না।
 - পুরনো: production DB-তে পুরনো duplicate `Setting` doc থাকলে একবার

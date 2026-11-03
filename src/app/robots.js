@@ -18,7 +18,6 @@ export default function robots() {
           "/thank-you/",
           "/login",
           "/singup",
-          "/wishlist",
         ],
       },
     ],

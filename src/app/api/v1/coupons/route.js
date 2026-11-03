@@ -1,6 +1,7 @@
 import Coupon from "@/app/backend/model/coupon.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
+import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 
 // get all coupons
 export const GET = async () => {
@@ -25,6 +26,7 @@ export const GET = async () => {
 
 // post request for coupons post | save a coupons in database
 export const POST = async (req) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   connectDB();
   const data = await req.json();
   try {

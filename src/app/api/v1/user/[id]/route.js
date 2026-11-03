@@ -1,22 +1,29 @@
 import User from "@/app/backend/model/user.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
-import { getApiSession, canAccessUser, unauthorized } from "@/app/backend/utils/apiAuth";
+import { getApiSession, canAccessUser, unauthorized, canManageRoles, forbidden } from "@/app/backend/utils/apiAuth";
 import { destroyImages, diffRemoved } from "@/app/backend/utils/cloudinaryServer";
 
 export async function PATCH(req, { params }) {
   const { id } = params;
-  if (!canAccessUser(await getApiSession(), id)) return unauthorized();
-  connectDB();
+  const session = await getApiSession();
+  if (!canAccessUser(session, id)) return unauthorized();
+  await connectDB();
 
   const updateUserData = await req.json(); // Get the status from request body
   // console.log("update updateUserData", updateUserData, id);
   try {
     const existingUser = await User.findById(id);
+    if (updateUserData.role !== undefined &&
+        updateUserData.role !== existingUser?.role && !canManageRoles(session)) {
+      return forbidden();
+    }
     const result = await User.updateOne(
       { _id: id },
       {
         $set: {
+          ...(canManageRoles(session) && updateUserData.role !== undefined
+            ? { role: updateUserData.role } : {}),
           name: updateUserData.name,
           contact: updateUserData.contact || updateUserData.phone,
           username: updateUserData.userName,

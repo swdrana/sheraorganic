@@ -28,7 +28,7 @@ export async function POST(req) {
     await user.save();
     revalidateTag(CACHE_TAGS.stats);
     return NextResponse.json(
-      { message: "User created", user },
+      { message: "User created", user: { ...user.toObject(), password: undefined } },
       { status: 201 }
     );
   } catch (error) {

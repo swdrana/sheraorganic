@@ -3,9 +3,11 @@ import connectDB from "@/app/utils/database";
 import Attribute from "../model/attributes.model";
 import { revalidateTag } from "next/cache";
 import { CACHE_TAGS } from "@/app/data/cachedData";
+import { requireStaff } from "../utils/apiAuth";
 
 // add attribute value
 export async function addChildAttributeValue(attributeId, attributeValue) {
+  await requireStaff();
   connectDB();
 
   // console.log("attributeId", attributeId, "attributeValue", attributeValue);
@@ -28,6 +30,7 @@ export async function addChildAttributeValue(attributeId, attributeValue) {
 
 // delete child attribute
 export async function deleteChildAttribute(attributeId, childId) {
+  await requireStaff();
   connectDB();
   try {
     const res = await Attribute.updateOne(
@@ -46,6 +49,7 @@ export async function deleteChildAttribute(attributeId, childId) {
 
 // update attribute value and status
 export async function updateChildAttributes(attributeId, childId, updateData) {
+  await requireStaff();
   connectDB();
   try {
     let attribute = await Attribute.findOne({
@@ -87,6 +91,7 @@ export async function updateChildAttributesStatus(
   childId,
   updateStatus
 ) {
+  await requireStaff();
   connectDB();
   // console.log(
   //   "attributeid",

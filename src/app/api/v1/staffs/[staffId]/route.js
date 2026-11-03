@@ -1,9 +1,11 @@
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import User from "../../../../backend/model/user.model";
+import { getApiSession, isStaff, unauthorized, canManageRoles, forbidden } from "@/app/backend/utils/apiAuth";
 
 //===== Delete single staff by id =========
 export const DELETE = async (req, { params }) => {
+  if (!isStaff(await getApiSession())) return unauthorized();
   // console.log("req in staff", req);
   connectDB();
   try {
@@ -23,7 +25,9 @@ export const DELETE = async (req, { params }) => {
 
 // ======== update single staff  ============
 export const PATCH = async (req, { params }) => {
-  connectDB();
+  const session = await getApiSession();
+  if (!isStaff(session)) return unauthorized();
+  await connectDB();
 
   const updateStaffData = await req.json();
   const { staffId } = params;
@@ -35,9 +39,13 @@ export const PATCH = async (req, { params }) => {
     if (!existingStaff) {
       return new Response("blog not found", { status: 404 });
     }
+    if (updateStaffData.role !== undefined &&
+        updateStaffData.role !== existingStaff.role && !canManageRoles(session)) {
+      return forbidden();
+    }
     existingStaff.name = updateStaffData.name;
     existingStaff.email = updateStaffData.email;
-    existingStaff.role = updateStaffData.role;
+    if (updateStaffData.role !== undefined) existingStaff.role = updateStaffData.role;
     existingStaff.contact = updateStaffData.contact;
     existingStaff.image = updateStaffData.image;
     existingStaff.joiningDate = updateStaffData.joiningDate;
@@ -54,12 +62,11 @@ export const PATCH = async (req, { params }) => {
 
 //======== single staff details =========
 export const GET = async (req, { params }) => {
-  // console.log("req is staff route", req);
-
-  connectDB();
+  if (!isStaff(await getApiSession())) return unauthorized();
+  await connectDB();
   try {
     const { staffId } = params;
-    const staffDetails = await Staff.findOne({ _id: staffId });
+    const staffDetails = await User.findOne({ _id: staffId }).select("-password");
     if (!staffDetails) {
       return NextResponse.json(
         { error: "staffDetails not found" },
