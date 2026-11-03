@@ -160,7 +160,7 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
   Subscribe route-ও একই helper-এ। `send-email` route মুছে ফেলা হয়েছে (যে কেউ shop-এর Gmail দিয়ে যেকোনো
   ঠিকানায় mail পাঠাতে পারত; কোথাও ব্যবহার হতো না)।
 - Env: client-এর নতুন Gmail App Password — `GMAIL_USER`/`GMAIL_PASSWORD` local `.env.local` + Coolify-তে
-  বসানো (value শুধু `.agent/private.md`-এ, repo-তে নয়)। SMTP login যাচাই হয়েছে।
+  বসানো (value শুধু `.agent/mehedi/private.md`-এ, repo-তে নয়)। SMTP login যাচাই হয়েছে।
 
 ## Round 7 — Product page: SEO URL + উপরের ফাঁকা জায়গা কমানো (2026-10-10)
 
@@ -168,7 +168,7 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
   (Home › Products › Category › Product); মোবাইলে product এখন header-এর ঠিক নিচ থেকে শুরু।
 - URL: `/product-details/<URL path>` — ID নেই। প্রতিটা product-এর unique "URL path" (বাংলা+ইংরেজি)।
   Admin-এ "URL path" ফিল্ড + "Same as title" টিক (টিক দিলে title থেকে auto; না দিলে title বদলালেও URL একই)।
-  ২৫টা product-এর URL title থেকে তৈরি (পুরনো slug backup: `.agent/backups/product-slugs-before-*.json`)।
+  ২৫টা product-এর URL title থেকে তৈরি (পুরনো slug backup: `.agent/mehedi/backups/product-slugs-before-*.json`)।
   পুরনো ID link ও পুরনো slug (cart/wishlist-এ জমা) 308 redirect হয়।
 - Admin-এ product-প্রতি "SEO" অংশ: SEO title, SEO description, SEO keywords/tags (কমা দিলেই আলাদা chip);
   খালি থাকলে নাম/description ব্যবহার হয়।
