@@ -49,7 +49,8 @@ export const getCachedSettingDoc = unstable_cache(
     load("settings", () =>
       Setting.findOne({ name: "storeCustomizationSetting" }).sort({ createdAt: 1 })
     ),
-  ["store-setting-doc"],
+  // v2: brand/tracking groups added; a new key stops a reused build cache serving the pre-brand doc.
+  ["store-setting-doc-v2"],
   { revalidate: REVALIDATE, tags: [CACHE_TAGS.settings] }
 );
 
