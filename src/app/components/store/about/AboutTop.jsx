@@ -1,9 +1,10 @@
+import Decor from "@/app/components/store/theme/Decor";
 const AboutTop = ({ setting }) => {
   return (
     <>
       <section className="pt-120 ab-about-section position-relative z-1 overflow-hidden">
-        <img
-          src="/img/shapes/mango.png"
+        <Decor
+          slot="about.mango"
           alt="mango"
           className="position-absolute mango z--1"
         />
@@ -60,8 +61,8 @@ const AboutTop = ({ setting }) => {
                   <div className="col-md-6">
                     <div className="image-box py-6 px-4 image-box-border">
                       <div className="icon position-relative">
-                        <img
-                          src="/img/icons/hand-icon.svg"
+                        <Decor
+                          slot="about.hand-icon"
                           alt="hand icon"
                           className="img-fluid"
                         />
@@ -75,8 +76,8 @@ const AboutTop = ({ setting }) => {
                   <div className="col-md-6">
                     <div className="image-box py-6 px-4 image-box-border">
                       <div className="icon position-relative">
-                        <img
-                          src="/img/icons/hand-icon.svg"
+                        <Decor
+                          slot="about.hand-icon"
                           alt="hand icon"
                           className="img-fluid"
                         />

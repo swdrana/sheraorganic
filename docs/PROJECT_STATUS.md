@@ -85,6 +85,43 @@ brand/tracking, staff-only leaf updates, analytics privacy boundary ও missing-
 
 ---
 
+## বর্তমান রাউন্ড — Job B theme review follow-ups (স্থানীয়; push নয়)
+
+- আগের `b130529`-এর উপর একটিমাত্র নতুন commit: `fix: theme review follow-ups`; amend/push নয়।
+- `decorSets.js` / `WeeklyBestDeals.jsx`: `/grostore/` থাকা saved seed URL unset হিসেবে গণ্য;
+  মেহেদীর সাইটে আগের `/img/banner/vegetables.webp` ও alt অক্ষুণ্ণ। Real custom Cloudinary banner
+  প্রতিটি theme-এ 800px optimized (400px box-এর 2x); tech/none-এ unset হলে আগের খালি box।
+- `_shop.scss` / regenerated `main.css`: quick-view Thumbs gallery-তে শুধু
+  `.swiper-slide-thumb-active` border পায়; strip-এর `.swiper-slide-active` ভুলভাবে আর highlight হয় না।
+  Product-details-এর Controller gallery আগের active selector ব্যবহার করে।
+- `HeroSwiper.jsx`: grocery-র তিন slide-এ ঠিক `alt="fruits"` ফেরত। Tech hero/preload এখন shared
+  `/img/shapes/hero-circle-lg.webp`; অপ্রয়োজনীয় 41KB PNG বাদ।
+- `Decor.jsx` / `decorSets.js`: numeric string width CSS-এ px পায়। প্রতিটি small tech SVG slot-এর
+  `techWidth` audit করে সর্বোচ্চ 60px box (মূল aspect ratio রেখে), grocery-only inline size override।
+  Counter 1-এর জন্য নিজস্ব opaque green foreground microchip SVG; faded background shape ব্যবহার হয় না।
+- Byte-identical পাঁচটি tech duplicate সরানো: login-banner.jpg, icon-3.png, icon-4.png, hand-icon.svg,
+  cart-color.svg। সংশ্লিষ্ট slots এখন `/img` originals ব্যবহার করে। Grocery asset বদলানো হয়নি।
+- Regression: আসল Swiper + shipped thumbnail CSS দিয়ে gallery render, main slide change, Thumbs tap,
+  video thumbnail selection ও একটিমাত্র highlight পরীক্ষা; theme/seed/custom-image/width/alt test যোগ।
+- Gate: lint exit 0 (পুরনো warnings), single-thread Vitest ১২ file / ৬৫ test pass; production build
+  exit 0, ৫৫/৫৫ page + postbuild successful। Command-only `MONGODB_URI=''`, localhost BASE_URL,
+  `CIRCLE_NODE_TOTAL=2`; expected DB-unavailable logs। কোনো `.env` বা real DB/server ব্যবহার হয়নি।
+- Production CSS-সহ isolated headless Chrome fixture: ৩৭৫px আগে, ১৪৪০px পরে, grocery/tech/none-এ
+  ৩৩ section/container box একই; overflow/broken image ০। Rendered ৩৮টি small tech shape সর্বোচ্চ 60px।
+  Grocery mobile screenshot baseline-এর byte-identical; desktop layout একই। Saved Grostore seed দিয়ে
+  grocery vegetables fallback এবং root preload যাচাই। Hydrated gallery-তে main slide change ও actual
+  mobile touch/desktop click-এ একটিমাত্র thumb highlight; strip active slide ভুল highlight পায় না।
+- Local `next start`: `/`, `/about`, `/contact`, `/login`, `/singup`, `/checkout`, foreground microchip SVG
+  ও shared hero WebP সব HTTP 200। নিজের server/Chrome বন্ধ করা হয়েছে; কোনো write request করা হয়নি।
+- Sass: `npm run sass` main.css বানায়, কিন্তু পুরনো standalone `pages/my-account.scss`-এ undefined
+  `$mint-chiffon` error দেয় এবং watch করে; watcher বন্ধ, ওই generated error CSS restore করা হয়েছে।
+  `npx sass src/assets/scss/main.scss src/assets/css/main.css --no-source-map` exit 0 (deprecation warnings)।
+- Scope: settings API/admin/metadata/SEO/email/Navbar বদলায়নি। Theme persistence/admin selector Job A-এর।
+- MANUAL VERIFY: Job A integrate হলে বাস্তব settings/data দিয়ে grocery/tech/none fresh load ও navigation,
+  real custom weekly image, quick-view video playback ও product switch; admin theme save/revalidation।
+
+---
+
 ## Round 1 — সম্পন্ন, merge + push (commits `c3a88b3`, `51372f3`, `main`)
 
 - Hero slider প্রতিটি বাটনের link / text / show-hide অ্যাডমিন থেকে নিয়ন্ত্রণ।
@@ -275,6 +312,9 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
   Manager/Accountant-এর normal edit/status এবং forbidden role edit UI।
 
 ## এখন কী বাকি
+
+- **বর্তমান Job B review follow-ups:** সাতটি finding ঠিক করা হয়েছে; একটিমাত্র নতুন local commit, push নয়।
+  Job A-এর settings/admin integration ও বাস্তব data দিয়ে manual verification বাকি।
 
 - **Round 7 যাচাই:** live-এ কয়েকটা product খুলে URL/breadcrumb দেখা; Google Search Console-এ sitemap আবার submit।
 

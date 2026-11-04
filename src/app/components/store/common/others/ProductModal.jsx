@@ -1,11 +1,10 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { Controller } from "swiper"; // Import Controller from modules in Swiper 8.4.0
 import Link from "next/link";
 
 import StarRating from "./StartRating";
+import ProductMediaGallery from "./ProductMediaGallery";
 
 import { useMainContext } from "../../provider/MainContextStore";
 import usebrands from "../../dataFetching/useBrand";
@@ -19,8 +18,6 @@ import { trackAddToCart } from "@/app/utilities/facebookPixel";
 import { productPath } from "@/app/utils/productUrl";
 
 const ProductModal = () => {
-  const [firstSwiper, setFirstSwiper] = useState(null);
-  const [secondSwiper, setSecondSwiper] = useState(null);
   const [loadingHuteiThak, set] = useState(true);
 
   const { handelAddItem, handleIncrement, handleDecrement, quantity } =
@@ -264,100 +261,7 @@ const ProductModal = () => {
               <div className="gstore-product-quick-view bg-white rounded-3 py-6 px-4">
                 <div className="row g-4">
                   <div className="col-xl-6 align-self-end">
-                    <div className="quickview-double-slider">
-                      {/* Main Product Slider */}
-                      <div className="quickview-product-slider">
-                        <Swiper
-                          modules={[Controller]}
-                          onSwiper={setFirstSwiper} // Set the swiper instance
-                          controller={{ control: secondSwiper }} // Connect the two sliders
-                          slidesPerView={1}
-                          centeredSlides={true}
-                          speed={700}
-                          loop={true}
-                          loopedSlides={6}
-                        >
-                          <SwiperSlide className="swiper-slide text-center">
-                            <img
-                              src={productDetails?.image?.[0]}
-                              alt="jam"
-                              className="img-fluid"
-                            />
-                          </SwiperSlide>
-                          <SwiperSlide className="swiper-slide text-center">
-                            <img
-                              src="/img/products/p-lg-2.png"
-                              alt="jam"
-                              className="img-fluid"
-                            />
-                          </SwiperSlide>
-                          <SwiperSlide className="swiper-slide text-center">
-                            <img
-                              src="/img/products/p-lg-3.png"
-                              alt="jam"
-                              className="img-fluid"
-                            />
-                          </SwiperSlide>
-                          <SwiperSlide className="swiper-slide text-center">
-                            <img
-                              src="/img/products/p-lg-4.png"
-                              alt="jam"
-                              className="img-fluid"
-                            />
-                          </SwiperSlide>
-                        </Swiper>
-                      </div>
-
-                      {/* Thumbnail Slider */}
-                      <div className="product-thumbnail-slider mt-2">
-                        <Swiper
-                          modules={[Controller]}
-                          onSwiper={setSecondSwiper} // Set the swiper instance
-                          controller={{ control: firstSwiper }} // Connect the two sliders
-                          slidesPerView={4}
-                          speed={700}
-                          loop={true}
-                          spaceBetween={20}
-                          slideToClickedSlide={true}
-                          loopedSlides={6}
-                          centeredSlides={true}
-                          breakpoints={{
-                            0: { slidesPerView: 2 },
-                            380: { slidesPerView: 3 },
-                            576: { slidesPerView: 4 },
-                          }}
-                        >
-                          <SwiperSlide className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center">
-                            <img
-                              src={productDetails?.image?.[0]}
-                              alt="jam"
-                              className="img-fluid"
-                            />
-                          </SwiperSlide>
-                          <SwiperSlide className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center">
-                            <img
-                              src="/img/products/thumb-sm-2.png"
-                              alt="jam"
-                              className="img-fluid"
-                            />
-                          </SwiperSlide>
-                          <SwiperSlide className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center">
-                            <img
-                              src="/img/products/thumb-sm-3.png"
-                              alt="jam"
-                              className="img-fluid"
-                            />
-                          </SwiperSlide>
-                          <SwiperSlide className="swiper-slide product-thumb-single rounded-2 d-flex align-items-center justify-content-center">
-                            <img
-                              src="/img/products/thumb-sm-4.png"
-                              alt="jam"
-                              className="img-fluid"
-                            />
-                          </SwiperSlide>
-                        </Swiper>
-                      </div>
-                    </div>
+                    <ProductMediaGallery key={productDetails._id} product={productDetails} />
                   </div>
                   <div className="col-xl-6">
                     <div className="product-info">

@@ -2,6 +2,9 @@ import "../assets/css/main.css";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
 import { getCachedSettings } from "@/app/data/cachedData";
+import DecorThemeProvider from "@/app/components/store/theme/DecorThemeProvider";
+import { getDecorSrc } from "@/app/components/store/theme/decorSets";
+import { normalizeTheme } from "@/app/utils/theme";
 
 import { normalizeBrand } from "./utils/brand";
 import { normalizeTracking } from "./utils/tracking";
@@ -28,6 +31,7 @@ export async function generateMetadata() {
 export default async function RootLayout({ children }) {
   const setting = await getCachedSettings();
   const tracking = normalizeTracking(setting);
+  const theme = normalizeTheme(setting?.brand?.decoration_theme);
   return (
     <html lang="en">
       <head>
@@ -61,7 +65,7 @@ export default async function RootLayout({ children }) {
         />
 
         {/* Preload LCP image — starts downloading before CSS blocks */}
-        <link rel="preload" as="image" href="/img/shapes/hero-circle-lg.webp" fetchpriority="high" />
+        <link rel="preload" as="image" href={getDecorSrc(theme, "hero-slide.hero-circle-lg")} fetchpriority="high" />
         {/* Global Swiper bundle CSS loaded synchronously to prevent style shifts */}
         <link rel="stylesheet" href="/css/swiper-bundle.min.css" />
         {/* Google Fonts — non-render-blocking using print media trick */}
@@ -91,7 +95,9 @@ export default async function RootLayout({ children }) {
       </head>
       <body>
 
-        <ClientLayout initialSettings={setting} tracking={tracking}>{children}</ClientLayout>
+        <DecorThemeProvider theme={theme}>
+          <ClientLayout initialSettings={setting} tracking={tracking}>{children}</ClientLayout>
+        </DecorThemeProvider>
       </body>
     </html>
   );

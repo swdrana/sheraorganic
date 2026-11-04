@@ -1,3 +1,4 @@
+import Decor from "@/app/components/store/theme/Decor";
 import Link from "next/link";
 
 const Breadcrumb = ({ title, page }) => {
@@ -9,13 +10,13 @@ const Breadcrumb = ({ title, page }) => {
           alt="bg-shape"
           className="position-absolute start-0 z--1 w-100 bg-shape"
         />
-        <img
-          src="/img/shapes/pata-xs.svg"
+        <Decor
+          slot="breadcrumb.pata-xs"
           alt="pata"
           className="position-absolute pata-xs z--1 vector-shape"
         />
-        <img
-          src="/img/shapes/onion.png"
+        <Decor
+          slot="breadcrumb.onion"
           alt="onion"
           className="position-absolute z--1 onion start-0 top-0 vector-shape"
         />
@@ -24,51 +25,51 @@ const Breadcrumb = ({ title, page }) => {
           alt="frame circle"
           className="position-absolute z--1 frame-circle vector-shape"
         />
-        <img
-          src="/img/shapes/leaf.svg"
+        <Decor
+          slot="breadcrumb.leaf"
           alt="leaf"
           className="position-absolute z--1 leaf vector-shape"
         />
-        <img
-          src="/img/shapes/garlic-white.png"
+        <Decor
+          slot="breadcrumb.garlic-white"
           alt="garlic"
           className="position-absolute z--1 garlic vector-shape"
         />
-        <img
-          src="/img/shapes/roll-1.png"
+        <Decor
+          slot="breadcrumb.roll-1"
           alt="roll"
           className="position-absolute z--1 roll vector-shape"
         />
-        <img
-          src="/img/shapes/roll-2.webp"
+        <Decor
+          slot="breadcrumb.roll-2"
           alt="roll"
           className="position-absolute z--1 roll-2 vector-shape"
           width="100"
           height="100"
           loading="lazy"
         />
-        <img
-          src="/img/shapes/pata-xs.svg"
+        <Decor
+          slot="breadcrumb.pata-xs"
           alt="roll"
           className="position-absolute z--1 pata-xs-2 vector-shape"
         />
-        <img
-          src="/img/shapes/tomato-half.svg"
+        <Decor
+          slot="breadcrumb.tomato-half"
           alt="tomato"
           className="position-absolute z--1 tomato-half vector-shape"
         />
-        <img
-          src="/img/shapes/tomato-slice.svg"
+        <Decor
+          slot="breadcrumb.tomato-slice"
           alt="tomato"
           className="position-absolute z--1 tomato-slice vector-shape"
         />
-        <img
-          src="/img/shapes/cauliflower.png"
+        <Decor
+          slot="breadcrumb.cauliflower"
           alt="cauliflower"
           className="position-absolute z--1 cauliflower vector-shape"
         />
-        <img
-          src="/img/shapes/leaf-gray.png"
+        <Decor
+          slot="breadcrumb.leaf-gray"
           alt="leaf-gray"
           className="position-absolute z--1 leaf-gray vector-shape"
         />

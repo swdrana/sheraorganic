@@ -6,7 +6,11 @@ import { useRouter } from "next/navigation";
 import ProductCard from "../common/card/ProductCard";
 import useAddToCart from "../hooks/useAddToCart";
 import WeeklyBestDealsOfferTime from "./WeeklyBestDealsOfferTime";
+import { useDecorTheme } from "../theme/DecorThemeProvider";
+import { DECOR_SETS, getWeeklyDealsImage } from "../theme/decorSets";
 const WeeklyBestDeals = ({ setting, products }) => {
+  const theme = useDecorTheme();
+  const banner = getWeeklyDealsImage(theme, setting?.home?.weekly_best_deals_img);
   const router = useRouter();
   // const { products, productsLoading } = useProducts();
   // const { setting, settingLoading } = useSetting();
@@ -53,14 +57,14 @@ const WeeklyBestDeals = ({ setting, products }) => {
                   </span>
                 </Link>
                 <div className="banner-img-wrapper d-flex justify-content-end mt--40">
-                  <img
-                    src="/img/banner/vegetables.webp"
-                    alt="vegetables"
+                  {banner ? <img
+                    src={banner}
+                    alt={banner === DECOR_SETS["weekly-banner"].grocery ? "vegetables" : ""}
                     className=""
                     width="400"
                     height="400"
                     loading="lazy"
-                  />
+                  /> : <span aria-hidden="true" style={{ width: 400, maxWidth: "100%", aspectRatio: `${DECOR_SETS["weekly-banner"].width} / ${DECOR_SETS["weekly-banner"].height}`, display: "block" }} />}
                 </div>
               </div>
             </div>

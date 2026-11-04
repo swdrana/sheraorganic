@@ -1,4 +1,6 @@
 "use client";
+import Decor from "@/app/components/store/theme/Decor";
+
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import useProducts from "../dataFetching/useProducts";
@@ -56,20 +58,20 @@ const TrendingProducts = ({ products, setting }) => {
   return (
     <>
       <section className="pt-8 pb-120 bg-white position-relative overflow-hidden z-1 trending-products-area">
-        <img
-          src="/img/shapes/garlic.png"
+        <Decor
+          slot="trending.garlic"
           alt="garlic"
           className="position-absolute garlic z--1"
           data-parallax='{"y": 100}'
         />
-        <img
-          src="/img/shapes/carrot.png"
+        <Decor
+          slot="trending.carrot"
           alt="carrot"
           className="position-absolute carrot z--1"
           data-parallax='{"y": -100}'
         />
-        <img
-          src="/img/shapes/mashrom.png"
+        <Decor
+          slot="trending.mashrom"
           alt="mashrom"
           className="position-absolute mashrom z--1"
           data-parallax='{"x": 100}'

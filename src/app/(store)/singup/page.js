@@ -9,7 +9,10 @@ import { createUser } from "@/app/backend/controllers/user.controller";
 import Loading from "@/app/components/store/common/others/Loading";
 import useSetting from "../../components/store/dataFetching/useSetting";
 import PasswordInput from "../../components/store/auth/PasswordInput";
+import { useDecorTheme } from "@/app/components/store/theme/DecorThemeProvider";
+import { getDecorSrc } from "@/app/components/store/theme/decorSets";
 const page = () => {
+  const banner = getDecorSrc(useDecorTheme(), "auth-banner");
   const router = useRouter();
   const {
     register,
@@ -80,7 +83,7 @@ const page = () => {
             <div
               className="col-lg-5 col-12 tt-login-img"
               style={{
-                background: "url(/img/banner/login-banner.jpg) center ",
+                background: banner ? `url(${banner}) center ` : "none",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 backgroundPosition: "center",

@@ -1,4 +1,6 @@
 "use client";
+import Decor from "@/app/components/store/theme/Decor";
+
 
 import useSetting from "../../components/store/dataFetching/useSetting";
 import ReceivedMail from "../../components/store/contact/ReceivedMail";
@@ -18,31 +20,31 @@ const page = () => {
             alt="frame circle"
             className="position-absolute frame z--1 d-none d-sm-block"
           />
-          <img
-            src="/img/shapes/roll-2.webp"
+          <Decor
+            slot="contact.roll-2"
             alt="roll"
             className="position-absolute roll-2 z--1"
             width="100"
             height="100"
             loading="lazy"
           />
-          <img
-            src="/img/shapes/pata-xs.svg"
+          <Decor
+            slot="contact.pata-xs"
             alt="pata"
             className="position-absolute pata z--1"
           />
-          <img
-            src="/img/shapes/garlic-white.png"
+          <Decor
+            slot="contact.garlic-white"
             alt="garlic"
             className="position-absolute garlic z--1"
           />
-          <img
-            src="/img/shapes/roll-1.png"
+          <Decor
+            slot="contact.roll-1"
             alt="roll"
             className="position-absolute roll-1 z--1"
           />
-          <img
-            src="/img/shapes/leaf.svg"
+          <Decor
+            slot="contact.leaf"
             alt="leaf"
             className="position-absolute leaf z--1"
           />

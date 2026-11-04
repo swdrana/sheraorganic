@@ -1,3 +1,5 @@
+import { normalizeTheme } from "./theme";
+
 // Shared by server and browser. Missing text is deliberately neutral: never another shop's brand.
 export const BRAND_TEXT_KEYS = [
   "site_name", "meta_title", "meta_description", "og_image", "login_welcome",
@@ -13,7 +15,7 @@ export const safeImageUrl = (value) => {
 export function normalizeBrand(setting) {
   const raw = setting?.brand || {};
   const brand = Object.fromEntries(BRAND_TEXT_KEYS.map((key) => [key, typeof raw[key] === "string" ? raw[key].trim() : ""]));
-  brand.decoration_theme = ["grocery", "tech", "none"].includes(raw.decoration_theme) ? raw.decoration_theme : "grocery";
+  brand.decoration_theme = normalizeTheme(raw.decoration_theme);
   brand.product_sidebar_banner_show = typeof raw.product_sidebar_banner_show === "boolean"
     ? raw.product_sidebar_banner_show : raw.product_sidebar_banner_show === undefined && brand.decoration_theme === "grocery";
   brand.whatsapp_number = brand.whatsapp_number.replace(/\D/g, "");

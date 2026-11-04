@@ -1,4 +1,6 @@
 "use client";
+import Decor from "@/app/components/store/theme/Decor";
+
 import dayjs from "dayjs";
 import Link from "next/link";
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
@@ -9,8 +11,8 @@ const Blog = ({ blogs }) => {
   return (
     <>
       <section className="blog-section pt-120 pb-120 position-relative overflow-hidden z-1">
-        <img
-          src="/img/shapes/dal.png"
+        <Decor
+          slot="blog.dal"
           alt="shape"
           className="position-absolute dal-shape z--1"
         />

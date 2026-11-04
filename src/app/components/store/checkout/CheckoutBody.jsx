@@ -1,4 +1,6 @@
 "use client";
+import Decor from "@/app/components/store/theme/Decor";
+
 
 import { createOrder } from "@/app/controlers/order.controler";
 import { useSession } from "next-auth/react";
@@ -474,7 +476,7 @@ const CheckoutBody = () => {
                         </div>
                         <div className="radio-right text-end">
                           <img
-                            src="https://grostore.themetags.com/public/frontend/pg/wallet.svg?v=v4.4.0"
+                            src="/img/payments/wallet.svg"
                             alt="wallet"
                             className="img-fluid"
                           />
@@ -502,7 +504,7 @@ const CheckoutBody = () => {
 
                         <div className="radio-right text-end">
                           <img
-                            src="https://grostore.themetags.com/public/frontend/pg/cod.svg?v=v4.4.0"
+                            src="/img/payments/cod.svg"
                             alt="cod"
                             className="img-fluid"
                           />
@@ -520,8 +522,8 @@ const CheckoutBody = () => {
               <div className="col-xl-4">
                 <div className="checkout-sidebar">
                   <div className="sidebar-widget checkout-sidebar py-6 px-4 bg-white rounded-2">
-                    <img
-                      src="/img/shapes/circle-half.png"
+                    <Decor
+                      slot="checkout.circle-half"
                       alt="circle shape"
                       className="position-absolute end-0 top-0 z--1"
                     />

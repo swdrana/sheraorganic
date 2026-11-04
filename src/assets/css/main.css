@@ -38432,7 +38432,7 @@ select:focus {
   padding: 10px;
   box-sizing: border-box;
 }
-.product-thumb-single.swiper-slide-active {
+.product-thumb-single.swiper-slide-thumb-active, .swiper:not(.swiper-thumbs) .product-thumb-single.swiper-slide-active {
   border-color: #ff7c08;
 }
 

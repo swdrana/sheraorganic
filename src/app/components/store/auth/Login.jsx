@@ -9,8 +9,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { createUser } from "@/app/backend/controllers/user.controller";
 import PasswordInput from "./PasswordInput";
+import { useDecorTheme } from "../theme/DecorThemeProvider";
+import { getDecorSrc } from "../theme/decorSets";
 
 const Login = ({ setting }) => {
+  const banner = getDecorSrc(useDecorTheme(), "auth-banner");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { data: session, status } = useSession();
@@ -145,7 +148,7 @@ const Login = ({ setting }) => {
             <div
               className="col-lg-5 col-12 tt-login-img"
               style={{
-                background: "url(/img/banner/login-banner.jpg)",
+                background: banner ? `url(${banner})` : "none",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
