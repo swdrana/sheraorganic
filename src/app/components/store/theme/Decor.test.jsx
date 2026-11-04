@@ -92,7 +92,7 @@ describe("server-rendered decoration", () => {
     for (const slot of ["about.hand-icon", "about-us.hand-icon", "auth-banner", "ability.icon-3", "ability.icon-4"]) {
       expect(getDecorSrc("tech", slot)).toBe(getDecorSrc("grocery", slot));
     }
-    expect(getDecorSrc("tech", "ability.icon-2")).toBe("/img/icons/cart-color.svg");
+    expect(getDecorSrc("tech", "ability.icon-2")).toBe("/themes/tech/icons/cart-color.svg");
   });
 
   it("reserves the original in-flow illustration box when none hides it", () => {
@@ -122,13 +122,16 @@ describe("admin-configured weekly banner", () => {
   });
 
   it("falls back to vegetables only on the grocery store", () => {
-    for (const value of [undefined, null, "", " ", false,
-      "https://res.cloudinary.com/demo/image/upload/v1/grostore/asdfasfvegetables.png",
-      " https://example.com/grostore/another-seed.png "]) {
+    for (const value of [undefined, null, "", " ", false]) {
       expect(getWeeklyDealsImage(undefined, value)).toBe("/img/banner/vegetables.webp");
       expect(getWeeklyDealsImage("tech", value)).toBeNull();
       expect(getWeeklyDealsImage("none", value)).toBeNull();
     }
+  });
+
+  it("keeps uploads from a Cloudinary folder named grostore (the live store's upload folder)", () => {
+    expect(getWeeklyDealsImage("grocery", "https://res.cloudinary.com/demo/image/upload/v1/grostore/banner.png"))
+      .toBe("https://res.cloudinary.com/demo/image/upload/w_800,q_80,f_auto/v1/grostore/banner.png");
   });
 
   it("optimizes real custom Cloudinary banners for the 400px box at 2x density", () => {

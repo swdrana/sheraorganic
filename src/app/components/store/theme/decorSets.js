@@ -371,7 +371,7 @@ export const DECOR_SETS = {
   },
   "ability.icon-2": {
     "grocery": "/img/icons/icon-2.png",
-    "tech": "/img/icons/cart-color.svg",
+    "tech": "/themes/tech/icons/cart-color.svg",
     "none": null,
     "width": 512,
     "height": 512
@@ -412,8 +412,7 @@ export function getDecorSrc(theme, slot) {
 
 export function getWeeklyDealsImage(theme, configuredImage) {
   const configured = typeof configuredImage === "string" ? configuredImage.trim() : "";
-  // Imported Grostore seed URLs are placeholders, not the owner's chosen banner.
-  if (!configured || configured.includes("/grostore/")) return getDecorSrc(theme, "weekly-banner");
+  if (!configured) return getDecorSrc(theme, "weekly-banner");
   // The banner renders up to 400px wide; serve a crisp image on 2x mobile displays.
   return optimizeCloudinaryUrl(configured, 800);
 }

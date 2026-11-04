@@ -123,7 +123,7 @@ admin settings or env. When reporting to the owner, name the store by the friend
   foreground microchip icon; neutral hand/customer/delivery/cart art reuses `/img` originals. Its laptop
   login banner is neutral enough for grocery/tech and reuses the original; none hides it.
 - Weekly deals use real `home.weekly_best_deals_img` images in every theme, optimized at 800px for
-  Cloudinary. Any URL containing `/grostore/` is a template seed and counts as unset; the legacy
+  Cloudinary (`grostore/` is the live store's real upload folder — never treat it as a placeholder). The legacy
   vegetables fallback is grocery-only. Missing tech/none images reserve the original banner box.
 - Quick view uses `ProductMediaGallery` + `utils/productMedia.js`: product images only, video after the
   first image, no template fallback photos. Thumbnail borders follow `.swiper-slide-thumb-active`;
