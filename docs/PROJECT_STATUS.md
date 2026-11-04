@@ -8,117 +8,60 @@
 > gotcha বদলালে `AGENTS.md`-ও একই ভাবে হালনাগাদ করো। machine-local (`~/.claude`) মেমোরিতে
 > এই প্রজেক্টের কিছু আলাদা করে রাখা হয় না — সব knowledge এখানেই।
 
-শেষ হালনাগাদ: 2026-11-03
+শেষ হালনাগাদ: 2026-11-04
 
 ---
 
-## Job A — Brand & Tracking review follow-ups (2026-11-03, local; push হয়নি)
+## Round 9 — দুই দোকান, এক codebase (2026-11-04, local `main`-এ merged; push হয়নি)
 
-আগের কাজ `6154206`-এর উপর review fix; এক নতুন local commit, amend/push নয়। আগের configurable
-brand/tracking, staff-only leaf updates, analytics privacy boundary ও missing-key seed অপরিবর্তিত আছে।
+একই repo থেকে দুই বন্ধুর দোকান চলবে — **মেহেদী** (Shera Organic, grocery) ও **রায়হান** (Nobomukh, tech)।
+প্রতিটির নিজের DB/env/Cloudinary; দোকানভেদে যা বদলায় তা সব admin-এর Site settings থেকে।
 
-### হয়েছে
-- Product description/SEO description না থাকলে আগের পণ্যভিত্তিক বাংলা invitation ফিরে এসেছে:
-  `পণ্যের নাম — সাইটের নাম থেকে অর্ডার করুন।`; নাম খালি হলে brand অংশ থাকে না। Site meta description
-  আর product fallback নয়। `utils/productMetadata.js`-এ regression-tested helper।
-- `utils/storeSettings.js` + store API: ভুল tracking ID, colour, Messenger username বা WhatsApp নম্বরে
-  পুরো POST/PATCH **400 + invalidFields**; DB connect/write, image delete বা cache invalidate হয় না।
-  Explicit empty string দিয়ে clear করা যায়; omitted leaf অক্ষুণ্ণ থাকে। `SiteSettings` একই error/field list
-  inline ও error toast-এ দেখায়; success বলে না।
-- `OrderTracking`-এর শেষ GroStore এবং `#G-Store` বদলে configured নাম/neutral label; brand খালি হলে
-  thank-you বাক্যের brand অংশ নেই। `UpdateProfile`-এর email example neutral; `MyAccountHome`-এর
-  template avatar বদলে local `public/img/avatar-neutral.svg`।
-- `TermsCondition` পুরনো commented template বাদ দিয়ে admin-এর Quill HTML (`setting.terms.value`)
-  দেখায়। নতুন `TermsContent` inert template থেকে allow-listed React nodes বানায়; scripts/events/styles,
-  executable URL ও unsafe embeds বাদ; emphasis/list/alignment/font/safe link/image রাখা হয়। Quill CSS
-  lazy load; empty/Quill-empty content-এ ছোট neutral বাংলা notice। নতুন dependency যোগ হয়নি।
-- `layout.js`-এ site-wide OG url বাদ; পণ্যের Breadcrumb JSON-LD-তে base URL না থাকলে `item` key-ই নেই।
-- Client settings audit: **home** → nav/footer/invoice/login, **about** → AboutBody, **contact** → contact page,
-  **terms** → TermsCondition/editor, **brand** → nav/sidebar/login/Brand tab, **tracking** → Tracking tab।
-  Root context client navigation জুড়ে shared; ছয় group-ই fallback হিসেবে ব্যবহৃত। Group বাদ দিলে API fail/loading-এ
-  page/tab-এর initial data হারাতে পারে, তাই unsafe payload trimming করা হয়নি। Analytics-এর normalized prop আগের মতো।
-- Seed script এখন preferred `MONGODB_URI`, fallback `MONGO_URI` নেয়; header/help/AGENTS-এ **deploy-এর আগে seed**
-  করার নির্দেশ। Brand tab আগে save করলে empty keys-ও “set” হয়, missing-only seed সেগুলো আর ভরবে না।
-  শুধু `--help` এবং URI preference/preset preservation-এর pure tests চালানো হয়েছে; কোনো DB seed হয়নি।
-- `src` আবার grep: বাকি নামগুলো seed fixtures/presets, Cloudinary/decorative asset URLs, non-visible CSS class,
-  commented/unused login demo helpers অথবা অন্য job-এর checkout payment icons; live brand copy আর নেই।
-  SCSS বদলায়নি; sass দরকার হয়নি। AGENTS ও এই tracked memory হালনাগাদ।
+### local `main`-এ যা আছে
+- **Security + cleanup** (Round 8, নিচে বিস্তারিত): সব write route staff-only, seed route ও dead template
+  মুছে ফেলা, staff data leak বন্ধ, HSTS (subdomain ছাড়া)।
+- **Brand & Tracking settings** (`setting.brand`, `setting.tracking`): site name, meta, OG image, login welcome,
+  WhatsApp/Messenger, email colour, decoration theme, product sidebar banner; GTM/GA4/FB Pixel/Clarity/TikTok
+  ID। ভুল মান দিলে API 400 + `invalidFields`। Analytics `/admin`-এ লোড হয় না, প্রথম interaction-এ লোড হয়।
+  Hardcoded "Shera"/"organic"/Pixel/GTM আর নেই। `scripts/seed-brand-settings.mjs --store=mehedi|raihan`
+  (dry run default; `--apply --backup=<file>`; শুধু অনুপস্থিত key বসায়)।
+- **Decoration themes** `grocery | tech | none` (Site settings → brand)। grocery = মেহেদীর আগের চেহারা হুবহু।
+  tech-এর art `public/themes/tech/`। Weekly banner: admin-এ দেওয়া ছবি সব theme-এ; না থাকলে theme-এর ছবি।
+  (`grostore/` মেহেদীর Cloudinary-র আসল upload folder — placeholder ধরা যাবে না।)
+- Settings cache key `store-setting-doc-v2` — Coolify-র রাখা পুরনো build cache থেকে brand-ছাড়া setting
+  এসে title খালি হওয়া ঠেকায় (local-এ reproduce করে যাচাই করা)।
 
-### যাচাই
-- `npm run lint`: **exit 0**, আগের warning আছে। Tail: `info - Need to disable some ESLint rules? ...`
-- `npx vitest run --pool=threads --poolOptions.threads.singleThread`: **16 files / 108 tests pass**।
-  POST/PATCH-এর সব invalid field ও wrong type, side-effect-free reject, explicit clear/valid trim,
-  toast error, Quill HTML sanitization/empty fallback, per-product description ও breadcrumb omission covered।
-- `CIRCLE_NODE_TOTAL=2 npm run build`: **exit 0**, `.env`/DB ছাড়াই।
-  Tail: `Postbuild: prerender-manifest.json already exists.`
-- Local production `next start`: terms page **200**; synthetic local staff session দিয়ে বাস্তব local PATCH-এ
-  malformed fields → **400**, সব invalid field ফেরে; DB access হয়নি। Real credentials/env file ব্যবহার হয়নি।
-- Headless Chrome, synthetic session + intercepted local API: Brand form **320/390/1280px × light/dark = 6/6**
-  overflow/control-bounds pass; 400 error field list inline + toast-এ দেখা গেছে। Terms-এর formatting/alignment,
-  executable HTML/URL বাদ এবং empty notice pass। Terms/profile **320/390px × light/dark** layout pass;
-  neutral avatar/email placeholder ও tracking-এর configured/empty prefix pass। Page exception/hydration warning **0**।
-- সীমাবদ্ধতা: environment-free পুরনো user/brand fetch wrapper-এ missing `NEXT_PUBLIC_BASE_URL` console error;
-  real customer/order data আনা যায়নি। Storefront **1280px**-এ আগের menu overflow terms/profile-এও আছে;
-  পরিবর্তিত profile controls clipped নয়। নতুন Brand form-এ desktop overflow নেই।
-- চালানো local server/browser বন্ধ করা হয়েছে; production server/DB, real env, remote বা checkout/decorative job-এর
-  ফাইল স্পর্শ করা হয়নি।
+### যাচাই (2026-11-04)
+- lint exit 0 (পুরনো warning), Vitest ২৩ file / ১৫১ test pass, production build exit 0।
+- Local mongod-এ দুই দোকানের 2026-11-03 backup restore + seed, প্রতিটির আলাদা build + `next start`,
+  headless Chromium (মোবাইল 390 + desktop 1366):
+  - **মেহেদী** vs live sheraorganic.com: ৭টা পাতা (home, login, about, product, products, checkout) — title,
+    পাতার উচ্চতা, decoration ও brand লেখা হুবহু; pixel পার্থক্য ০–১.৫% (শুধু slider-এর মুহূর্ত)। ইচ্ছাকৃত পার্থক্য:
+    weekly banner এখন Cloudinary থেকে (একই ছবি), checkout payment icon local SVG।
+  - **রায়হান** (tech): কোনো organic/Shera লেখা বা শাক-সবজির art নেই; title "Nobomukh"; tech shapes।
 
-### MANUAL VERIFY / পরের ধাপ
-1. বাস্তব test DB/staff session-এ Brand/Tracking uploader → save/reload/cache এবং deliberate bad-value reject যাচাই।
-2. বাস্তব customer order code দিয়ে tracking table-এর thank-you text; দুই দোকানের product SEO/canonical/schema,
-   terms-এর নিজের rich text ও avatar/profile মোবাইল/desktop-এ মালিকের visual approval।
-3. Owner-এর আলাদা অনুমোদনে **deploy-এর আগে** seed dry run/backup/apply; SMTP/vendor actual delivery আগের মতো বাকি।
-4. পুরনো desktop menu overflow ও environment-dependent fetch wrapper এই scope-এর বাইরে; আলাদা কাজ লাগবে।
+### রায়হানের data-র পুরনো সমস্যা (code-এর নয়; live nobomukh.com-এও আছে)
+- Footer-এর ৪টা payment ছবি (`/uploads/payment_*.png`) server-এ নেই → 404।
+- অনেক `/uploads/*.png` আসলে SVG বা WebP। WebP browser চিনে নেয়, কিন্তু `.png` নামের SVG দেখায় না
+  (About পাতার ৪টা ছবি ভাঙা)। Cloudinary migration-এ file-এর আসল ধরন দেখে upload করতে হবে।
+
+### deploy-এর আগে / দিনে (প্রতিটি ধাপে মালিকের হ্যাঁ লাগবে)
+1. দুই DB-র fresh backup → মেহেদীর DB-তে seed (`--store=mehedi`) → **একবার push** (শুধু মেহেদীর Coolify app build হবে)।
+2. রায়হানের Coolify app (sw-app-01): build-এর সময়েও `MONGODB_URI` লাগবে (নইলে home grocery হিসেবে prerender হয়)।
+3. রায়হানের `/uploads` → তার Cloudinary + DB URL rewrite (backup আগে) → seed `--store=raihan` → temp domain-এ test
+   → Cloudflare DNS (nobomukh.com → sw-app-01; bdxmart.com redirect) — VPN subdomain ছোঁয়া যাবে না।
+4. মালিক রায়হানের Atlas-এ `187.124.212.87/32` যোগ করবেন; পরে Atlas password ও NEXTAUTH secret বদলাবেন।
 
 ---
 
 ## ডেলিভারি ওয়ার্কফ্লো (স্থির)
 
-1. মালিক (`swdrana`) `plan/implementation-plan.md` Codex-কে দেয়।
-2. Codex সব টাস্ক implement করে, নিজে self-check চালায় (`npm run build` / `lint` / `sass` / `dev` smoke),
-   **locally commit** করে (author `swdrana`, **কোনো `Co-Authored-By` / AI trailer নয়**), **push করে না**।
-3. মালিক Codex-এর রিপোর্ট Claude-কে দেয়।
-4. Claude verify করে (build / lint / regression / smoke)। সব সবুজ হলে মালিককে `git push` করতে বলে —
-   **Claude নিজে push করে না**।
+1. Claude পরিকল্পনা, review, merge ও যাচাই করে; কোডিং Claude নিজে বা Codex (মালিক যেভাবে বলেন)।
+2. প্রতিটি commit author `swdrana`, **কোনো `Co-Authored-By` / AI trailer নয়**; local commit।
+3. যাচাই: build / lint / test / headless browser। সব সবুজ হলে মালিককে জানানো হয় — মালিকের স্পষ্ট
+   অনুমোদন ছাড়া push নয়, round-এ একবার push।
 
 `plan/` ফোল্ডার git-এ **untracked** — কখনো `git add` করা হয় না। `docs/` এবং `AGENTS.md` tracked।
-
----
-
-## বর্তমান রাউন্ড — Job B theme review follow-ups (স্থানীয়; push নয়)
-
-- আগের `b130529`-এর উপর একটিমাত্র নতুন commit: `fix: theme review follow-ups`; amend/push নয়।
-- `decorSets.js` / `WeeklyBestDeals.jsx`: `/grostore/` থাকা saved seed URL unset হিসেবে গণ্য;
-  মেহেদীর সাইটে আগের `/img/banner/vegetables.webp` ও alt অক্ষুণ্ণ। Real custom Cloudinary banner
-  প্রতিটি theme-এ 800px optimized (400px box-এর 2x); tech/none-এ unset হলে আগের খালি box।
-- `_shop.scss` / regenerated `main.css`: quick-view Thumbs gallery-তে শুধু
-  `.swiper-slide-thumb-active` border পায়; strip-এর `.swiper-slide-active` ভুলভাবে আর highlight হয় না।
-  Product-details-এর Controller gallery আগের active selector ব্যবহার করে।
-- `HeroSwiper.jsx`: grocery-র তিন slide-এ ঠিক `alt="fruits"` ফেরত। Tech hero/preload এখন shared
-  `/img/shapes/hero-circle-lg.webp`; অপ্রয়োজনীয় 41KB PNG বাদ।
-- `Decor.jsx` / `decorSets.js`: numeric string width CSS-এ px পায়। প্রতিটি small tech SVG slot-এর
-  `techWidth` audit করে সর্বোচ্চ 60px box (মূল aspect ratio রেখে), grocery-only inline size override।
-  Counter 1-এর জন্য নিজস্ব opaque green foreground microchip SVG; faded background shape ব্যবহার হয় না।
-- Byte-identical পাঁচটি tech duplicate সরানো: login-banner.jpg, icon-3.png, icon-4.png, hand-icon.svg,
-  cart-color.svg। সংশ্লিষ্ট slots এখন `/img` originals ব্যবহার করে। Grocery asset বদলানো হয়নি।
-- Regression: আসল Swiper + shipped thumbnail CSS দিয়ে gallery render, main slide change, Thumbs tap,
-  video thumbnail selection ও একটিমাত্র highlight পরীক্ষা; theme/seed/custom-image/width/alt test যোগ।
-- Gate: lint exit 0 (পুরনো warnings), single-thread Vitest ১২ file / ৬৫ test pass; production build
-  exit 0, ৫৫/৫৫ page + postbuild successful। Command-only `MONGODB_URI=''`, localhost BASE_URL,
-  `CIRCLE_NODE_TOTAL=2`; expected DB-unavailable logs। কোনো `.env` বা real DB/server ব্যবহার হয়নি।
-- Production CSS-সহ isolated headless Chrome fixture: ৩৭৫px আগে, ১৪৪০px পরে, grocery/tech/none-এ
-  ৩৩ section/container box একই; overflow/broken image ০। Rendered ৩৮টি small tech shape সর্বোচ্চ 60px।
-  Grocery mobile screenshot baseline-এর byte-identical; desktop layout একই। Saved Grostore seed দিয়ে
-  grocery vegetables fallback এবং root preload যাচাই। Hydrated gallery-তে main slide change ও actual
-  mobile touch/desktop click-এ একটিমাত্র thumb highlight; strip active slide ভুল highlight পায় না।
-- Local `next start`: `/`, `/about`, `/contact`, `/login`, `/singup`, `/checkout`, foreground microchip SVG
-  ও shared hero WebP সব HTTP 200। নিজের server/Chrome বন্ধ করা হয়েছে; কোনো write request করা হয়নি।
-- Sass: `npm run sass` main.css বানায়, কিন্তু পুরনো standalone `pages/my-account.scss`-এ undefined
-  `$mint-chiffon` error দেয় এবং watch করে; watcher বন্ধ, ওই generated error CSS restore করা হয়েছে।
-  `npx sass src/assets/scss/main.scss src/assets/css/main.css --no-source-map` exit 0 (deprecation warnings)।
-- Scope: settings API/admin/metadata/SEO/email/Navbar বদলায়নি। Theme persistence/admin selector Job A-এর।
-- MANUAL VERIFY: Job A integrate হলে বাস্তব settings/data দিয়ে grocery/tech/none fresh load ও navigation,
-  real custom weekly image, quick-view video playback ও product switch; admin theme save/revalidation।
 
 ---
 
@@ -273,7 +216,7 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
 - Codex: `.codex-2` admin form, `.codex-8` server slug, `.codex-10` link audit, `.codex-9` final review।
 - বাকি ঝুঁকি: একই মুহূর্তে দুইজন admin save করলে slug duplicate হতে পারে (unique DB index নেই)।
 
-## Round 8 / Job C — Security hardening + template cleanup (2026-11-03)
+## Round 8 — Security hardening + template cleanup (2026-11-03)
 
 - Products, categories, brands, attributes, blogs, coupons ও staff-এর সব mutation API এখন explicit staff
   session ছাড়া `401`; direct mutation/revalidation server action-ও নিজের ভিতরে session যাচাই করে। Guest order,
@@ -288,7 +231,7 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
 - Category/coupon client controller আর missing `NEXT_PUBLIC_BASE_URL`-এ module import-এর সময় throw করে না;
   তাই env/DB ছাড়াও safe fallbacks দিয়ে production build শেষ হয়।
 
-## Job C fix round — cleanup review (2026-11-03, local only)
+## Round 8 fix round — cleanup review (2026-11-03, local only)
 
 - `_services.scss` থেকে মূল `.service-section` ও `.about-section` blocks হুবহু `_about.scss`-এ ফেরানো হয়েছে;
   অবশিষ্ট সব deleted selector `src`-তে খোঁজা হয়েছে। `AboutFeedback`-এ থাকা `.feedback-slider-2`-ও ফেরানো হয়েছে।
@@ -313,8 +256,8 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
 
 ## এখন কী বাকি
 
-- **বর্তমান Job B review follow-ups:** সাতটি finding ঠিক করা হয়েছে; একটিমাত্র নতুন local commit, push নয়।
-  Job A-এর settings/admin integration ও বাস্তব data দিয়ে manual verification বাকি।
+- **Round 9 (দুই দোকান):** local `main`-এ merged ও যাচাই করা; মালিকের হ্যাঁ পেলে উপরের deploy ধাপ।
+  MANUAL VERIFY: admin-এ Site settings save → reload; theme বদলালে storefront বদলায়; বাস্তব test order।
 
 - **Round 7 যাচাই:** live-এ কয়েকটা product খুলে URL/breadcrumb দেখা; Google Search Console-এ sitemap আবার submit।
 
@@ -329,7 +272,7 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
   CPU steal/throttle যাচাই; অন্য AI-এর push কমানো।
 - Round 4 ম্যানুয়াল যাচাই: admin-এ category/brand/product/settings edit → storefront-এ সাথে সাথে দেখা যায়;
   লগইন করা customer-এর my-account/order history/checkout ঠিক; admin customers/orders page ঠিক।
-- `/products` grid এখনো client-side filter। Store-settings write guard আলাদা multi-store job-এর scope।
+- `/products` grid এখনো client-side filter।
 - **মালিকের সিদ্ধান্ত (2026-10-08):** password যেমন আছে (plaintext) তেমনই থাকবে — hashing/migration
   প্রস্তাব বা পরিবর্তন করা হবে না।
 - পুরনো: production DB-তে পুরনো duplicate `Setting` doc থাকলে একবার

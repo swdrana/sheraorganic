@@ -140,6 +140,9 @@ admin settings or env. When reporting to the owner, name the store by the friend
   (API POST/PATCH/DELETE, server actions in `backend/actions/*`, review PUT, orders/signup → `stats`).
   A new write path without it = storefront stale for up to 5 min.
 - Loaders throw on DB errors (never cached); pages use the `safe` wrappers (`getCachedProducts`, …).
+- A reused build cache (Coolify keeps `.next/cache`) serves the previous build's data during prerender. When a
+  loader's document shape changes, bump its key (settings is `store-setting-doc-v2`) or the static pages ship
+  stale data until the next revalidation.
 - Never add `export const dynamic = "force-dynamic"` to these routes: in Next 14 it sets
   `fetchCache: force-no-store`, which makes `unstable_cache` bypass the cache. Route files that also export
   POST/PATCH are already dynamic. Data-cache entries over 2MB are silently not cached (a `[cache]` warn logs
