@@ -19,7 +19,7 @@ export async function createOrder(newOrder) {
 
     const order = await response.json();
     if (!response.ok) {
-      return { error: order?.message };
+      return { error: order?.message, currentPrices: order?.currentPrices };
     }
 
     return order;

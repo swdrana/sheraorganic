@@ -193,14 +193,33 @@ describe("order creation", () => {
     expect(order.total).toBe(405);
   });
 
-  it("rejects a browser total that differs from the server total", async () => {
+  it("matches variants by option values even when generated productIds repeat", async () => {
+    Product.findById.mockResolvedValue({
+      ...product(),
+      variants: [
+        { colorAttributeId: "red-option-id", productId: "dup-sku", price: 300 },
+        { colorAttributeId: "green-option-id", productId: "dup-sku", price: 325 },
+      ],
+    });
     const data = orderData();
+    data.cart[0].variant = { colorAttributeId: "green-option-id", productId: "dup-sku" };
+    data.total = 405;
+    const response = await POST(request(data));
+    expect(response.status).toBe(201);
+    expect((await response.json()).order.cart[0].price).toBe(325);
+  });
+
+  it("rejects a browser total that differs from the server total and returns current prices", async () => {
+    const data = orderData();
+    data.cart[0].id = "product-id";
     data.cart[0].price = 1;
     data.subTotal = 1;
     data.total = 81;
     const response = await POST(request(data));
     expect(response.status).toBe(409);
-    expect((await response.json()).message).toMatch(/রিফ্রেশ/);
+    const body = await response.json();
+    expect(body.message).toMatch(/নতুন দাম/);
+    expect(body.currentPrices).toEqual({ "product-id": 250 });
     expect(Order).not.toHaveBeenCalled();
     expect(save).not.toHaveBeenCalled();
   });

@@ -224,7 +224,8 @@ builds**. Each app needs `MONGODB_URI` at build time (the home page prerenders w
   `utils/orderPricing.js` limits shipping to Dhaka ৳80/outside Dhaka ৳100 and payment to `cod`.
   Coupons are looked up case-insensitively and apply their saved percentage only before `endTime` (the model
   has no minimum-order field); unknown/expired coupons give zero discount. A client/server total difference
-  over ৳1 returns 409, create status is always `Pending`, and the server-injected ৳0 review gift is outside
+  over ৳1 returns 409 with `currentPrices` (cart line id → server price; CheckoutBody updates the
+  localStorage cart so the next submit matches — the saved cart keeps add-time prices), create status is always `Pending`, and the server-injected ৳0 review gift is outside
   subtotal/discount calculations.
 - Order owner and review-gift redemption use only `getApiSession().user.id`; body `user` is ignored.
   A missing generated order code returns 500 before saving or redeeming a gift.

@@ -10,7 +10,7 @@ vi.stubGlobal("React", React);
 afterAll(() => vi.unstubAllGlobals());
 const mocks = vi.hoisted(() => ({
   session: { data: null, status: "unauthenticated" },
-  push: vi.fn(), emptyCart: vi.fn(),
+  push: vi.fn(), emptyCart: vi.fn(), updateItem: vi.fn(),
 }));
 vi.mock("@/app/components/store/theme/Decor", () => ({ default: () => null }));
 vi.mock("@/app/controlers/order.controler", () => ({ createOrder: vi.fn() }));
@@ -22,7 +22,7 @@ vi.mock("next-auth/react", () => ({ useSession: () => mocks.session }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: mocks.push }) }));
 vi.mock("react-use-cart", () => ({ useCart: () => ({
   items: [{ id: "product-id", quantity: 1, price: 250 }], cartTotal: 250,
-  emptyCart: mocks.emptyCart,
+  emptyCart: mocks.emptyCart, updateItem: mocks.updateItem,
 }) }));
 
 beforeEach(() => {
@@ -72,6 +72,17 @@ describe("checkout validation and order feedback", () => {
     fireEvent.click(screen.getByRole("button", { name: "Place Order" }));
     expect(await screen.findByText("সঠিক ইমেইল ঠিকানা দিন।")).toBeInTheDocument();
     expect(createOrder).not.toHaveBeenCalled();
+  });
+
+  it("updates stale cart prices from the server's 409 response and keeps the cart", async () => {
+    createOrder.mockResolvedValue({ error: "পণ্যের দাম পরিবর্তন হয়েছে।", currentPrices: { "product-id": 300, "not-in-cart": 5 } });
+    render(React.createElement(CheckoutBody));
+    fillGuestForm();
+    fireEvent.click(screen.getByRole("button", { name: "Place Order" }));
+    await waitFor(() => expect(notifyError).toHaveBeenCalledWith("পণ্যের দাম পরিবর্তন হয়েছে।"));
+    expect(mocks.updateItem).toHaveBeenCalledOnce();
+    expect(mocks.updateItem).toHaveBeenCalledWith("product-id", { price: 300 });
+    expect(mocks.emptyCart).not.toHaveBeenCalled();
   });
 
   it.each([

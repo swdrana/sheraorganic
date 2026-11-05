@@ -40,14 +40,8 @@ const findSelectedVariant = (product, cartLine) => {
   const requested = cartLine?.variant;
   if (!variants.length || !requested || typeof requested !== "object") return null;
 
-  if (requested.productId) {
-    const byProductId = variants.find(
-      (variant) => String(variant.productId) === String(requested.productId)
-    );
-    if (byProductId) return byProductId;
-  }
-
-  return variants.find((variant) => {
+  // Option values are the identity the storefront uses for the cart line; generated productIds can repeat.
+  const byOptions = variants.find((variant) => {
     const optionKeys = Object.keys(variant).filter(
       (key) => !VARIANT_META_KEYS.has(key)
     );
@@ -58,6 +52,15 @@ const findSelectedVariant = (product, cartLine) => {
       )
     );
   });
+  if (byOptions) return byOptions;
+
+  if (requested.productId) {
+    const byProductId = variants.filter(
+      (variant) => String(variant.productId) === String(requested.productId)
+    );
+    if (byProductId.length === 1) return byProductId[0];
+  }
+  return null;
 };
 
 const priceCart = async (cart) => {
@@ -204,7 +207,13 @@ export const POST = async (req) => {
     const total = priced.subTotal + shipping.cost - discount;
     if (!Number.isFinite(Number(data.total)) || Math.abs(Number(data.total) - total) > 1) {
       return NextResponse.json(
-        { message: "পণ্যের দাম পরিবর্তন হয়েছে। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।" },
+        {
+          message: "পণ্যের দাম পরিবর্তন হয়েছে। কার্টে নতুন দাম বসানো হয়েছে, দেখে আবার অর্ডার করুন।",
+          // Current server prices per cart line, so the browser can update its saved (stale) cart.
+          currentPrices: Object.fromEntries(
+            priced.cart.filter((line) => line.id).map((line) => [String(line.id), line.price])
+          ),
+        },
         { status: 409 }
       );
     }

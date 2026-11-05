@@ -62,7 +62,7 @@ const CheckoutBody = () => {
   const router = useRouter();
   const [discount, setDiscount] = useState(0);
   const [couponInfo, setCouponInfo] = useState({});
-  const { items, updateItemQuantity, emptyCart, cartTotal } = useCart();
+  const { items, updateItem, updateItemQuantity, emptyCart, cartTotal } = useCart();
   const [shippingCost, setShippingCost] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [selectedShipping, setSelectedShipping] = useState("");
@@ -180,6 +180,10 @@ const CheckoutBody = () => {
         );
       } else {
         setIsSubmitting(false);
+        // Prices changed since the item was added: refresh the saved cart so the next submit matches.
+        Object.entries(res?.currentPrices || {}).forEach(([id, price]) => {
+          if (items.some((item) => String(item.id) === id)) updateItem(id, { price });
+        });
         notifyError(res?.error || res?.message || "অর্ডার সম্পন্ন হয়নি।");
       }
     }

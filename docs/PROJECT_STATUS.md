@@ -8,7 +8,7 @@
 > gotcha বদলালে `AGENTS.md`-ও একই ভাবে হালনাগাদ করো। machine-local (`~/.claude`) মেমোরিতে
 > এই প্রজেক্টের কিছু আলাদা করে রাখা হয় না — সব knowledge এখানেই।
 
-শেষ হালনাগাদ: 2026-11-05
+শেষ হালনাগাদ: 2026-11-05 (রাত)
 
 ---
 
@@ -37,7 +37,8 @@
   subtotal আবার হিসাব; delivery শুধু shared constant-এর ঢাকা ৳৮০/ঢাকার বাইরে ৳১০০; payment শুধু COD; create
   status সবসময় Pending। Coupon code case-insensitive DB lookup, expiry-এর আগে saved percentage discount
   (model-এ minimum নেই); unknown/expired coupon = ০ discount। Browser total server total থেকে ৳১-এর বেশি
-  আলাদা হলে বাংলা message-সহ 409 ও কোনো order/gift write নয়। Review gift আগের মতো server-injected ৳০ line।
+  আলাদা হলে বাংলা message-সহ 409 ও কোনো order/gift write নয়; 409-এ `currentPrices` আসে, checkout cart-এর পুরনো দাম
+  বদলে দেয় (পরের submit সফল)। Variant আগে option মান দিয়ে মেলে, তারপর একক productId দিয়ে। Review gift আগের মতো server-injected ৳০ line।
 - এই কাজের যাচাই: Vitest 35 file/256 test pass; lint exit 0 (শুধু পুরনো warning); `MONGODB_URI=` production
   build 46/46 page pass। কোনো server/real DB/network চালানো হয়নি। আগের Round 10 manual verification নিচে।
 - আগের যাচাই: Mac-এ রায়হানের DB কপি (local mongod)
