@@ -132,6 +132,15 @@ builds**. Each app needs `MONGODB_URI` at build time (the home page prerenders w
   Payment SVGs are local under `/img/payments/`.
 - Admin picks the theme in Site settings (brand group); `normalizeBrand` validates it via `normalizeTheme`.
 
+### Customer login switch (2026-11)
+
+- `setting.brand.customer_login` (Brand & Theme tab): missing/non-false = on. Off hides every guest entry point
+  to customer accounts (Navbar user menu, Offcanvas, Footer, FooterNav Profile, ThankYou Profile, review login
+  prompt, `/login` guest-account button + Sign Up, `/singup` form). Signed-in users keep their menus; staff still
+  sign in at `/login`. Gate new account links with `normalizeBrand(setting).customer_login` too.
+- Post-login redirects go through `utils/callbackUrl.js` (`safeCallbackUrl`); middleware sets a relative
+  `callbackUrl` because behind the proxy `req.url` carries the internal host.
+
 ### Caching & data fetching (round 4 — CPU fix)
 
 - **Server:** public data (products, categories, brands, attributes, settings, blogs, About stats) is read
@@ -154,6 +163,8 @@ builds**. Each app needs `MONGODB_URI` at build time (the home page prerenders w
   through `components/store/dataFetching/sharedFetch.js` (`useSharedData` / `fetchOnce`): one request per
   key, reused 5 min across client navigations, never reused after an `/admin` visit (`markAdminVisit` in
   `ClientLayout`). Don't add new per-component `useEffect` fetches of public data — add a shared hook.
+- The `react-use-cart` cart lives in localStorage: render cart items/counts/totals only after mount
+  (a `mounted` flag), or every page with a non-empty cart hydrates with #418 and re-renders fully.
 - Hooks keep server-identical initial state (no hydration mismatch). Swiper `loop` must only switch on
   after mount (it clones slides client-side; see `home/Category.jsx`).
 - `SessionProvider refetchOnWindowFocus={false}`. `utils/database.js` keeps one connection promise on `global`.

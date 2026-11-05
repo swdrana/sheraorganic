@@ -9,9 +9,11 @@ import { productPath } from "@/app/utils/productUrl";
 
 const CartDrawer = () => {
   const { openCartDrawer, setOpenCartDrawer } = useMainContext();
-  const { items, updateItemQuantity, removeItem, cartTotal, totalItems } =
+  const { items: cartItems, updateItemQuantity, removeItem, cartTotal, totalItems } =
     useCart();
   const [mounted, setMounted] = useState(false);
+  // Same as the count: the localStorage cart is shown only after mount (no hydration mismatch).
+  const items = mounted ? cartItems : [];
 
   useEffect(() => setMounted(true), []);
 

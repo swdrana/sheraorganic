@@ -12,25 +12,34 @@
 
 ---
 
-## Guest-order hardening — সম্পন্ন, local only (2026-11-05)
+## Round 10 — ক্রেতার login চালু/বন্ধ + guest order (2026-11-05, local commits, push বাকি)
 
-- Order POST-এর owner এখন শুধু session-এর user ID; body-এর `user` উপেক্ষিত। Review gift-ও শুধু
-  session user-এর জন্য redeem হয়। Guest order/login করা customer-এর checkout ও retry response বজায় আছে।
-- Shared `utils/phone.js`: বাংলা অঙ্ক, spaces/dashes/dots/parentheses ও `+88`/`88` normalize; client/server
-  দুটোতেই `01[3-9]` + মোট ১১ অঙ্কের mobile validation। Invalid phone-এ 400, DB/cache/mail side effect নেই।
-  Order-এ normalized phone জমে; checkout field-এ tel keyboard ও বাংলা error।
-- Email স্পষ্টভাবে ঐচ্ছিক; non-empty malformed email client-এ error, server-এ empty string হিসেবে save।
-- Checkout controller server-এর message ফেরায়; checkout সেটা দেখায় এবং ব্যর্থ হলে cart রেখে retry করতে দেয়।
-- Admin search এখন নাম, normalized phone ও order number মেলায়। Order code না এলে 500; order/gift save হয় না।
-- Customer/admin invoice-এ আসল `createdAt` date; Invoice, ThankYou ও admin Orders invoice-এ `#` order prefix।
-- যাচাই ধারাবাহিকভাবে: single-fork Vitest **৩১ file / ২৩৩ test pass** → lint exit 0 (শুধু পুরনো warning)
-  → `MONGODB_URI= npm run build` exit 0। Mocked route ও RTL tests-এ guest/logged-in checkout, profile update,
-  session-only gift, phone/email validation, error feedback, idempotent retry, search/filter/pagination যাচাই।
-- Main checkout-এর `node_modules` symlink ব্যবহার; install করা হয়নি। সব verification-এ OS sandbox দিয়ে
-  network বন্ধ ছিল; real DB/production/env files ছোঁয়া হয়নি, server চালানো হয়নি, push হয়নি। Offline build-এ
-  Google Fonts optimization skipped ও DB-unconfigured fallback messages প্রত্যাশিত।
-- MANUAL VERIFY: মোবাইল আগে, desktop পরে checkout validation/error layout, admin phone/order search এবং
-  invoice date/print/download দেখা। বাস্তব order/email যাচাই এই offline scope-এ করা হয়নি।
+রায়হান চায় ক্রেতা login ছাড়া সরাসরি order দিক; মেহেদী login রাখবে। তাই admin-এ দোকানভেদে switch।
+
+- **Site settings → Brand & Theme → "ক্রেতাদের Login/Registration দেখান"** (`setting.brand.customer_login`;
+  না থাকলে চালু)। বন্ধ করলে guest-রা Navbar user menu, Offcanvas, Footer, মোবাইল FooterNav Profile,
+  ThankYou Profile, review "লগইন করে রিভিউ দিন" দেখে না; `/login`-এ guest-account বোতাম ও Sign Up লুকানো
+  (staff login আগের মতো); `/singup` শুধু "লগইন ছাড়াই অর্ডার" বার্তা। login থাকা user নিজের menu পায়।
+- Checkout আগে থেকেই guest (নাম + ফোন + ঠিকানা; email ঐচ্ছিক)। রায়হানের "লগইন করুন / লগইন ছাড়া" পাতা ছিল
+  তার **পুরনো** সাইটে (`/checkout` middleware-এ ছিল)।
+- Guest order hardening (Codex job, Claude যাচাই): order owner শুধু session থেকে (body `user` উপেক্ষিত, gift-ও);
+  `utils/phone.js` বাংলা অঙ্ক/`+88` normalize + `01[3-9]` ১১ অঙ্ক validation (client + server 400); invalid
+  ঐচ্ছিক email → ""; server error message checkout-এ দেখায়; admin order search নাম/ফোন/order নম্বর;
+  order code না পেলে 500; invoice-এ আসল তারিখ, `#G-Store:` বাদ।
+- Login redirect: middleware `callbackUrl` এখন relative (proxy-র পেছনে `https://localhost:80/...` হচ্ছিল, ক্রেতা
+  `/my-account` থেকে login করলে localhost-এ চলে যেত); `utils/callbackUrl.js` শুধু same-origin path মানে।
+- Hydration fix: cart থাকলে **প্রতিটি পাতায়** React #418/#423 (পুরো পাতা client-এ আবার render) হচ্ছিল — দুই লাইভ
+  সাইটেই। `ShoppingBegHoverContent` ও `CartDrawer` এখন mount-এর পর cart দেখায়; checkout summary-ও।
+- যাচাই: Vitest 31 file/233 test, lint (শুধু পুরনো warning), build OK। Mac-এ রায়হানের DB কপি (local mongod)
+  + headless মোবাইল: login বন্ধ অবস্থায় কোনো login link নেই, guest order (বাংলা অঙ্কের ফোন, email ছাড়া)
+  → thank-you → invoice → admin-এ দেখা ও ফোন/নম্বরে খোঁজা, ভুল ফোন/email-এ বাংলা ত্রুটি, server 400;
+  admin থেকে switch চালু/বন্ধ save করলে storefront (static home-সহ) সঙ্গে সঙ্গে বদলায়; tracking request ০।
+  পরীক্ষার order ও local DB মুছে ফেলা হয়েছে। লাইভ DB-তে কোনো লেখা হয়নি।
+- **Deploy-এর পর:** রায়হান admin থেকে switch বন্ধ করবে (default চালু, তাই দুই সাইট নিজে থেকে বদলায় না)।
+- **পরের round-এর প্রস্তাব (owner-এর হ্যাঁ লাগবে):** `/api/v1/order-code/[code]` যে কেউ ক্রমিক নম্বরে সব
+  ক্রেতার নাম/ফোন/ঠিকানা পড়তে পারে → invoice link-এ random token; order POST দাম/total/status browser-এর
+  কথায় নেয় → server-এ product থেকে হিসাব; guest ক্রেতাদের ফোন ধরে admin "customers" view; `clientToken`
+  unique index।
 
 ---
 

@@ -1,11 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useCart } from "react-use-cart";
 import { productPath } from "@/app/utils/productUrl";
 
 const ShoppingBegHoverContent = () => {
-  const { items, removeItem, updateItemQuantity, cartTotal } = useCart();
+  const { items: cartItems, removeItem, updateItemQuantity, cartTotal: cartSum } = useCart();
+  // The cart is in localStorage; render it empty until mount so server and client HTML match.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const items = mounted ? cartItems : [];
+  const cartTotal = mounted ? cartSum : 0;
 
   return (
     <>

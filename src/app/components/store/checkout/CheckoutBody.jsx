@@ -77,6 +77,11 @@ const CheckoutBody = () => {
   });
 
   const grandTotal = shippingCost + cartTotal - discount;
+  // The cart lives in localStorage: the server renders it empty, so show cart numbers only after
+  // mount (otherwise a non-empty cart causes a hydration mismatch and a full client re-render).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const shownCartTotal = mounted ? cartTotal : 0;
 
   const handleCheckoutSubmit = async () => {
     if (isSubmitting) return;
@@ -589,8 +594,8 @@ const CheckoutBody = () => {
                     <table className="sidebar-table w-100 mt-5">
                       <tbody>
                         <tr>
-                          <td>Items ({items.length}):</td>
-                          <td className="text-end">৳{cartTotal}.00</td>
+                          <td>Items ({mounted ? items.length : 0}):</td>
+                          <td className="text-end">৳{shownCartTotal}.00</td>
                         </tr>
                         <tr>
                           <td>Shipping & handling:</td>
@@ -610,7 +615,7 @@ const CheckoutBody = () => {
                     <div className="d-flex align-items-center justify-content-between">
                       <h6 className="mb-0 fs-md">Total</h6>
                       <h6 className="mb-0 fs-md">
-                        ৳{Math.floor(grandTotal)}.00
+                        ৳{Math.floor(shippingCost + shownCartTotal - discount)}.00
                       </h6>
                     </div>
                     <button
