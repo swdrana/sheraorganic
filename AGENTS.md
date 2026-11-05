@@ -215,7 +215,9 @@ builds**. Each app needs `MONGODB_URI` at build time (the home page prerenders w
 - `POST /api/v1/orders` — validates `cart/user_info/total`, idempotent via `clientToken`, returns
   `{ order: { orderCode, accessToken } }` on 201. Every new order gets a server-generated 32-hex
   `accessToken`; an idempotent `clientToken` retry returns the same saved token. `accessToken` is
-  `select: false` and must never appear in GET responses.
+  `select: false` and must never appear in GET responses. Only a string `clientToken` (≤200 chars) is
+  used (objects would be query operators). A partial unique index `clientToken_unique` blocks double
+  submits; a POST losing that race (E11000 on save) re-reads and returns the winner's order with 200.
 - `GET /api/v1/order-code/[code]` returns 404 unless the requester is staff, the signed-in order owner,
   or supplies the matching `?t=<accessToken>` (constant-time comparison). Invoice/thank-you/email links for
   new guest orders carry this token; legacy tokenless orders are available only to staff or their owner.
@@ -228,12 +230,16 @@ builds**. Each app needs `MONGODB_URI` at build time (the home page prerenders w
   localStorage cart so the next submit matches — the saved cart keeps add-time prices), create status is always `Pending`, and the server-injected ৳0 review gift is outside
   subtotal/discount calculations.
 - Order owner and review-gift redemption use only `getApiSession().user.id`; body `user` is ignored.
-  A missing generated order code returns 500 before saving or redeeming a gift.
+  A missing generated order code returns 500 before saving or redeeming a gift. The pending gift is
+  marked redeemed only after the order save succeeds (never for a lost race / failed save).
 - `utils/phone.js` normalizes Bengali digits, separators and Bangladesh country prefix; checkout and
   order POST share its mobile validation. Orders store normalized `user_info.contact`; invalid optional
   emails become empty strings. Admin order search matches name, normalized phone or order code.
-- `order.cart` is a `Mixed` array; items carry the full product doc + `_id`, `name`, `image[]`,
-  `quantity`, `price`. "Delivered" status is set by admin only (`SelectStatus.jsx` → `PATCH /api/v1/orders/[orderId]`).
+- `order.cart` is a `Mixed` array. Non-gift lines are rebuilt from the DB product (`toObject()` minus
+  ratings/description/slugHistory/seo*/`__v`) + `_id`, client `id` (cart identity), `name` (DB name, plus
+  DB attribute option names for multi-variant lines), `quantity`, `price`, `itemTotal`, `prices`,
+  `variants`, resolved `variant`. No other browser field is saved; `isGift` only on the server gift line.
+  "Delivered" status is set by admin only (`SelectStatus.jsx` → `PATCH /api/v1/orders/[orderId]`).
 
 ### Email (Gmail SMTP)
 
