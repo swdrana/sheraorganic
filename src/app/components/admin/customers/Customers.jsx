@@ -8,10 +8,17 @@ import CustomerTable from "./CustomerTable";
 import useCustomerFilter from "@/app/hooks/useCustomerFilter";
 import { getAllUser } from "@/app/backend/controllers/customer.controller";
 import LoadingSkeleton from "../loader/TableLoading";
+import GuestCustomers from "./GuestCustomers";
+
+const TABS = [
+  { id: "registered", label: "নিবন্ধিত গ্রাহক" },
+  { id: "guests", label: "অতিথি ক্রেতা" },
+];
 
 const Customers = () => {
   const [users, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState("registered");
   const { setIsOpenCustomerDrawer, customerId, setCustomerDetails } =
     useMainContext();
 
@@ -54,31 +61,58 @@ const Customers = () => {
           </div>
         </div>
 
-        <div className=" relative my-10">
-          <input
-            type="text"
-            placeholder="Search customer-name/email/contact-number"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            className="block w-full rounded-md border-0 py-2 text-gray-900  shadow-sm  ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-transparent sm:text-sm sm:leading-6 px-10 outline-none"
-          />
-          <p className="absolute top-3 left-3">
-            <FiSearch size={20} />
-          </p>
+        <div role="tablist" aria-label="গ্রাহকের ধরন" className="mt-6 flex gap-2 overflow-x-auto">
+          {TABS.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              aria-selected={tab === item.id}
+              onClick={() => setTab(item.id)}
+              className={`whitespace-nowrap px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                tab === item.id
+                  ? "bg-dark text-white"
+                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
 
-        {loading ? (
-          <>
-            {" "}
-            <LoadingSkeleton />{" "}
-          </>
+        {tab === "guests" ? (
+          <div className="mt-6">
+            <GuestCustomers />
+          </div>
         ) : (
-          <CustomerTable
-            users={filterCustomer}
-            handelCustomerUpdate={handelCustomerUpdate}
-            pageCount={pageCount}
-            handlePageChange={handlePageChange}
-          />
+          <>
+            <div className=" relative my-10">
+              <input
+                type="text"
+                placeholder="Search customer-name/email/contact-number"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                className="block w-full rounded-md border-0 py-2 text-gray-900  shadow-sm  ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-transparent sm:text-sm sm:leading-6 px-10 outline-none"
+              />
+              <p className="absolute top-3 left-3">
+                <FiSearch size={20} />
+              </p>
+            </div>
+
+            {loading ? (
+              <>
+                {" "}
+                <LoadingSkeleton />{" "}
+              </>
+            ) : (
+              <CustomerTable
+                users={filterCustomer}
+                handelCustomerUpdate={handelCustomerUpdate}
+                pageCount={pageCount}
+                handlePageChange={handlePageChange}
+              />
+            )}
+          </>
         )}
       </section>
     </div>
