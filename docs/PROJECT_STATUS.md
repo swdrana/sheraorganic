@@ -8,11 +8,11 @@
 > gotcha বদলালে `AGENTS.md`-ও একই ভাবে হালনাগাদ করো। machine-local (`~/.claude`) মেমোরিতে
 > এই প্রজেক্টের কিছু আলাদা করে রাখা হয় না — সব knowledge এখানেই।
 
-শেষ হালনাগাদ: 2026-11-04
+শেষ হালনাগাদ: 2026-11-05
 
 ---
 
-## Round 9 — দুই দোকান, এক codebase (2026-11-04, local `main`-এ merged; push হয়নি)
+## Round 9 — দুই দোকান, এক codebase (2026-11-04 push; 2026-11-05 দুই দোকান লাইভ)
 
 একই repo থেকে দুই বন্ধুর দোকান চলবে — **মেহেদী** (Shera Organic, grocery) ও **রায়হান** (Nobomukh, tech)।
 প্রতিটির নিজের DB/env/Cloudinary; দোকানভেদে যা বদলায় তা সব admin-এর Site settings থেকে।
@@ -45,12 +45,13 @@
 - অনেক `/uploads/*.png` আসলে SVG বা WebP। WebP browser চিনে নেয়, কিন্তু `.png` নামের SVG দেখায় না
   (About পাতার ৪টা ছবি ভাঙা)। Cloudinary migration-এ file-এর আসল ধরন দেখে upload করতে হবে।
 
-### deploy-এর আগে / দিনে (প্রতিটি ধাপে মালিকের হ্যাঁ লাগবে)
-1. দুই DB-র fresh backup → মেহেদীর DB-তে seed (`--store=mehedi`) → **একবার push** (শুধু মেহেদীর Coolify app build হবে)।
-2. রায়হানের Coolify app (sw-app-01): build-এর সময়েও `MONGODB_URI` লাগবে (নইলে home grocery হিসেবে prerender হয়)।
-3. রায়হানের `/uploads` → তার Cloudinary + DB URL rewrite (backup আগে) → seed `--store=raihan` → temp domain-এ test
-   → Cloudflare DNS (nobomukh.com → sw-app-01; bdxmart.com redirect) — VPN subdomain ছোঁয়া যাবে না।
-4. মালিক রায়হানের Atlas-এ `187.124.212.87/32` যোগ করবেন; পরে Atlas password ও NEXTAUTH secret বদলাবেন।
+### deploy (সম্পন্ন)
+- মেহেদী: DB seed → push `3c10199` → Coolify deploy; live-এর আগে/পরে screenshot হুবহু।
+- রায়হান: sw-app-01-এ আলাদা Coolify app (auto-deploy on push, নিজের env/DB/Cloudinary, নতুন NEXTAUTH_SECRET);
+  `/uploads` ছবি তার Cloudinary-তে (আসল format সহ) + DB URL rewrite; payment badge; seed; nobomukh.com/www DNS
+  sw-app-01-এ; bdxmart.com পুরনো nginx থেকে 301; পুরনো app বন্ধ (এক সপ্তাহ file রাখা)।
+- রায়হানের পুরনো সাইটে মেহেদীর WhatsApp/GTM/Pixel বসানো ছিল — নতুনটায় নেই; রায়হান admin থেকে নিজেরটা বসাবেন।
+- এখন থেকে একটি push = **দুটো** Coolify build (মেহেদী + রায়হান)।
 
 ---
 
@@ -256,7 +257,7 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
 
 ## এখন কী বাকি
 
-- **Round 9 (দুই দোকান):** local `main`-এ merged ও যাচাই করা; মালিকের হ্যাঁ পেলে উপরের deploy ধাপ।
+- **Round 9 (দুই দোকান):** দুটোই লাইভ। 2026-11-12-এর পরে পুরনো bdXmart app/vhost মুছে bdxmart.com redirect Cloudflare-এ।
   MANUAL VERIFY: admin-এ Site settings save → reload; theme বদলালে storefront বদলায়; বাস্তব test order।
 
 - **Round 7 যাচাই:** live-এ কয়েকটা product খুলে URL/breadcrumb দেখা; Google Search Console-এ sitemap আবার submit।

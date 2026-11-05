@@ -17,7 +17,8 @@ language for customer-facing copy is **Bengali**; code identifiers are English.
 **Two stores, one codebase (from 2026-11):** **মেহেদী (Mehedi)** = Shera Organic (sheraorganic.com,
 ghanizbd.com redirects to it, grocery) and **রায়হান (Raihan)** = bdXmart/Nobomukh (nobomukh.com, tech). Each
 deployment has its own env + MongoDB DB; nothing brand- or niche-specific may be hardcoded — it comes from
-admin settings or env. When reporting to the owner, name the store by the friend ("মেহেদীর সাইট"). Plan:
+admin settings or env. Both run on `sw-app-01` Coolify and auto-deploy from `main`, so **one push = two
+builds**. Each app needs `MONGODB_URI` at build time (the home page prerenders with that store's settings). When reporting to the owner, name the store by the friend ("মেহেদীর সাইট"). Plan:
 `plan/multi-store-plan.md` (local).
 
 **Mobile-first is the rule** — most users are on mobile. Fix/verify mobile layout first, desktop second.
