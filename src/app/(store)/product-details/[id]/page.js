@@ -1,4 +1,4 @@
-import { breadcrumbJsonLd, productDescription } from "@/app/utils/productMetadata";
+import { breadcrumbJsonLd, jsonLdBrand, productDescription } from "@/app/utils/productMetadata";
 import { normalizeBrand } from "@/app/utils/brand";
 import { getSiteUrl } from "@/app/utils/siteUrl";
 import { notFound, permanentRedirect } from "next/navigation";
@@ -87,7 +87,7 @@ function productJsonLd(product, url, category) {
       image: (product.image || []).filter(Boolean),
       description: plainText(product.description, 500) || undefined,
       sku: product.sku || String(product._id),
-      ...(product.brand ? { brand: { "@type": "Brand", name: product.brand } } : {}),
+      ...(jsonLdBrand(product.brand) ? { brand: jsonLdBrand(product.brand) } : {}),
       offers,
       ...(ratings.length && Number(product.averageRating) > 0
         ? {

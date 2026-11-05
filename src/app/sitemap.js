@@ -2,6 +2,7 @@ import { getCachedCategories, getCachedProducts } from "@/app/data/cachedData";
 import { categoryPath, productPathEncoded } from "@/app/utils/productUrl";
 
 import { getSiteUrl } from "@/app/utils/siteUrl";
+import { pastDate } from "@/app/utils/productMetadata";
 
 export const revalidate = 3600;
 
@@ -31,7 +32,7 @@ export default async function sitemap() {
     })),
     ...products.filter(visible).map((product) => ({
       url: `${BASE_URL}${productPathEncoded(product)}`,
-      lastModified: product.updatedAt || product.createdAt,
+      lastModified: pastDate(product.updatedAt) || pastDate(product.createdAt),
       changeFrequency: "weekly",
       priority: 0.8,
     })),
