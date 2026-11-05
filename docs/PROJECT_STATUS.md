@@ -321,7 +321,7 @@ VPS পর্যবেক্ষণ (2026-10-08): app container ~০.৬৫% CPU;
 
 ## এখন কী বাকি
 
-- **Round 9 (দুই দোকান):** দুটোই লাইভ। 2026-11-12-এর পরে পুরনো bdXmart app/vhost মুছে bdxmart.com redirect Cloudflare-এ।
+- **Round 9 (দুই দোকান):** দুটোই লাইভ। 2026-11-12-এর পরে (মালিকের হ্যাঁ নিয়ে) xboard-mahi-র পুরনো bdXmart app/vhost মুছে bdxmart.com redirect Cloudflare-এ, তারপর bdXmart repo archive। (local `plan/` folder শেষ, মুছে ফেলা হয়েছে।)
   MANUAL VERIFY: admin-এ Site settings save → reload; theme বদলালে storefront বদলায়; বাস্তব test order।
 
 - **Round 7 যাচাই:** live-এ কয়েকটা product খুলে URL/breadcrumb দেখা; Google Search Console-এ sitemap আবার submit।
