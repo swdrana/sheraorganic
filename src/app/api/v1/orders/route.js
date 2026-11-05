@@ -4,6 +4,7 @@ import Product from "@/app/backend/model/product.model";
 import Coupon from "@/app/backend/model/coupon.model";
 import User from "@/app/backend/model/user.model";
 import Setting from "@/app/backend/model/setting.model";
+import Attribute from "@/app/backend/model/attributes.model";
 import connectDB from "@/app/utils/database";
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
@@ -17,6 +18,7 @@ import {
   shippingOptionFor,
 } from "@/app/utils/orderPricing";
 import crypto from "crypto";
+import { isValidObjectId } from "mongoose";
 
 const VARIANT_META_KEYS = new Set([
   "originalPrice",
@@ -63,6 +65,59 @@ const findSelectedVariant = (product, cartLine) => {
   return null;
 };
 
+// Product fields that are never needed on an order line (large or private-ish).
+const OMITTED_PRODUCT_FIELDS = [
+  "ratings",
+  "description",
+  "slugHistory",
+  "seoTitle",
+  "seoDescription",
+  "seoKeywords",
+  "__v",
+];
+
+const productSnapshot = (product) => {
+  const doc =
+    typeof product?.toObject === "function" ? product.toObject() : { ...product };
+  for (const key of OMITTED_PRODUCT_FIELDS) delete doc[key];
+  return doc;
+};
+
+// Cart identity from the browser (react-use-cart id); the only free-form client field kept on a line.
+const clientLineId = (line, product) => {
+  const id = line?.id;
+  if ((typeof id === "string" || typeof id === "number") && String(id).length > 0) {
+    return String(id).slice(0, 200);
+  }
+  return String(product._id);
+};
+
+// Same label the storefront builds ("Name-Option, Option") but from DB attribute names,
+// so invoices / packing lists keep showing which variant was ordered.
+const variantLineName = async (product, selectedVariant) => {
+  const variants = Array.isArray(product?.variants) ? product.variants : [];
+  if (!selectedVariant || variants.length <= 1) return product.name;
+  const attributeIds = Object.keys(selectedVariant).filter(
+    (key) => !VARIANT_META_KEYS.has(key) && isValidObjectId(key)
+  );
+  if (!attributeIds.length) return product.name;
+  try {
+    const attributes = await Attribute.find({ _id: { $in: attributeIds } })
+      .sort({ _id: -1 })
+      .lean();
+    const labels = (attributes || [])
+      .map((attribute) =>
+        attribute?.variants?.find(
+          (option) => String(option?._id) === String(selectedVariant[String(attribute._id)])
+        )?.name
+      )
+      .filter(Boolean);
+    return labels.length ? `${product.name}-${labels.join(", ")}` : product.name;
+  } catch {
+    return product.name;
+  }
+};
+
 const priceCart = async (cart) => {
   const pricedCart = [];
   let subTotal = 0;
@@ -89,9 +144,14 @@ const priceCart = async (cart) => {
 
     const itemTotal = price * quantity;
     subTotal += itemTotal;
+    // Built from the DB product only: browser-supplied name/image/isGift/extra fields are never saved.
+    const snapshot = productSnapshot(product);
+    delete snapshot.isGift;
     pricedCart.push({
-      ...line,
+      ...snapshot,
       _id: String(product._id),
+      id: clientLineId(line, product),
+      name: await variantLineName(product, selectedVariant),
       quantity,
       price,
       itemTotal,
@@ -107,6 +167,15 @@ const priceCart = async (cart) => {
 
   return { cart: pricedCart, subTotal };
 };
+
+const isClientTokenConflict = (error) =>
+  error?.code === 11000 &&
+  (Boolean(error?.keyPattern?.clientToken) ||
+    (error?.keyValue && "clientToken" in error.keyValue) ||
+    /clientToken/.test(String(error?.message || "")));
+
+const existingOrderResponse = (order) =>
+  NextResponse.json({ message: "order create successfully", order }, { status: 200 });
 
 const couponDiscount = async (couponCode, subTotal) => {
   const code = typeof couponCode === "string" ? couponCode.trim() : "";
@@ -176,13 +245,17 @@ export const POST = async (req) => {
     const user = session?.user?.id || undefined;
     await connectDB();
 
-    if (data?.clientToken) {
-      const existingOrder = await Order.findOne({
-        clientToken: data.clientToken,
-      }).select("+accessToken");
-      if (existingOrder) {
-        return NextResponse.json({ message: "order create successfully", order: existingOrder }, { status: 200 });
-      }
+    // Only a plain string token is used: an object here would be a query operator ({$ne: null}).
+    const clientToken =
+      typeof data.clientToken === "string" &&
+      data.clientToken.length > 0 &&
+      data.clientToken.length <= 200
+        ? data.clientToken
+        : undefined;
+
+    if (clientToken) {
+      const existingOrder = await Order.findOne({ clientToken }).select("+accessToken");
+      if (existingOrder) return existingOrderResponse(existingOrder);
     }
 
     const shipping = shippingOptionFor(data.shippingOption);
@@ -227,6 +300,8 @@ export const POST = async (req) => {
     }
 
     let giftLine = null;
+    let giftOwner = null;
+    let pendingGift = null;
     if (user) {
       const settingDoc = await Setting.findOne({
         name: "storeCustomizationSetting",
@@ -247,12 +322,12 @@ export const POST = async (req) => {
               image: giftProduct.image || [],
               price: 0,
               prices: { price: 0, originalPrice: 0, discount: 0 },
+              itemTotal: 0,
               quantity: 1,
               isGift: true,
             };
-            pending.redeemed = true;
-            pending.redeemedOrderCode = orderCode;
-            await orderUser.save();
+            giftOwner = orderUser;
+            pendingGift = pending;
           }
         }
       }
@@ -260,7 +335,7 @@ export const POST = async (req) => {
     const finalCart = giftLine ? [giftLine, ...priced.cart] : priced.cart;
 
     const newOrder = new Order({
-      clientToken: data.clientToken,
+      clientToken,
       accessToken: crypto.randomBytes(16).toString("hex"),
       orderCode: orderCode,
       user,
@@ -275,7 +350,26 @@ export const POST = async (req) => {
       paymentMethod: data.paymentMethod,
       status: "Pending",
     });
-    await newOrder.save();
+    try {
+      await newOrder.save();
+    } catch (error) {
+      // A simultaneous retry with the same clientToken won the unique index: return its order.
+      if (clientToken && isClientTokenConflict(error)) {
+        const existingOrder = await Order.findOne({ clientToken }).select("+accessToken");
+        if (existingOrder) return existingOrderResponse(existingOrder);
+      }
+      throw error;
+    }
+    // Redeem the gift only once the order carrying it is really saved.
+    if (giftOwner && pendingGift) {
+      pendingGift.redeemed = true;
+      pendingGift.redeemedOrderCode = orderCode;
+      try {
+        await giftOwner.save();
+      } catch (error) {
+        console.error("[orders] review gift redemption failed", orderCode, error?.message);
+      }
+    }
     revalidateTag(CACHE_TAGS.stats);
     // Customer's order email goes out in the background (never delays or fails the order).
     sendOrderConfirmation(newOrder.toObject());

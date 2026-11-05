@@ -9,6 +9,7 @@ vi.mock("@/app/backend/model/user.model", () => ({ default: { findById: vi.fn() 
 vi.mock("@/app/backend/model/product.model", () => ({ default: { findById: vi.fn() } }));
 vi.mock("@/app/backend/model/coupon.model", () => ({ default: { findOne: vi.fn() } }));
 vi.mock("@/app/backend/model/setting.model", () => ({ default: { findOne: vi.fn() } }));
+vi.mock("@/app/backend/model/attributes.model", () => ({ default: { find: vi.fn() } }));
 vi.mock("@/app/data/cachedData", () => ({ CACHE_TAGS: { stats: "stats" } }));
 vi.mock("next/cache", () => ({ revalidateTag: vi.fn() }));
 vi.mock("@/app/backend/utils/orderEmail", () => ({ sendOrderConfirmation: vi.fn() }));
@@ -21,6 +22,7 @@ import User from "@/app/backend/model/user.model";
 import Product from "@/app/backend/model/product.model";
 import Coupon from "@/app/backend/model/coupon.model";
 import Setting from "@/app/backend/model/setting.model";
+import Attribute from "@/app/backend/model/attributes.model";
 import { revalidateTag } from "next/cache";
 import { sendOrderConfirmation } from "@/app/backend/utils/orderEmail";
 import { POST } from "./route";
@@ -330,5 +332,148 @@ describe("order creation", () => {
     expect(save).not.toHaveBeenCalled();
     expect(User.findById).not.toHaveBeenCalled();
     expect(sendOrderConfirmation).not.toHaveBeenCalled();
+  });
+
+  it("builds saved lines from the database product, not browser-supplied fields", async () => {
+    Product.findById.mockResolvedValue({
+      toObject: () => ({
+        _id: "product-id",
+        name: "Real honey",
+        slug: "real-honey",
+        image: ["real.jpg"],
+        prices: { price: 250, originalPrice: 300, discount: 50 },
+        variants: [],
+        ratings: [{ rating: 5, comment: "x" }],
+        description: "<p>long</p>",
+        slugHistory: ["old"],
+        __v: 3,
+      }),
+      _id: "product-id",
+      name: "Real honey",
+      prices: { price: 250, originalPrice: 300, discount: 50 },
+      variants: [],
+    });
+    const data = orderData();
+    Object.assign(data.cart[0], {
+      id: "client-line-id",
+      name: "Fake name",
+      image: ["https://evil.example/fake.jpg"],
+      slug: "fake-slug",
+      isGift: true,
+      junk: "x".repeat(10_000),
+    });
+    const response = await POST(request(data));
+    expect(response.status).toBe(201);
+    const line = (await response.json()).order.cart[0];
+    expect(line).toMatchObject({
+      _id: "product-id",
+      id: "client-line-id",
+      name: "Real honey",
+      slug: "real-honey",
+      image: ["real.jpg"],
+      quantity: 1,
+      price: 250,
+      itemTotal: 250,
+    });
+    for (const key of ["isGift", "junk", "ratings", "description", "slugHistory", "__v"]) {
+      expect(line).not.toHaveProperty(key);
+    }
+  });
+
+  it("falls back to the product id as the line id and still keys 409 prices by the client id", async () => {
+    const data = orderData();
+    const response = await POST(request(data));
+    expect((await response.json()).order.cart[0].id).toBe("product-id");
+
+    const stale = orderData();
+    stale.cart[0].id = "product-id-variant-a";
+    stale.total = 1;
+    const conflict = await POST(request(stale));
+    expect(conflict.status).toBe(409);
+    expect((await conflict.json()).currentPrices).toEqual({ "product-id-variant-a": 250 });
+  });
+
+  it("names a multi-variant line from database attribute option names", async () => {
+    const attrId = "64b000000000000000000001";
+    const optionId = "64b0000000000000000000aa";
+    Product.findById.mockResolvedValue({
+      ...product(),
+      variants: [
+        { [attrId]: "64b0000000000000000000bb", price: 200 },
+        { [attrId]: optionId, price: 250 },
+      ],
+    });
+    const lean = vi.fn().mockResolvedValue([
+      { _id: attrId, variants: [{ _id: "64b0000000000000000000bb", name: "250g" }, { _id: optionId, name: "500g" }] },
+    ]);
+    Attribute.find.mockReturnValue({ sort: () => ({ lean }) });
+    const data = orderData();
+    data.cart[0].variant = { [attrId]: optionId };
+    data.cart[0].name = "Anything";
+    const response = await POST(request(data));
+    expect(response.status).toBe(201);
+    expect((await response.json()).order.cart[0]).toMatchObject({ name: "Product-500g", price: 250 });
+    expect(Attribute.find).toHaveBeenCalledWith({ _id: { $in: [attrId] } });
+  });
+
+  it("ignores a non-string clientToken instead of using it as a query", async () => {
+    const data = orderData();
+    data.clientToken = { $ne: null };
+    const response = await POST(request(data));
+    expect(response.status).toBe(201);
+    expect(Order.findOne).not.toHaveBeenCalled();
+    expect((await response.json()).order.clientToken).toBeUndefined();
+  });
+
+  it("returns the winning order when a simultaneous submit hits the clientToken unique index", async () => {
+    save.mockRejectedValue(Object.assign(new Error("E11000 duplicate key error index: clientToken_unique"), {
+      code: 11000, keyPattern: { clientToken: 1 }, keyValue: { clientToken: "checkout-token" },
+    }));
+    selectExistingOrder
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({ orderCode: 777, accessToken: "winner-token" });
+    const response = await POST(request(orderData()));
+    expect(response.status).toBe(200);
+    expect((await response.json()).order).toMatchObject({ orderCode: 777, accessToken: "winner-token" });
+    expect(Order.findOne).toHaveBeenCalledTimes(2);
+    expect(selectExistingOrder).toHaveBeenLastCalledWith("+accessToken");
+    expect(revalidateTag).not.toHaveBeenCalled();
+    expect(sendOrderConfirmation).not.toHaveBeenCalled();
+  });
+
+  it("does not redeem a review gift when the order save loses the race", async () => {
+    getApiSession.mockResolvedValue({ user: { id: "session-user" } });
+    Setting.findOne.mockReturnValue({ sort: async () => ({ setting: { home: { review_gift_enabled: true } } }) });
+    const pending = { productId: "gift-product", redeemed: false };
+    const userSave = vi.fn();
+    User.findById.mockResolvedValue({ pendingGifts: [pending], save: userSave });
+    Product.findById.mockImplementation(async (id) =>
+      id === "gift-product" ? { _id: "gift-product", name: "Gift", image: [] } : product()
+    );
+    save.mockRejectedValue(Object.assign(new Error("E11000"), { code: 11000, keyPattern: { clientToken: 1 } }));
+    selectExistingOrder
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({ orderCode: 777, accessToken: "winner-token" });
+    const response = await POST(request(orderData()));
+    expect(response.status).toBe(200);
+    expect(pending.redeemed).toBe(false);
+    expect(pending.redeemedOrderCode).toBeUndefined();
+    expect(userSave).not.toHaveBeenCalled();
+  });
+
+  it("returns 500 for other save errors without redeeming a gift", async () => {
+    getApiSession.mockResolvedValue({ user: { id: "session-user" } });
+    Setting.findOne.mockReturnValue({ sort: async () => ({ setting: { home: { review_gift_enabled: true } } }) });
+    const pending = { productId: "gift-product", redeemed: false };
+    const userSave = vi.fn();
+    User.findById.mockResolvedValue({ pendingGifts: [pending], save: userSave });
+    Product.findById.mockImplementation(async (id) =>
+      id === "gift-product" ? { _id: "gift-product", name: "Gift", image: [] } : product()
+    );
+    save.mockRejectedValue(new Error("db down"));
+    const response = await POST(request(orderData()));
+    expect(response.status).toBe(500);
+    expect(pending.redeemed).toBe(false);
+    expect(userSave).not.toHaveBeenCalled();
   });
 });

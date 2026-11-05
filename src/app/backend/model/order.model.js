@@ -99,12 +99,24 @@ const orderSchema = new Schema(
   }
 );
 // Lookups done on every storefront visit / order: by code (invoice, tracking), by user
-// (my-account, review reminder), idempotency token (checkout), and date range (admin reports).
-// Non-unique on purpose so index builds can never fail on legacy data.
+// (my-account, review reminder) and date range (admin reports). Non-unique on purpose so
+// index builds can never fail on legacy data.
 orderSchema.index({ orderCode: 1 });
 orderSchema.index({ user: 1, createdAt: -1 });
-orderSchema.index({ clientToken: 1 }, { sparse: true });
 orderSchema.index({ createdAt: -1 });
+// Checkout idempotency: one order per clientToken, so two simultaneous submits of the same checkout
+// cannot both save (the loser gets E11000 and POST /api/v1/orders returns the winner's order).
+// Partial (string tokens only) so orders without a token never conflict. Separately named so it does
+// not clash with the old non-unique `clientToken_1` index. If legacy duplicate tokens exist, the
+// background index build just fails (logged) and the app keeps working with the findOne check alone.
+orderSchema.index(
+  { clientToken: 1 },
+  {
+    unique: true,
+    name: "clientToken_unique",
+    partialFilterExpression: { clientToken: { $type: "string" } },
+  }
+);
 
 const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
 
