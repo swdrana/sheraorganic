@@ -17,9 +17,12 @@ describe("Site Settings form", () => {
     expect(screen.getAllByText("Image uploader")).toHaveLength(2);
     expect(screen.getByLabelText("সাজসজ্জার ধরন")).toHaveValue("tech");
     expect(screen.getByLabelText("পণ্যের পাশের ব্যানার দেখান")).not.toBeChecked();
-    const loginToggle = screen.getByLabelText("ক্রেতাদের Login/Registration দেখান");
-    expect(loginToggle).toBeChecked();
+    const loginToggle = screen.getByRole("switch", { name: "ক্রেতাদের Login/Registration" });
+    expect(loginToggle).toHaveAttribute("aria-checked", "true");
+    expect(screen.getByText("চালু")).toBeInTheDocument();
     fireEvent.click(loginToggle);
+    expect(loginToggle).toHaveAttribute("aria-checked", "false");
+    expect(screen.getByText("বন্ধ")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "সেভ করুন" }));
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
     const options = fetch.mock.calls[0][1];

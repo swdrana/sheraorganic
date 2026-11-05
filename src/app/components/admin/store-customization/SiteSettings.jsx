@@ -70,7 +70,15 @@ export default function SiteSettings({ group }) {
             </select>
           </label>
           <label className="d-flex gap-2 mb-4 align-items-center"><input type="checkbox" checked={values.product_sidebar_banner_show} onChange={(e) => change("product_sidebar_banner_show", e.target.checked)} />পণ্যের পাশের ব্যানার দেখান</label>
-          <label className="d-flex gap-2 mb-1 align-items-center"><input type="checkbox" checked={values.customer_login} onChange={(e) => change("customer_login", e.target.checked)} />ক্রেতাদের Login/Registration দেখান</label>
+          <div className="d-flex gap-3 mb-1 align-items-center">
+            <span id="customer-login-label">ক্রেতাদের Login/Registration</span>
+            <button type="button" role="switch" aria-checked={values.customer_login} aria-labelledby="customer-login-label"
+              onClick={() => change("customer_login", !values.customer_login)}
+              style={{ position: "relative", width: 52, height: 28, borderRadius: 999, border: 0, padding: 0, flexShrink: 0, cursor: "pointer", transition: "background .2s", background: values.customer_login ? "#16a34a" : "#9ca3af" }}>
+              <span aria-hidden="true" style={{ position: "absolute", top: 3, left: values.customer_login ? 27 : 3, width: 22, height: 22, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,.3)", transition: "left .2s" }} />
+            </button>
+            <strong style={{ color: values.customer_login ? "#16a34a" : "#6b7280" }}>{values.customer_login ? "চালু" : "বন্ধ"}</strong>
+          </div>
           <p className="text-muted small mb-4">বন্ধ করলে ক্রেতারা লগইন ছাড়াই সরাসরি অর্ডার করবে; মেনু ও ফুটারে লগইন/রেজিস্ট্রেশন দেখাবে না। অ্যাডমিন লগইন /login-এ আগের মতোই কাজ করবে।</p>
         </> : <>
           <label className="d-flex gap-2 mb-4 align-items-center"><input type="checkbox" role="switch" checked={values.enabled} onChange={(e) => change("enabled", e.target.checked)} />ট্র্যাকিং চালু</label>

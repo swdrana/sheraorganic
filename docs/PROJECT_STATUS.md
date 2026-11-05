@@ -16,7 +16,7 @@
 
 রায়হান চায় ক্রেতা login ছাড়া সরাসরি order দিক; মেহেদী login রাখবে। তাই admin-এ দোকানভেদে switch।
 
-- **Site settings → Brand & Theme → "ক্রেতাদের Login/Registration দেখান"** (`setting.brand.customer_login`;
+- **Site settings → Brand & Theme → "ক্রেতাদের Login/Registration" চালু/বন্ধ toggle** (`setting.brand.customer_login`;
   না থাকলে চালু)। বন্ধ করলে guest-রা Navbar user menu, Offcanvas, Footer, মোবাইল FooterNav Profile,
   ThankYou Profile, review "লগইন করে রিভিউ দিন" দেখে না; `/login`-এ guest-account বোতাম ও Sign Up লুকানো
   (staff login আগের মতো); `/singup` শুধু "লগইন ছাড়াই অর্ডার" বার্তা। login থাকা user নিজের menu পায়।
