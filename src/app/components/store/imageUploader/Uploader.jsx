@@ -24,7 +24,6 @@ const Uploader = ({ setImageUrl, imageUrl, product, folder }) => {
   const [err, setError] = useState("");
   const cloudinaryUploadUrl = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
 
-  // console.log('process.env.NEXT_PUBLIC_CLOUDINARY_URL',process.env.NEXT_PUBLIC_CLOUDINARY_URL)
 
   // console.log("data", data);
 
@@ -73,13 +72,6 @@ const Uploader = ({ setImageUrl, imageUrl, product, folder }) => {
         setLoading(true);
         setError("Uploading....");
 
-        if (product) {
-          const result = imageUrl?.find(
-            (img) => img === process.env.NEXT_PUBLIC_CLOUDINARY_URL
-          );
-
-          if (result) return setLoading(false);
-        }
 
         const name = file.name.replaceAll(/\s/g, "");
         const public_id = name?.substring(0, name.lastIndexOf("."));

@@ -12,7 +12,7 @@
 
 ---
 
-## Round 11 — অর্ডার আরও নিরাপদ + অতিথি ক্রেতা তালিকা + SEO ছোট ঠিক (2026-11-06, local; push বাকি)
+## Round 11 — অর্ডার আরও নিরাপদ + অতিথি ক্রেতা তালিকা + SEO ছোট ঠিক (2026-11-06 push 77c55f8)
 
 - **Order line DB থেকে:** saved cart line = DB product (ratings/description/slugHistory/seo* বাদ) + client `id`
   + DB-র নাম (multi-variant হলে DB attribute option নাম, storefront-এর মতো `নাম-1L`)। browser-এর নাম/ছবি/
@@ -30,6 +30,8 @@
 - যাচাই: 37 file / 278 test, lint, build; Mac-এ দুই DB কপি: ভুয়া নাম/ছবি/isGift save হয় না, `$ne` injection
   নতুন order দেয়, ৬টা একসঙ্গে একই token → ১টা order, পুরনো tamper (৳১ → 409, Delivered → Pending, shipping 0 → 400)
   ঠিক, guest tab মোবাইল/ডেস্কটপ, আসল browser-এ variant guest order 201, tracking ০। পরীক্ষার order/DB মোছা।
+- Push-এর পরে (local, পরের push-এ যাবে): অব্যবহৃত পুরনো Cloudinary `NEXT_PUBLIC_CLOUDINARY_URL` মেহেদীর Coolify env
+  (২টা row) ও local env থেকে মোছা, Uploader-এর অকেজো তুলনাও বাদ। মালিকের সিদ্ধান্ত: password/চাবি বদল নয়, repo private।
 - **Admin-এর data কাজ (code নয়):** রায়হান: Sony WH-1000XM5-এর brand "Asus" ভুল; SEO title/বিবরণ খালি।
   মেহেদী: brand বানান "kalkuma"; কয়েকটা "Others"।
 

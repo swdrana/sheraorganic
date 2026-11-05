@@ -317,8 +317,10 @@ builds**. Each app needs `MONGODB_URI` at build time (the home page prerenders w
   touch. Any always-visible card button must not rely on those.
 - Catalog/admin write routes and direct mutation server actions must call the shared staff authorization helpers
   before parsing input, connecting to MongoDB or changing cache state. Do not rely on middleware alone.
-- `.env*.local` is ignored and `.env.local` is no longer tracked. Historical secrets were previously
-  committed to GitHub; the owner still needs to rotate them outside the repository.
+- `.env*.local` is ignored and `.env.local` is no longer tracked. Historical secrets remain in git history.
+  Owner decision (2026-11-06): no credential rotation; the GitHub repos are to be private instead (the
+  Coolify GitHub App can read private repos, so deploys keep working). Do not re-propose rotation.
+- `NEXT_PUBLIC_CLOUDINARY_URL` (an unused old Cloudinary account) was removed from env and code (2026-11-06).
 - Cloudinary API key/secret are exposed as `NEXT_PUBLIC_*` (browser bundle). Server delete helper prefers
   non-public `CLOUDINARY_*` but falls back to the public ones.
 - `POST /api/v1/store` historically could create duplicate `Setting` docs; `findOne` has no `.sort()`.
