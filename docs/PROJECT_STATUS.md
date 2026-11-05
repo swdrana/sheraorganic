@@ -8,7 +8,30 @@
 > gotcha বদলালে `AGENTS.md`-ও একই ভাবে হালনাগাদ করো। machine-local (`~/.claude`) মেমোরিতে
 > এই প্রজেক্টের কিছু আলাদা করে রাখা হয় না — সব knowledge এখানেই।
 
-শেষ হালনাগাদ: 2026-11-05 (রাত)
+শেষ হালনাগাদ: 2026-11-06
+
+---
+
+## Round 11 — অর্ডার আরও নিরাপদ + অতিথি ক্রেতা তালিকা + SEO ছোট ঠিক (2026-11-06, local; push বাকি)
+
+- **Order line DB থেকে:** saved cart line = DB product (ratings/description/slugHistory/seo* বাদ) + client `id`
+  + DB-র নাম (multi-variant হলে DB attribute option নাম, storefront-এর মতো `নাম-1L`)। browser-এর নাম/ছবি/
+  `isGift`/বাড়তি field আর save হয় না। gift line-এ `itemTotal: 0` (invoice-এ "৳undefined" ছিল)।
+- **`clientToken` injection বন্ধ:** আগে body-র `{"$ne": null}` দিয়ে অন্যের order (accessToken-সহ) ফেরত পাওয়া
+  যেত; এখন শুধু ≤২০০ অক্ষরের string।
+- **একই checkout দুবার:** নতুন partial unique index `clientToken_unique` (পুরনো `clientToken_1` DB-তে থেকে যায়,
+  ক্ষতি নেই); E11000 হলে বিজয়ী order 200। Mongo 7-এ দুই DB কপিতে index পাশাপাশি তৈরি হয়েছে; duplicate token
+  ছিল না। Review gift redeem হয় order save-এর **পরে** (save ব্যর্থ হলে gift অক্ষত; gift save ব্যর্থ হলে শুধু log)।
+- **Admin Customers → "অতিথি ক্রেতা" tab** (শুধু দেখা): ফোন ধরে ক্রেতা, নাম/ঠিকানা/ইমেইল, অর্ডার সংখ্যা,
+  মোট কেনা (Cancel বাদ), প্রথম/শেষ অর্ডার, guest/নিবন্ধিত; বাংলা অঙ্কে খোঁজা; মোবাইলে card। পুরনো
+  "লগইন ছাড়া" account-এর `…@anonymous.com` ইমেইল দেখায় না।
+- **SEO:** JSON-LD-তে "Others"/"No brand" brand বাদ; বিবরণ না থাকলে ইংরেজি নামে ইংরেজি fallback (বাংলা নামে
+  আগের বাংলা); sitemap-এ ভবিষ্যতের তারিখ বাদ। দুই সাইটে URL/SEO field আগে থেকেই আছে; cross-store leak নেই।
+- যাচাই: 37 file / 278 test, lint, build; Mac-এ দুই DB কপি: ভুয়া নাম/ছবি/isGift save হয় না, `$ne` injection
+  নতুন order দেয়, ৬টা একসঙ্গে একই token → ১টা order, পুরনো tamper (৳১ → 409, Delivered → Pending, shipping 0 → 400)
+  ঠিক, guest tab মোবাইল/ডেস্কটপ, আসল browser-এ variant guest order 201, tracking ০। পরীক্ষার order/DB মোছা।
+- **Admin-এর data কাজ (code নয়):** রায়হান: Sony WH-1000XM5-এর brand "Asus" ভুল; SEO title/বিবরণ খালি।
+  মেহেদী: brand বানান "kalkuma"; কয়েকটা "Others"।
 
 ---
 
@@ -47,8 +70,7 @@
   admin থেকে switch চালু/বন্ধ save করলে storefront (static home-সহ) সঙ্গে সঙ্গে বদলায়; tracking request ০।
   পরীক্ষার order ও local DB মুছে ফেলা হয়েছে। লাইভ DB-তে কোনো লেখা হয়নি।
 - **Deploy-এর পর:** রায়হান admin থেকে switch বন্ধ করবে (default চালু, তাই দুই সাইট নিজে থেকে বদলায় না)।
-- **পরের round-এর প্রস্তাব (owner-এর হ্যাঁ লাগবে):** guest ক্রেতাদের ফোন ধরে admin "customers" view;
-  `clientToken` unique index।
+- পরের round-এর প্রস্তাব দুটো (guest customers view, `clientToken` unique index) Round 11-এ হয়েছে।
 
 ---
 

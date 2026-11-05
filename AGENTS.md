@@ -238,7 +238,7 @@ builds**. Each app needs `MONGODB_URI` at build time (the home page prerenders w
 - Admin Customers has a read-only "অতিথি ক্রেতা" tab (`customers/GuestCustomers.jsx`) fed by staff-only
   `GET /api/v1/orders/guest-customers` (401 anonymous / 403 non-staff, uncached). `backend/utils/guestCustomers.js`
   aggregates by raw `user_info.contact`, then merges rows by `normalizeBdPhone` in JS (legacy phones);
-  spend excludes `Cancel`. Admin Orders has no phone query param, so phones render as `tel:` links.
+  spend excludes `Cancel`; legacy `<date>@anonymous.com` emails (old login-less accounts) are hidden. Admin Orders has no phone query param, so phones render as `tel:` links.
 - `order.cart` is a `Mixed` array. Non-gift lines are rebuilt from the DB product (`toObject()` minus
   ratings/description/slugHistory/seo*/`__v`) + `_id`, client `id` (cart identity), `name` (DB name, plus
   DB attribute option names for multi-variant lines), `quantity`, `price`, `itemTotal`, `prices`,

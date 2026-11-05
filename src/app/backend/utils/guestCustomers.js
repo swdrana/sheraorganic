@@ -4,10 +4,17 @@ import { normalizeBdPhone } from "@/app/utils/phone";
 export const CANCELLED_STATUSES = Object.freeze(["Cancel", "Cancelled", "cancel", "cancelled"]);
 
 // Latest non-empty value of a field: $max skips nulls and compares the embedded docs by `at` first.
-const latestNonEmpty = (field) => ({
+const latestNonEmpty = (field, skipRegex) => ({
   $max: {
     $cond: [
-      { $ne: [{ $ifNull: [field, ""] }, ""] },
+      skipRegex
+        ? {
+            $and: [
+              { $ne: [{ $ifNull: [field, ""] }, ""] },
+              { $not: [{ $regexMatch: { input: { $toString: { $ifNull: [field, ""] } }, regex: skipRegex, options: "i" } }] },
+            ],
+          }
+        : { $ne: [{ $ifNull: [field, ""] }, ""] },
       { at: "$createdAt", value: field },
       null,
     ],
@@ -24,7 +31,7 @@ export const GUEST_CUSTOMER_PIPELINE = Object.freeze([
       _id: "$user_info.contact",
       name: latestNonEmpty("$user_info.name"),
       address: latestNonEmpty("$user_info.address"),
-      email: latestNonEmpty("$user_info.email"),
+      email: latestNonEmpty("$user_info.email", "@anonymous\\.com$"),
       orderCount: { $sum: 1 },
       cancelledCount: {
         $sum: { $cond: [{ $in: ["$status", CANCELLED_STATUSES] }, 1, 0] },
@@ -46,8 +53,12 @@ const time = (value) => {
   return Number.isNaN(ms) ? null : ms;
 };
 
+// Old "order without login" accounts carry a generated `<date>@anonymous.com` email (Login.jsx): not a real address.
+const isPlaceholderEmail = (value) => /@anonymous\.com$/i.test(String(value || "").trim());
+
 const pickLatest = (current, candidate) => {
   if (!candidate || typeof candidate.value !== "string" || !candidate.value.trim()) return current;
+  if (isPlaceholderEmail(candidate.value)) return current;
   if (!current) return candidate;
   return (time(candidate.at) ?? -Infinity) > (time(current.at) ?? -Infinity) ? candidate : current;
 };

@@ -71,7 +71,7 @@ describe("guest customer grouping", () => {
         _id: "8801812-345678",
         name: { at: at("03"), value: "Karim" },
         address: { at: at("03"), value: "Chattogram" },
-        email: null,
+        email: { at: at("03"), value: "2026-10-11t08:26:00.116z@anonymous.com" },
         orderCount: 1, cancelledCount: 1, totalSpent: 0,
         firstOrderAt: at("03"), lastOrderAt: at("03"), registered: 0,
       },
