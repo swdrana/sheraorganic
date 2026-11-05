@@ -12,7 +12,7 @@
 
 ---
 
-## Round 10 — ক্রেতার login চালু/বন্ধ + guest order (2026-11-05, local commits, push বাকি)
+## Round 10 — ক্রেতার login চালু/বন্ধ + guest order (2026-11-05 push bbc4b4f, দুই সাইট লাইভ)
 
 রায়হান চায় ক্রেতা login ছাড়া সরাসরি order দিক; মেহেদী login রাখবে। তাই admin-এ দোকানভেদে switch।
 
