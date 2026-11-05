@@ -14,6 +14,7 @@ import { getAllCoupons } from "@/app/backend/controllers/coupon.controller";
 import { InitiateCheckout, Purchase } from "@/app/utilities/facebookPixel";
 import { getUserById, updateUserProfile } from "@/app/controlers/user.controler";
 import { notifyError } from "@/app/utils/toast";
+import { isValidBdPhone, normalizeBdPhone } from "@/app/utils/phone";
 
 import dayjs from "dayjs";
 const CheckoutBody = () => {
@@ -113,7 +114,7 @@ const CheckoutBody = () => {
       const userInfo = {
         name: name,
         email: email,
-        contact: phone,
+        contact: normalizeBdPhone(phone),
         address: address,
       };
       const orderData = {
@@ -139,7 +140,7 @@ const CheckoutBody = () => {
           try {
             await updateUserProfile(session.data.user.id, {
               name: name,
-              contact: phone,
+              contact: normalizeBdPhone(phone),
               address: address,
             });
           } catch (profileError) {
@@ -166,7 +167,7 @@ const CheckoutBody = () => {
         router.push(`/thank-you/${res?.order?.orderCode}`);
       } else {
         setIsSubmitting(false);
-        notifyError(res?.message || "অর্ডার সম্পন্ন হয়নি।");
+        notifyError(res?.error || res?.message || "অর্ডার সম্পন্ন হয়নি।");
       }
     }
   };
@@ -258,14 +259,23 @@ const CheckoutBody = () => {
 
                       <div className="w-100 mt-4">
                         <label className="form-label fw-medium" htmlFor="email">
-                          Email Address
+                          Email (ঐচ্ছিক)
                         </label>
                         <input
                           type="email"
+                          id="email"
                           placeholder="Enter your email"
                           className="form-control"
-                          {...register("email")}
+                          {...register("email", {
+                            pattern: {
+                              value: /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/,
+                              message: "সঠিক ইমেইল ঠিকানা দিন।",
+                            },
+                          })}
                         />
+                        {errors.email && (
+                          <p className="text-danger">{errors.email.message}</p>
+                        )}
                       </div>
 
                       <div className="d-flex flex-wrap gap-3 mt-4">
@@ -278,10 +288,13 @@ const CheckoutBody = () => {
                           </label>
                           <input
                             type="text"
+                            id="phone"
+                            inputMode="tel"
                             placeholder="Phone"
                             className="form-control"
                             {...register("phone", {
-                              required: "Phone is required",
+                              required: "মোবাইল নম্বর দিন।",
+                              validate: (value) => isValidBdPhone(value) || "সঠিক বাংলাদেশি মোবাইল নম্বর দিন।",
                             })}
                           />
                           {errors.phone && (

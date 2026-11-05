@@ -9,6 +9,8 @@ import { revalidateTag } from "next/cache";
 import { CACHE_TAGS } from "@/app/data/cachedData";
 import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAuth";
 import { sendOrderConfirmation } from "@/app/backend/utils/orderEmail";
+import { isEmail } from "@/app/backend/utils/mailer";
+import { isValidBdPhone, normalizeBdPhone } from "@/app/utils/phone";
 
 // get all orders (staff only: contains every customer's name, phone and address)
 export const GET = async () => {
@@ -34,10 +36,8 @@ export const GET = async () => {
 };
 
 export const POST = async (req) => {
-  connectDB();
-  const data = await req.json();
-  // console.log("product data", data);
   try {
+    const data = await req.json();
     if (
       !data?.cart?.length ||
       !data?.user_info?.name ||
@@ -52,6 +52,21 @@ export const POST = async (req) => {
       );
     }
 
+    if (!isValidBdPhone(data.user_info.contact)) {
+      return NextResponse.json(
+        { message: "সঠিক বাংলাদেশি মোবাইল নম্বর দিন।" },
+        { status: 400 }
+      );
+    }
+    const userInfo = {
+      ...data.user_info,
+      contact: normalizeBdPhone(data.user_info.contact),
+      email: isEmail(data.user_info.email) ? data.user_info.email.trim() : "",
+    };
+    const session = await getApiSession();
+    const user = session?.user?.id || undefined;
+    await connectDB();
+
     if (data?.clientToken) {
       const existingOrder = await Order.findOne({ clientToken: data.clientToken });
       if (existingOrder) {
@@ -59,18 +74,23 @@ export const POST = async (req) => {
       }
     }
     const orderCode = await getNextOrderCode();
-    // console.log("orderCode..", orderCode);
+    if (orderCode === null || orderCode === undefined) {
+      return NextResponse.json(
+        { message: "অর্ডার নম্বর তৈরি হয়নি। আবার চেষ্টা করুন।" },
+        { status: 500 }
+      );
+    }
 
     let giftLine = null;
-    if (data.user) {
+    if (user) {
       const settingDoc = await Setting.findOne({
         name: "storeCustomizationSetting",
       }).sort({ createdAt: 1 });
       const home = settingDoc?.setting?.home || {};
       const minOrder = Number(home.review_gift_min_order) || 0;
       if (home.review_gift_enabled && Number(data.total) >= minOrder) {
-        const user = await User.findById(data.user);
-        const pending = user?.pendingGifts?.find((gift) => !gift.redeemed);
+        const orderUser = await User.findById(user);
+        const pending = orderUser?.pendingGifts?.find((gift) => !gift.redeemed);
         if (pending) {
           const giftProduct = await Product.findById(pending.productId);
           if (giftProduct) {
@@ -87,7 +107,7 @@ export const POST = async (req) => {
             };
             pending.redeemed = true;
             pending.redeemedOrderCode = orderCode;
-            await user.save();
+            await orderUser.save();
           }
         }
       }
@@ -97,9 +117,9 @@ export const POST = async (req) => {
     const newOrder = new Order({
       clientToken: data.clientToken,
       orderCode: orderCode,
-      user: data.user || undefined,
+      user,
       cart: finalCart,
-      user_info: data.user_info,
+      user_info: userInfo,
       subTotal: data.subTotal,
       shippingCost: data.shippingCost,
       discount: data.discount,

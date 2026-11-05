@@ -1,5 +1,6 @@
 "use client";
 import { useRef } from "react";
+import dayjs from "dayjs";
 import useOrderCode from "../dataFetching/useOrderCode";
 import useSetting from "../dataFetching/useSetting";
 
@@ -156,14 +157,18 @@ const Invoice = ({ invoiceNo }) => {
                       <td className="text-sm text-black">
                         <strong>Invoice No</strong>
                       </td>
-                      <td className="text-sm text-black">#G-Store: {codeOrder?.orderCode}</td>
+                      <td className="text-sm text-black">#{codeOrder?.orderCode}</td>
                     </tr>
 
                     <tr>
                       <td className="text-sm text-black">
                         <strong>Date</strong>
                       </td>
-                      <td className="text-sm text-black">15 January, 2023</td>
+                      <td className="text-sm text-black">
+                        {codeOrder?.createdAt && dayjs(codeOrder.createdAt).isValid()
+                          ? dayjs(codeOrder.createdAt).format("D MMMM, YYYY")
+                          : ""}
+                      </td>
                     </tr>
                   </tbody>
                 </table>

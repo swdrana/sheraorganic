@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { normalizeBdPhone } from "@/app/utils/phone";
 
 const useOrderFilter = (allOrder) => {
   // console.log("allOrder..", allOrder);
@@ -44,8 +45,11 @@ const useOrderFilter = (allOrder) => {
 
     // Apply additional filtering based on search text if present
     if (searchText) {
+      const phoneSearch = normalizeBdPhone(searchText);
       updateOrder = updateOrder.filter((order) =>
-        (order?.user_info?.name || "").toLowerCase().includes(searchText.toLowerCase())
+        (order?.user_info?.name || "").toLowerCase().includes(searchText.toLowerCase()) ||
+        (!!phoneSearch && normalizeBdPhone(order?.user_info?.contact).includes(phoneSearch)) ||
+        String(order?.orderCode ?? "").includes(searchText)
       );
     }
 

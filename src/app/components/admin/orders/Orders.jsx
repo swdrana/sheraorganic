@@ -3,6 +3,7 @@ import useOrderFilter from "@/app/hooks/useOrderFilter";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useRef } from "react";
+import dayjs from "dayjs";
 import { FiSearch } from "react-icons/fi";
 import { GrClose } from "react-icons/gr";
 import useOrderCode from "../../store/dataFetching/useOrderCode";
@@ -167,13 +168,15 @@ const Orders = ({ orderCode }) => {
                             Invoice No
                           </td>
                           <td className="text-sm text-black">
-                            #G-Store: {codeOrder?.orderCode}
+                            #{codeOrder?.orderCode}
                           </td>
                         </tr>
                         <tr>
                           <td className="font-bold text-sm text-black">Date</td>
                           <td className="text-sm text-black">
-                            15 January, 2023
+                            {codeOrder?.createdAt && dayjs(codeOrder.createdAt).isValid()
+                              ? dayjs(codeOrder.createdAt).format("D MMMM, YYYY")
+                              : ""}
                           </td>
                         </tr>
                       </tbody>
@@ -345,7 +348,7 @@ const Orders = ({ orderCode }) => {
                 <div className=" relative ">
                   <input
                     type="text"
-                    placeholder="Search by customer name"
+                    placeholder="Search by name, phone or order number"
                     value={searchText}
                     // onKeyPress={handleSearch}
                     onChange={(e) => setSearchText(e.target.value)}

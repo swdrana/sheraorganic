@@ -17,11 +17,11 @@ export async function createOrder(newOrder) {
       }
     );
 
+    const order = await response.json();
     if (!response.ok) {
-      throw new Error(`Failed to create order. Status: ${response.status}`);
+      return { error: order?.message };
     }
 
-    const order = await response.json();
     return order;
   } catch (error) {
     console.error("Error in creating order:", error);

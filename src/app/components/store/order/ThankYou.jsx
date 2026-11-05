@@ -21,7 +21,7 @@ const ThankYou = ({ orderCode }) => {
                 </span>
               </div>
               <h3 className="mb-2">আপনার অর্ডার সফলভাবে সম্পন্ন হয়েছে!</h3>
-              <p className="text-muted mb-4">অর্ডার নম্বর: #G-Store: {orderCode}</p>
+              <p className="text-muted mb-4">অর্ডার নম্বর: #{orderCode}</p>
               <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
                 <Link href={`/invoice/${orderCode}`} className="btn btn-primary">
                   View Order

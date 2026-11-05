@@ -203,6 +203,11 @@ builds**. Each app needs `MONGODB_URI` at build time (the home page prerenders w
 - Guest checkout is enabled (no login required). `Order.user` is `ref: "User"`, `required: false`.
 - `POST /api/v1/orders` — validates `cart/user_info/total`, idempotent via `clientToken`, returns
   `{ order: { orderCode } }` on 201. `CheckoutBody` checks `res?.order?.orderCode` for success.
+- Order owner and review-gift redemption use only `getApiSession().user.id`; body `user` is ignored.
+  A missing generated order code returns 500 before saving or redeeming a gift.
+- `utils/phone.js` normalizes Bengali digits, separators and Bangladesh country prefix; checkout and
+  order POST share its mobile validation. Orders store normalized `user_info.contact`; invalid optional
+  emails become empty strings. Admin order search matches name, normalized phone or order code.
 - `order.cart` is a `Mixed` array; items carry the full product doc + `_id`, `name`, `image[]`,
   `quantity`, `price`. "Delivered" status is set by admin only (`SelectStatus.jsx` → `PATCH /api/v1/orders/[orderId]`).
 

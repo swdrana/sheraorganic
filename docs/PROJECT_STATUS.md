@@ -12,6 +12,28 @@
 
 ---
 
+## Guest-order hardening — সম্পন্ন, local only (2026-11-05)
+
+- Order POST-এর owner এখন শুধু session-এর user ID; body-এর `user` উপেক্ষিত। Review gift-ও শুধু
+  session user-এর জন্য redeem হয়। Guest order/login করা customer-এর checkout ও retry response বজায় আছে।
+- Shared `utils/phone.js`: বাংলা অঙ্ক, spaces/dashes/dots/parentheses ও `+88`/`88` normalize; client/server
+  দুটোতেই `01[3-9]` + মোট ১১ অঙ্কের mobile validation। Invalid phone-এ 400, DB/cache/mail side effect নেই।
+  Order-এ normalized phone জমে; checkout field-এ tel keyboard ও বাংলা error।
+- Email স্পষ্টভাবে ঐচ্ছিক; non-empty malformed email client-এ error, server-এ empty string হিসেবে save।
+- Checkout controller server-এর message ফেরায়; checkout সেটা দেখায় এবং ব্যর্থ হলে cart রেখে retry করতে দেয়।
+- Admin search এখন নাম, normalized phone ও order number মেলায়। Order code না এলে 500; order/gift save হয় না।
+- Customer/admin invoice-এ আসল `createdAt` date; Invoice, ThankYou ও admin Orders invoice-এ `#` order prefix।
+- যাচাই ধারাবাহিকভাবে: single-fork Vitest **৩১ file / ২৩৩ test pass** → lint exit 0 (শুধু পুরনো warning)
+  → `MONGODB_URI= npm run build` exit 0। Mocked route ও RTL tests-এ guest/logged-in checkout, profile update,
+  session-only gift, phone/email validation, error feedback, idempotent retry, search/filter/pagination যাচাই।
+- Main checkout-এর `node_modules` symlink ব্যবহার; install করা হয়নি। সব verification-এ OS sandbox দিয়ে
+  network বন্ধ ছিল; real DB/production/env files ছোঁয়া হয়নি, server চালানো হয়নি, push হয়নি। Offline build-এ
+  Google Fonts optimization skipped ও DB-unconfigured fallback messages প্রত্যাশিত।
+- MANUAL VERIFY: মোবাইল আগে, desktop পরে checkout validation/error layout, admin phone/order search এবং
+  invoice date/print/download দেখা। বাস্তব order/email যাচাই এই offline scope-এ করা হয়নি।
+
+---
+
 ## Round 9 — দুই দোকান, এক codebase (2026-11-04 push; 2026-11-05 দুই দোকান লাইভ)
 
 একই repo থেকে দুই বন্ধুর দোকান চলবে — **মেহেদী** (Shera Organic, grocery) ও **রায়হান** (Nobomukh, tech)।
