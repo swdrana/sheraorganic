@@ -2,6 +2,7 @@
 
 import { optimizeCloudinaryUrl } from "@/app/utils/cloudinary";
 import { menuItems } from "@/app/utils/data";
+import { normalizeBrand } from "@/app/utils/brand";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -22,6 +23,7 @@ const Offcanvas = () => {
   const { totalItems } = useCart();
   const { categorys } = useCategory();
   const { setting } = useSetting();
+  const customerLogin = normalizeBrand(setting).customer_login;
 
   useEffect(() => setMounted(true), []);
   useEffect(() => {
@@ -70,7 +72,7 @@ const Offcanvas = () => {
           <nav className="mobile-menu-wrapper mt-3">
             <ul>
               {!session?.data?.user?.email ? (
-                <><li><Link href="/login" onClick={closeOffcanvas}>Login</Link></li><li><Link href="/singup" onClick={closeOffcanvas}>Registration</Link></li></>
+                customerLogin && <><li><Link href="/login" onClick={closeOffcanvas}>Login</Link></li><li><Link href="/singup" onClick={closeOffcanvas}>Registration</Link></li></>
               ) : session.data.user.role !== "Customer" ? (
                 <li><Link href="/admin" onClick={closeOffcanvas}>Dashboard</Link></li>
               ) : (

@@ -3,11 +3,18 @@ import Link from "next/link";
 import { useCart } from "react-use-cart";
 import { useEffect, useState } from "react";
 import { useMainContext } from "../../provider/MainContextStore";
+import { useSession } from "next-auth/react";
+import useSetting from "../../dataFetching/useSetting";
+import { normalizeBrand } from "@/app/utils/brand";
 
 const FooterNav = () => {
   const { totalItems, cartTotal } = useCart();
   const { setOpenCategoryDrawer } = useMainContext();
   const [mounted, setMounted] = useState(false);
+  const session = useSession();
+  const { setting } = useSetting();
+  // Guests only get Profile when customer login is on; signed-in users always keep it.
+  const showProfile = !!session?.data?.user?.email || normalizeBrand(setting).customer_login;
 
   useEffect(() => {
     setMounted(true);
@@ -32,6 +39,7 @@ const FooterNav = () => {
             </span>
             <span className="text-xs text-gray-600 leading-tight">Category</span>
           </button>
+          {showProfile && (
           <Link className="flex flex-col items-center justify-center py-2 px-1 flex-1 text-center" href="/my-account">
             <span className="flex items-center justify-center mb-1">
               <svg
@@ -54,6 +62,7 @@ const FooterNav = () => {
             </span>
             <span className="text-xs text-gray-600 leading-tight">Profile</span>
           </Link>
+          )}
           <Link className="flex flex-col items-center justify-center py-2 px-1 flex-1 text-center" href="/products">
             <span className="flex items-center justify-center mb-1">
               <svg

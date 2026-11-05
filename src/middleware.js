@@ -32,7 +32,8 @@ export async function middleware(req) {
 
   // Redirect to login if the user is not authenticated
   const loginUrl = new URL("/login", req.url);
-  loginUrl.searchParams.set("callbackUrl", req.url);
+  // A relative path: behind the proxy req.url carries the internal host (https://localhost:80).
+  loginUrl.searchParams.set("callbackUrl", pathname + req.nextUrl.search);
   return NextResponse.redirect(loginUrl);
 }
 

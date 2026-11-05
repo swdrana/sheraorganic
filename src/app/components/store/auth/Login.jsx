@@ -4,6 +4,7 @@ import Loading from "@/app/components/store/common/others/Loading";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { normalizeBrand } from "@/app/utils/brand";
+import { safeCallbackUrl } from "@/app/utils/callbackUrl";
 import { useRouter } from "next/navigation"; // For App Router in Next.js 13
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,6 +15,8 @@ import { getDecorSrc } from "../theme/decorSets";
 
 const Login = ({ setting }) => {
   const banner = getDecorSrc(useDecorTheme(), "auth-banner");
+  // Off: this page is only the staff sign-in, so no guest-account or sign-up shortcuts.
+  const customerLogin = normalizeBrand(setting).customer_login;
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { data: session, status } = useSession();
@@ -31,7 +34,7 @@ const Login = ({ setting }) => {
     setLoading(true);
     const { email, password } = data;
     const callbackUrl =
-      new URLSearchParams(window.location.search).get("callbackUrl") || "/";
+      safeCallbackUrl(new URLSearchParams(window.location.search).get("callbackUrl"));
 
     // Call signIn with credentials
     const result = await signIn("credentials", {
@@ -98,7 +101,7 @@ const Login = ({ setting }) => {
       // console.log("result...", result);
 
       const callbackUrl =
-        new URLSearchParams(window.location.search).get("callbackUrl") || "/";
+        safeCallbackUrl(new URLSearchParams(window.location.search).get("callbackUrl"));
       if (result.error) {
         setError(result.error);
         setLoading(false);
@@ -116,7 +119,7 @@ const Login = ({ setting }) => {
     router.refresh();
     if (status === "authenticated") {
       const callbackUrl =
-        new URLSearchParams(window.location.search).get("callbackUrl") || "/";
+        safeCallbackUrl(new URLSearchParams(window.location.search).get("callbackUrl"));
 
       if (session?.user?.role !== "Customer") {
         router.push("/admin");
@@ -244,18 +247,22 @@ const Login = ({ setting }) => {
                     >
                       Sign In
                     </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary w-100 mt-2"
-                      onClick={handleAnonymousLogin}
-                    >
-                      লগইন ছাড়া অর্ডার করুন
-                    </button>
+                    {customerLogin && (
+                      <button
+                        type="button"
+                        className="btn btn-secondary w-100 mt-2"
+                        onClick={handleAnonymousLogin}
+                      >
+                        লগইন ছাড়া অর্ডার করুন
+                      </button>
+                    )}
                   </div>
                 </div>
-                <p className="mb-0 fs-xs mt-4 text-center">
-                  Don't have an Account? <Link href="/singup">Sign Up</Link>
-                </p>
+                {customerLogin && (
+                  <p className="mb-0 fs-xs mt-4 text-center">
+                    Don't have an Account? <Link href="/singup">Sign Up</Link>
+                  </p>
+                )}
               </form>
             </div>
           </div>

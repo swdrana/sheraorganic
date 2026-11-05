@@ -6,6 +6,8 @@ import Link from "next/link";
 
 import StarRating from "../common/others/StartRating";
 import ProductReviewForm from "./ProductReviewForm";
+import useSetting from "../dataFetching/useSetting";
+import { normalizeBrand } from "@/app/utils/brand";
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 const ProductDetailsTab = ({
   product,
@@ -15,6 +17,8 @@ const ProductDetailsTab = ({
   onReviewSubmitted,
 }) => {
   const [activeTab, setActiveTab] = useState("des");
+  const { setting } = useSetting();
+  const customerLogin = normalizeBrand(setting).customer_login;
   return (
     <>
       <Tabs className="product-info-tab next_style bg-white rounded-2 overflow-hidden pt-6 mt-4">
@@ -110,11 +114,11 @@ const ProductDetailsTab = ({
                 <p className="text-muted">
                   এই পণ্য ডেলিভারি হওয়ার পর রিভিউ দিতে পারবেন।
                 </p>
-              ) : (
+              ) : customerLogin ? (
                 <p className="text-muted">
                   <Link href="/login">লগইন</Link> করে রিভিউ দিন।
                 </p>
-              )}
+              ) : null}
               {product?.ratings?.length === 0 && (
                 <p className="text-muted">এখনও কোনো রিভিউ নেই।</p>
               )}

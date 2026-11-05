@@ -11,6 +11,8 @@ import useSetting from "../../components/store/dataFetching/useSetting";
 import PasswordInput from "../../components/store/auth/PasswordInput";
 import { useDecorTheme } from "@/app/components/store/theme/DecorThemeProvider";
 import { getDecorSrc } from "@/app/components/store/theme/decorSets";
+import { normalizeBrand } from "@/app/utils/brand";
+import { safeCallbackUrl } from "@/app/utils/callbackUrl";
 const page = () => {
   const banner = getDecorSrc(useDecorTheme(), "auth-banner");
   const router = useRouter();
@@ -26,8 +28,9 @@ const page = () => {
   // console.log("callbackUrl", callbackUrl);
   useEffect(() => {
     // Only runs on the client, setting callback URL from query parameters
-    const url =
-      new URLSearchParams(window.location.search).get("callbackUrl") || "/";
+    const url = safeCallbackUrl(
+      new URLSearchParams(window.location.search).get("callbackUrl")
+    );
     setCallbackUrl(url);
   }, []);
 
@@ -75,6 +78,19 @@ const page = () => {
     }
   };
   const { setting, settingLoading } = useSetting();
+  // Customer accounts switched off in Site settings: guests order directly at checkout.
+  if (!normalizeBrand(setting).customer_login) {
+    return (
+      <section className="login-section py-5">
+        <div className="container text-center">
+          <p className="mb-4">লগইন বা অ্যাকাউন্ট ছাড়াই সরাসরি অর্ডার করতে পারবেন।</p>
+          <Link href="/products" className="btn btn-primary">
+            পণ্য দেখুন
+          </Link>
+        </div>
+      </section>
+    );
+  }
   return (
     <>
       <section className="login-section py-5">

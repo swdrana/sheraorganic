@@ -6,7 +6,7 @@ export const BRAND_TEXT_KEYS = [
   "whatsapp_number", "messenger_username", "messenger_greeting", "email_brand_color",
   "product_sidebar_banner_img", "product_sidebar_banner_title", "product_sidebar_banner_subtitle",
 ];
-export const BRAND_KEYS = [...BRAND_TEXT_KEYS, "decoration_theme", "product_sidebar_banner_show"];
+export const BRAND_KEYS = [...BRAND_TEXT_KEYS, "decoration_theme", "product_sidebar_banner_show", "customer_login"];
 export const safeImageUrl = (value) => {
   if (typeof value !== "string") return "";
   const url = value.trim();
@@ -18,6 +18,8 @@ export function normalizeBrand(setting) {
   brand.decoration_theme = normalizeTheme(raw.decoration_theme);
   brand.product_sidebar_banner_show = typeof raw.product_sidebar_banner_show === "boolean"
     ? raw.product_sidebar_banner_show : raw.product_sidebar_banner_show === undefined && brand.decoration_theme === "grocery";
+  // Customer login/registration links stay visible unless the admin explicitly turns them off.
+  brand.customer_login = raw.customer_login !== false;
   brand.whatsapp_number = brand.whatsapp_number.replace(/\D/g, "");
   brand.messenger_username = /^[a-zA-Z0-9._-]+$/.test(brand.messenger_username) ? brand.messenger_username : "";
   brand.email_brand_color = /^#[0-9a-fA-F]{6}$/.test(brand.email_brand_color) ? brand.email_brand_color : "";

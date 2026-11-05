@@ -313,6 +313,8 @@ const Navbar = () => {
                       </div>
                     </div>
 
+                    {/* With customer login off, guests get no account menu; signed-in users keep theirs. */}
+                    {(session?.data?.user?.email || brand.customer_login) && (
                     <div className="gshop-header-user position-relative">
                       <button type="button" className="header-icon" aria-label="User Menu">
                         <svg
@@ -408,6 +410,7 @@ const Navbar = () => {
                         </ul>
                       </div>
                     </div>
+                    )}
 
                     {/* shopping beg hover content */}
                     <ShoppingBegHoverContent />

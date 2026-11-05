@@ -28,6 +28,19 @@ describe("brand normalization", () => {
     expect(normalizeBrand({ brand: { decoration_theme: "tech", product_sidebar_banner_show: true, email_brand_color: "#aB091F" } }).product_sidebar_banner_show).toBe(true);
   });
 });
+describe("customer login switch", () => {
+  it("stays on unless explicitly false, so existing stores keep their login links", () => {
+    expect(normalizeBrand().customer_login).toBe(true);
+    for (const value of [true, "false", 0, null]) {
+      expect(normalizeBrand({ brand: { customer_login: value } }).customer_login).toBe(true);
+    }
+    expect(normalizeBrand({ brand: { customer_login: false } }).customer_login).toBe(false);
+  });
+  it("is written as a leaf only when supplied", () => {
+    expect(settingsUpdate({ brand: { customer_login: false } })).toEqual({ name: "storeCustomizationSetting", "setting.brand.customer_login": false });
+    expect(settingsUpdate({ brand: { site_name: "X" } })).not.toHaveProperty("setting.brand.customer_login");
+  });
+});
 describe("tracking validators", () => {
   const valid = { gtm_id: "GTM-MMLFB63S", ga4_id: "G-ABC1234567", fb_pixel_id: "123456789012345", clarity_id: "abc1234567", tiktok_pixel_id: "ABCDEFGHIJKLMNOPQRST" };
   it("is disabled unless explicitly true", () => {

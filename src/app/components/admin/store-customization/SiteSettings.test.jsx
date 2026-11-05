@@ -17,6 +17,9 @@ describe("Site Settings form", () => {
     expect(screen.getAllByText("Image uploader")).toHaveLength(2);
     expect(screen.getByLabelText("সাজসজ্জার ধরন")).toHaveValue("tech");
     expect(screen.getByLabelText("পণ্যের পাশের ব্যানার দেখান")).not.toBeChecked();
+    const loginToggle = screen.getByLabelText("ক্রেতাদের Login/Registration দেখান");
+    expect(loginToggle).toBeChecked();
+    fireEvent.click(loginToggle);
     fireEvent.click(screen.getByRole("button", { name: "সেভ করুন" }));
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
     const options = fetch.mock.calls[0][1];
@@ -24,6 +27,7 @@ describe("Site Settings form", () => {
     const { setting } = JSON.parse(options.body);
     expect(Object.keys(setting)).toEqual(["brand"]);
     expect(setting.brand.site_name).toBe("Changed shop");
+    expect(setting.brand.customer_login).toBe(false);
     expect(await screen.findByText("সেভ হয়েছে।")).toBeInTheDocument();
   });
   it("renders every tracking ID with hints and preserves the disabled switch", async () => {

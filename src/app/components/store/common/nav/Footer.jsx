@@ -6,6 +6,7 @@ import useCategory from "../../dataFetching/useCategory";
 import FooterNav from "./FooterNav";
 import Link from "next/link";
 import useSetting from "../../dataFetching/useSetting";
+import { normalizeBrand } from "@/app/utils/brand";
 import { toast } from "react-toastify";
 
 const Footer = () => {
@@ -207,12 +208,16 @@ const Footer = () => {
                   </div>
                   <div className="col-lg-6">
                     <ul className="footer-nav">
-                      <li>
-                        <Link href="/login">Log In</Link>
-                      </li>
-                      <li>
-                        <Link href="/singup">Sing Up</Link>
-                      </li>
+                      {normalizeBrand(setting).customer_login && (
+                        <>
+                          <li>
+                            <Link href="/login">Log In</Link>
+                          </li>
+                          <li>
+                            <Link href="/singup">Sing Up</Link>
+                          </li>
+                        </>
+                      )}
                       <li>
                         <Link href="/cart">Cart</Link>
                       </li>

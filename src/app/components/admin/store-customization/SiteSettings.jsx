@@ -70,6 +70,8 @@ export default function SiteSettings({ group }) {
             </select>
           </label>
           <label className="d-flex gap-2 mb-4 align-items-center"><input type="checkbox" checked={values.product_sidebar_banner_show} onChange={(e) => change("product_sidebar_banner_show", e.target.checked)} />পণ্যের পাশের ব্যানার দেখান</label>
+          <label className="d-flex gap-2 mb-1 align-items-center"><input type="checkbox" checked={values.customer_login} onChange={(e) => change("customer_login", e.target.checked)} />ক্রেতাদের Login/Registration দেখান</label>
+          <p className="text-muted small mb-4">বন্ধ করলে ক্রেতারা লগইন ছাড়াই সরাসরি অর্ডার করবে; মেনু ও ফুটারে লগইন/রেজিস্ট্রেশন দেখাবে না। অ্যাডমিন লগইন /login-এ আগের মতোই কাজ করবে।</p>
         </> : <>
           <label className="d-flex gap-2 mb-4 align-items-center"><input type="checkbox" role="switch" checked={values.enabled} onChange={(e) => change("enabled", e.target.checked)} />ট্র্যাকিং চালু</label>
           {Object.entries(TRACKING_PATTERNS).map(([key, pattern]) => <label key={key} className="d-block mb-4">

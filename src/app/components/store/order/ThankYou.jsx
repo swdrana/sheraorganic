@@ -1,8 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import useSetting from "../dataFetching/useSetting";
+import { normalizeBrand } from "@/app/utils/brand";
 
 const ThankYou = ({ orderCode }) => {
+  const session = useSession();
+  const { setting } = useSetting();
+  const showProfile = !!session?.data?.user?.email || normalizeBrand(setting).customer_login;
   return (
     <section className="ptb-120">
       <div className="container">
@@ -23,9 +29,11 @@ const ThankYou = ({ orderCode }) => {
                 <Link href="/" className="btn btn-secondary">
                   Home
                 </Link>
-                <Link href="/my-account" className="btn btn-outline-primary">
-                  Profile
-                </Link>
+                {showProfile && (
+                  <Link href="/my-account" className="btn btn-outline-primary">
+                    Profile
+                  </Link>
+                )}
               </div>
             </div>
           </div>
