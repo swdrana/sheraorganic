@@ -6,6 +6,7 @@ vi.mock("@/app/data/cachedData", () => ({ getCachedSettings: vi.fn().mockResolve
 
 const order = {
   orderCode: 10234,
+  accessToken: "private token",
   user_info: { name: "<b>Rahim</b>", contact: "017", address: "Dhaka" },
   cart: [
     { name: "Honey-500g", quantity: 2, price: 450 },
@@ -26,7 +27,7 @@ describe("buildOrderEmail", () => {
     expect(html).toContain("৳900");
     expect(html).toContain("-৳50");
     expect(html).toContain("৳910");
-    expect(html).toContain("/invoice/10234");
+    expect(html).toContain("/invoice/10234?t=private%20token");
     expect(html).toContain("ক্যাশ অন ডেলিভারি");
     expect(text).toContain("Honey-500g x 2: ৳900");
   });

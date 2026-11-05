@@ -28,7 +28,9 @@ vi.mock("react-use-cart", () => ({ useCart: () => ({
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.session = { data: null, status: "unauthenticated" };
-  createOrder.mockResolvedValue({ order: { orderCode: 12345 } });
+  createOrder.mockResolvedValue({
+    order: { orderCode: 12345, accessToken: "private-token", total: 330 },
+  });
 });
 
 const fillGuestForm = (phone = "০১৭১২-৩৪৫৬৭৮") => {
@@ -49,7 +51,7 @@ describe("checkout validation and order feedback", () => {
     expect(createOrder.mock.calls[0][0]).toMatchObject({
       user: undefined, user_info: { contact: "01712345678", email: "" }, total: 330,
     });
-    await waitFor(() => expect(mocks.push).toHaveBeenCalledWith("/thank-you/12345"));
+    await waitFor(() => expect(mocks.push).toHaveBeenCalledWith("/thank-you/12345?t=private-token"));
     expect(mocks.emptyCart).toHaveBeenCalledOnce();
     expect(updateUserProfile).not.toHaveBeenCalled();
   });
@@ -93,7 +95,7 @@ describe("checkout validation and order feedback", () => {
     await waitFor(() => expect(screen.getByLabelText("Phone")).toHaveValue("01712-345678"));
     fireEvent.click(screen.getByLabelText(/ঢাকার ভেতর/));
     fireEvent.click(screen.getByRole("button", { name: "Place Order" }));
-    await waitFor(() => expect(mocks.push).toHaveBeenCalledWith("/thank-you/12345"));
+    await waitFor(() => expect(mocks.push).toHaveBeenCalledWith("/thank-you/12345?t=private-token"));
     expect(createOrder.mock.calls[0][0]).toMatchObject({ user_info: { email: "customer@example.test", contact: "01712345678" } });
     expect(updateUserProfile).toHaveBeenCalledWith("session-user", { name: "Customer", contact: "01712345678", address: "Dhaka" });
   });

@@ -18,7 +18,9 @@ export function buildOrderEmail(order, brandInput = {}, siteUrl = getSiteUrl()) 
   const thanks = `${shop ? `${shop} থেকে ` : ""}অর্ডার করার জন্য ধন্যবাদ।`;
   const info = order.user_info || {};
   const cart = Array.isArray(order.cart) ? order.cart : [];
-  const invoiceUrl = siteUrl ? `${siteUrl}/invoice/${encodeURIComponent(order.orderCode)}` : "";
+  const invoiceUrl = siteUrl && order.accessToken
+    ? `${siteUrl}/invoice/${encodeURIComponent(order.orderCode)}?t=${encodeURIComponent(order.accessToken)}`
+    : "";
   const payment = PAYMENT_LABELS[order.paymentMethod] || order.paymentMethod || "";
 
   const rows = cart

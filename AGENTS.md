@@ -213,7 +213,19 @@ builds**. Each app needs `MONGODB_URI` at build time (the home page prerenders w
 
 - Guest checkout is enabled (no login required). `Order.user` is `ref: "User"`, `required: false`.
 - `POST /api/v1/orders` — validates `cart/user_info/total`, idempotent via `clientToken`, returns
-  `{ order: { orderCode } }` on 201. `CheckoutBody` checks `res?.order?.orderCode` for success.
+  `{ order: { orderCode, accessToken } }` on 201. Every new order gets a server-generated 32-hex
+  `accessToken`; an idempotent `clientToken` retry returns the same saved token. `accessToken` is
+  `select: false` and must never appear in GET responses.
+- `GET /api/v1/order-code/[code]` returns 404 unless the requester is staff, the signed-in order owner,
+  or supplies the matching `?t=<accessToken>` (constant-time comparison). Invoice/thank-you/email links for
+  new guest orders carry this token; legacy tokenless orders are available only to staff or their owner.
+- Order prices are server-owned: each non-gift cart line resolves its product/selected variant in MongoDB,
+  quantity is an integer 1–999, and saved line prices/subtotal come from the DB. Shared
+  `utils/orderPricing.js` limits shipping to Dhaka ৳80/outside Dhaka ৳100 and payment to `cod`.
+  Coupons are looked up case-insensitively and apply their saved percentage only before `endTime` (the model
+  has no minimum-order field); unknown/expired coupons give zero discount. A client/server total difference
+  over ৳1 returns 409, create status is always `Pending`, and the server-injected ৳0 review gift is outside
+  subtotal/discount calculations.
 - Order owner and review-gift redemption use only `getApiSession().user.id`; body `user` is ignored.
   A missing generated order code returns 500 before saving or redeeming a gift.
 - `utils/phone.js` normalizes Bengali digits, separators and Bangladesh country prefix; checkout and
@@ -227,7 +239,8 @@ builds**. Each app needs `MONGODB_URI` at build time (the home page prerenders w
 - `backend/utils/mailer.js` = the only sender (`sendMail`, `escapeHtml`, `isEmail`); env `GMAIL_USER` +
   `GMAIL_PASSWORD` (a Gmail **App Password**; a normal password fails with EAUTH 535).
 - New order → `sendOrderConfirmation(order)` (`backend/utils/orderEmail.js`) fire-and-forget from `orders`
-  POST; it never throws. Contact form → `recive-mail`, footer → `subscribe-gmail` (both to the shop inbox).
+  POST; it never throws, and its invoice URL includes the order access token. Contact form → `recive-mail`,
+  footer → `subscribe-gmail` (both to the shop inbox).
 - Never add a route that sends to a caller-supplied `to` address (open relay); always escape user text in HTML.
 
 ### Reviews

@@ -22,9 +22,9 @@ describe("Profile links (mobile bar + thank-you)", () => {
 
   it("hide for guests when customer login is off, keeping the order link", () => {
     fixture.setting = { brand: { customer_login: false } };
-    render(<><FooterNav /><ThankYou orderCode="123" /></>);
+    render(<><FooterNav /><ThankYou orderCode="123" accessToken="private token" /></>);
     expect(screen.queryByRole("link", { name: /Profile/ })).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "View Order" })).toHaveAttribute("href", "/invoice/123");
+    expect(screen.getByRole("link", { name: "View Order" })).toHaveAttribute("href", "/invoice/123?t=private%20token");
   });
 
   it("stay for a signed-in customer even when off", () => {

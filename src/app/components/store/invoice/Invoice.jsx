@@ -4,11 +4,11 @@ import dayjs from "dayjs";
 import useOrderCode from "../dataFetching/useOrderCode";
 import useSetting from "../dataFetching/useSetting";
 
-const Invoice = ({ invoiceNo }) => {
+const Invoice = ({ invoiceNo, accessToken = "" }) => {
   const invoiceRef = useRef();
   // console.log("invoiceNo..", invoiceNo);
-  const { codeOrder, codeOrderLoading } = useOrderCode(invoiceNo);
-  const { setting, settingLoading } = useSetting();
+  const { codeOrder, codeOrderLoading } = useOrderCode(invoiceNo, accessToken);
+  const { setting } = useSetting();
   // console.log("codeOrder in invoice", codeOrder);
 
   const downloadInvoice = async () => {
@@ -137,6 +137,16 @@ const Invoice = ({ invoiceNo }) => {
     printWindow.print();
     printWindow.close();
   };
+  if (codeOrderLoading) {
+    return <p className="py-5 text-center">অর্ডারটি লোড হচ্ছে...</p>;
+  }
+  if (!codeOrder) {
+    return (
+      <p className="py-5 text-center">
+        অর্ডারটি পাওয়া যায়নি বা দেখার অনুমতি নেই।
+      </p>
+    );
+  }
   return (
     <>
       <section ref={invoiceRef} className="invoice-section pt-6 pb-120">

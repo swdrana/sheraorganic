@@ -30,16 +30,24 @@
   `/my-account` থেকে login করলে localhost-এ চলে যেত); `utils/callbackUrl.js` শুধু same-origin path মানে।
 - Hydration fix: cart থাকলে **প্রতিটি পাতায়** React #418/#423 (পুরো পাতা client-এ আবার render) হচ্ছিল — দুই লাইভ
   সাইটেই। `ShoppingBegHoverContent` ও `CartDrawer` এখন mount-এর পর cart দেখায়; checkout summary-ও।
-- যাচাই: Vitest 31 file/233 test, lint (শুধু পুরনো warning), build OK। Mac-এ রায়হানের DB কপি (local mongod)
+- Order security: নতুন order-এ server-generated random `accessToken`; guest thank-you → invoice ও order email-এ
+  `?t=` থাকে। `/api/v1/order-code/[code]` এখন শুধু staff, signed-in owner, বা সঠিক token-এ order দেয়; অন্য সব
+  ক্ষেত্রে details ছাড়া 404। সব GET-এ token গোপন। পুরনো token-ছাড়া order শুধু staff/owner খুলতে পারবে।
+- Server-side pricing: cart-এর product/variant MongoDB থেকে নিয়ে quantity ১–৯৯৯ validate করে line price ও
+  subtotal আবার হিসাব; delivery শুধু shared constant-এর ঢাকা ৳৮০/ঢাকার বাইরে ৳১০০; payment শুধু COD; create
+  status সবসময় Pending। Coupon code case-insensitive DB lookup, expiry-এর আগে saved percentage discount
+  (model-এ minimum নেই); unknown/expired coupon = ০ discount। Browser total server total থেকে ৳১-এর বেশি
+  আলাদা হলে বাংলা message-সহ 409 ও কোনো order/gift write নয়। Review gift আগের মতো server-injected ৳০ line।
+- এই কাজের যাচাই: Vitest 35 file/256 test pass; lint exit 0 (শুধু পুরনো warning); `MONGODB_URI=` production
+  build 46/46 page pass। কোনো server/real DB/network চালানো হয়নি। আগের Round 10 manual verification নিচে।
+- আগের যাচাই: Mac-এ রায়হানের DB কপি (local mongod)
   + headless মোবাইল: login বন্ধ অবস্থায় কোনো login link নেই, guest order (বাংলা অঙ্কের ফোন, email ছাড়া)
   → thank-you → invoice → admin-এ দেখা ও ফোন/নম্বরে খোঁজা, ভুল ফোন/email-এ বাংলা ত্রুটি, server 400;
   admin থেকে switch চালু/বন্ধ save করলে storefront (static home-সহ) সঙ্গে সঙ্গে বদলায়; tracking request ০।
   পরীক্ষার order ও local DB মুছে ফেলা হয়েছে। লাইভ DB-তে কোনো লেখা হয়নি।
 - **Deploy-এর পর:** রায়হান admin থেকে switch বন্ধ করবে (default চালু, তাই দুই সাইট নিজে থেকে বদলায় না)।
-- **পরের round-এর প্রস্তাব (owner-এর হ্যাঁ লাগবে):** `/api/v1/order-code/[code]` যে কেউ ক্রমিক নম্বরে সব
-  ক্রেতার নাম/ফোন/ঠিকানা পড়তে পারে → invoice link-এ random token; order POST দাম/total/status browser-এর
-  কথায় নেয় → server-এ product থেকে হিসাব; guest ক্রেতাদের ফোন ধরে admin "customers" view; `clientToken`
-  unique index।
+- **পরের round-এর প্রস্তাব (owner-এর হ্যাঁ লাগবে):** guest ক্রেতাদের ফোন ধরে admin "customers" view;
+  `clientToken` unique index।
 
 ---
 

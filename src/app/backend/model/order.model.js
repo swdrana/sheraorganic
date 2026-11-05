@@ -6,6 +6,11 @@ const orderSchema = new Schema(
       type: String,
       required: false,
     },
+    accessToken: {
+      type: String,
+      required: false,
+      select: false,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

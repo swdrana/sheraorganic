@@ -1,11 +1,10 @@
-"use client";
 import ThankYou from "@/app/components/store/order/ThankYou";
 
-const Page = ({ params }) => {
+const Page = ({ params, searchParams }) => {
   const { orderCode } = params;
   return (
     <>
-      <ThankYou orderCode={orderCode} />
+      <ThankYou orderCode={orderCode} accessToken={searchParams?.t || ""} />
     </>
   );
 };

@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import useSetting from "../dataFetching/useSetting";
 import { normalizeBrand } from "@/app/utils/brand";
 
-const ThankYou = ({ orderCode }) => {
+const ThankYou = ({ orderCode, accessToken = "" }) => {
   const session = useSession();
   const { setting } = useSetting();
   const showProfile = !!session?.data?.user?.email || normalizeBrand(setting).customer_login;
@@ -23,7 +23,10 @@ const ThankYou = ({ orderCode }) => {
               <h3 className="mb-2">আপনার অর্ডার সফলভাবে সম্পন্ন হয়েছে!</h3>
               <p className="text-muted mb-4">অর্ডার নম্বর: #{orderCode}</p>
               <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
-                <Link href={`/invoice/${orderCode}`} className="btn btn-primary">
+                <Link
+                  href={`/invoice/${orderCode}${accessToken ? `?t=${encodeURIComponent(accessToken)}` : ""}`}
+                  className="btn btn-primary"
+                >
                   View Order
                 </Link>
                 <Link href="/" className="btn btn-secondary">

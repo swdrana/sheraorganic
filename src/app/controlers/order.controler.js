@@ -56,15 +56,19 @@ export async function getUserOrders(id) {
 }
 
 // Get order by code
-export async function getOrderByCode(code) {
+export async function getOrderByCode(code, accessToken = "") {
   if (!code) {
     console.error("Order code is required to fetch order.");
     return null;
   }
 
   try {
+    const tokenQuery = accessToken
+      ? `?t=${encodeURIComponent(accessToken)}`
+      : "";
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/order-code/${code}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/order-code/${encodeURIComponent(code)}${tokenQuery}`,
+      { credentials: "include" }
     );
 
     if (!response.ok) {

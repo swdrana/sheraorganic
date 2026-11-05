@@ -15,6 +15,7 @@ import { InitiateCheckout, Purchase } from "@/app/utilities/facebookPixel";
 import { getUserById, updateUserProfile } from "@/app/controlers/user.controler";
 import { notifyError } from "@/app/utils/toast";
 import { isValidBdPhone, normalizeBdPhone } from "@/app/utils/phone";
+import { SHIPPING_OPTIONS } from "@/app/utils/orderPricing";
 
 import dayjs from "dayjs";
 const CheckoutBody = () => {
@@ -59,7 +60,6 @@ const CheckoutBody = () => {
     }
   }, [session]);
   const router = useRouter();
-  const [discountPercentage, setDiscountPercentage] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [couponInfo, setCouponInfo] = useState({});
   const { items, updateItemQuantity, emptyCart, cartTotal } = useCart();
@@ -82,6 +82,11 @@ const CheckoutBody = () => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const shownCartTotal = mounted ? cartTotal : 0;
+
+  useEffect(() => {
+    const percentage = Number(couponInfo?.discountPercentage) || 0;
+    setDiscount(couponInfo?.couponCode ? (cartTotal * percentage) / 100 : 0);
+  }, [cartTotal, couponInfo]);
 
   const handleCheckoutSubmit = async () => {
     if (isSubmitting) return;
@@ -135,6 +140,7 @@ const CheckoutBody = () => {
         paymentMethod: payment,
         status: "Pending",
         clientToken: clientToken,
+        couponCode: couponInfo?.couponCode || "",
       };
 
       const res = await createOrder(orderData);
@@ -163,13 +169,15 @@ const CheckoutBody = () => {
           })),
           currency: 'BDT',
           num_items: items.length,
-          value: grandTotal
+          value: res.order.total
         }, res.order.orderCode);
         
         emptyCart();
         // Cookies.remove("couponInfo");
         // getOrderRevalidate();
-        router.push(`/thank-you/${res?.order?.orderCode}`);
+        router.push(
+          `/thank-you/${res.order.orderCode}?t=${encodeURIComponent(res.order.accessToken)}`
+        );
       } else {
         setIsSubmitting(false);
         notifyError(res?.error || res?.message || "অর্ডার সম্পন্ন হয়নি।");
@@ -190,11 +198,26 @@ const CheckoutBody = () => {
         // console.log("res..in", res);
 
         // Filter out active coupons based on endTime
-        const activeCoupons = res?.filter((coupon) =>
+        const activeCoupons = (res || []).filter((coupon) =>
           dayjs().isBefore(dayjs(coupon.endTime))
         );
         // console.log("activeCoupons", activeCoupons);
         setEnterCouponCodeList(activeCoupons);
+        const savedCoupon = Cookies.get("couponInfo");
+        if (savedCoupon) {
+          try {
+            const parsedCoupon = JSON.parse(savedCoupon);
+            const activeSavedCoupon = activeCoupons.find(
+              (coupon) =>
+                coupon.couponCode.toLowerCase() ===
+                String(parsedCoupon.couponCode || "").toLowerCase()
+            );
+            if (activeSavedCoupon) setCouponInfo(activeSavedCoupon);
+            else Cookies.remove("couponInfo");
+          } catch {
+            Cookies.remove("couponInfo");
+          }
+        }
       } catch (error) {
         console.error("Error fetching coupons:", error);
       } finally {
@@ -203,11 +226,6 @@ const CheckoutBody = () => {
     };
 
     fetchData();
-    if (Cookies.get("couponInfo")) {
-      const coupon = JSON.parse(Cookies.get("couponInfo"));
-      setCouponInfo(coupon);
-      setDiscountPercentage(coupon.discountPercentage);
-    }
   }, []);
 
   const handleCopunApply = (e) => {
@@ -220,7 +238,6 @@ const CheckoutBody = () => {
     // console.log("foundCoupon", foundCoupon);
     if (foundCoupon) {
       setMessage("Coupon applied successfully!");
-      setDiscount((cartTotal * foundCoupon?.discountPercentage) / 100);
       setCouponInfo(foundCoupon);
       Cookies.set("couponInfo", JSON.stringify(foundCoupon));
     } else {
@@ -339,13 +356,13 @@ const CheckoutBody = () => {
                             <div className="d-flex align-items-center gap-2">
                               <input
                                 onClick={() => {
-                                  setShippingCost(80);
-                                  setSelectedShipping("80");
+                                  setShippingCost(SHIPPING_OPTIONS.insideDhaka.cost);
+                                  setSelectedShipping(SHIPPING_OPTIONS.insideDhaka.value);
                                 }}
                                 type="radio"
                                 name="shipping"
-                                value="80"
-                                id="80"
+                                value={SHIPPING_OPTIONS.insideDhaka.value}
+                                id={SHIPPING_OPTIONS.insideDhaka.value}
                                 className="form-check-input"
                                 {...register("shipping", {
                                   required: "Shipping method is required",
@@ -353,7 +370,7 @@ const CheckoutBody = () => {
                               />
                               <label
                                 className="form-check-label fw-semibold"
-                                htmlFor="80"
+                                htmlFor={SHIPPING_OPTIONS.insideDhaka.value}
                               >
                                 ঢাকার ভেতর -{" "}
                                 <span className="text-primary">৮০ টাকা</span>
@@ -368,13 +385,13 @@ const CheckoutBody = () => {
                             <div className="d-flex align-items-center gap-2">
                               <input
                                 onClick={() => {
-                                  setShippingCost(100);
-                                  setSelectedShipping("100");
+                                  setShippingCost(SHIPPING_OPTIONS.outsideDhaka.cost);
+                                  setSelectedShipping(SHIPPING_OPTIONS.outsideDhaka.value);
                                 }}
                                 type="radio"
                                 name="shipping"
-                                value="100"
-                                id="100"
+                                value={SHIPPING_OPTIONS.outsideDhaka.value}
+                                id={SHIPPING_OPTIONS.outsideDhaka.value}
                                 className="form-check-input"
                                 {...register("shipping", {
                                   required: "Shipping method is required",
@@ -382,7 +399,7 @@ const CheckoutBody = () => {
                               />
                               <label
                                 className="form-check-label fw-semibold"
-                                htmlFor="100"
+                                htmlFor={SHIPPING_OPTIONS.outsideDhaka.value}
                               >
                                 ঢাকার বাহিরে -{" "}
                                 <span className="text-primary">১০০ টাকা</span>

@@ -86,14 +86,20 @@ export async function updateOrderStatus(id, updateOrderStatus) {
 }
 
 // Get order by code
-export async function getOrderByCode(code) {
+export async function getOrderByCode(code, accessToken = "") {
   if (!code) return null;
 
   const apiUrl = getApiUrl();
   if (!apiUrl) return null; // Return null if the API URL is missing
 
   try {
-    const response = await fetch(`${apiUrl}/api/v1/order-code/${code}`);
+    const tokenQuery = accessToken
+      ? `?t=${encodeURIComponent(accessToken)}`
+      : "";
+    const response = await fetch(
+      `${apiUrl}/api/v1/order-code/${encodeURIComponent(code)}${tokenQuery}`,
+      { credentials: "include" }
+    );
     if (!response.ok) {
       throw new Error(
         `Failed to fetch order by code. Status: ${response.status}`

@@ -1,14 +1,11 @@
-"use client";
 import Invoice from "@/app/components/store/invoice/Invoice";
 
-// Keep this if you need client-side features
-
-const Page = ({ params }) => {
+const Page = ({ params, searchParams }) => {
   const { invoiceNo } = params;
 
   return (
     <>
-      <Invoice invoiceNo={invoiceNo} />
+      <Invoice invoiceNo={invoiceNo} accessToken={searchParams?.t || ""} />
     </>
   );
 };

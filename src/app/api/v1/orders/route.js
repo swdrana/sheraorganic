@@ -1,6 +1,7 @@
 import getNextOrderCode from "@/app/backend/controllers/order.controller";
 import Order from "@/app/backend/model/order.model";
 import Product from "@/app/backend/model/product.model";
+import Coupon from "@/app/backend/model/coupon.model";
 import User from "@/app/backend/model/user.model";
 import Setting from "@/app/backend/model/setting.model";
 import connectDB from "@/app/utils/database";
@@ -11,6 +12,111 @@ import { getApiSession, isStaff, unauthorized } from "@/app/backend/utils/apiAut
 import { sendOrderConfirmation } from "@/app/backend/utils/orderEmail";
 import { isEmail } from "@/app/backend/utils/mailer";
 import { isValidBdPhone, normalizeBdPhone } from "@/app/utils/phone";
+import {
+  ALLOWED_PAYMENT_METHODS,
+  shippingOptionFor,
+} from "@/app/utils/orderPricing";
+import crypto from "crypto";
+
+const VARIANT_META_KEYS = new Set([
+  "originalPrice",
+  "price",
+  "discount",
+  "quantity",
+  "inUse",
+  "inUseOrder",
+  "barcode",
+  "volume",
+  "totalVolume",
+  "unit",
+  "sku",
+  "productId",
+  "image",
+  "_id",
+]);
+
+const findSelectedVariant = (product, cartLine) => {
+  const variants = Array.isArray(product?.variants) ? product.variants : [];
+  const requested = cartLine?.variant;
+  if (!variants.length || !requested || typeof requested !== "object") return null;
+
+  if (requested.productId) {
+    const byProductId = variants.find(
+      (variant) => String(variant.productId) === String(requested.productId)
+    );
+    if (byProductId) return byProductId;
+  }
+
+  return variants.find((variant) => {
+    const optionKeys = Object.keys(variant).filter(
+      (key) => !VARIANT_META_KEYS.has(key)
+    );
+    return (
+      optionKeys.length > 0 &&
+      optionKeys.every(
+        (key) => String(variant[key]) === String(requested[key])
+      )
+    );
+  });
+};
+
+const priceCart = async (cart) => {
+  const pricedCart = [];
+  let subTotal = 0;
+
+  for (const line of cart) {
+    const quantity = Number(line?.quantity);
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 999) {
+      return { error: "পণ্যের পরিমাণ ১ থেকে ৯৯৯-এর মধ্যে হতে হবে।" };
+    }
+
+    const product = line?._id ? await Product.findById(line._id) : null;
+    if (!product) return { error: "কার্টের একটি পণ্য আর পাওয়া যাচ্ছে না।" };
+
+    const selectedVariant = findSelectedVariant(product, line);
+    if (line?.variant && product.variants?.length && !selectedVariant) {
+      return { error: "কার্টের পণ্যের ভ্যারিয়েন্টটি আর পাওয়া যাচ্ছে না।" };
+    }
+
+    const serverPrices = selectedVariant || product.prices;
+    const price = Number(serverPrices?.price);
+    if (!Number.isFinite(price) || price < 0) {
+      return { error: "কার্টের একটি পণ্যের দাম সঠিক নয়।" };
+    }
+
+    const itemTotal = price * quantity;
+    subTotal += itemTotal;
+    pricedCart.push({
+      ...line,
+      _id: String(product._id),
+      quantity,
+      price,
+      itemTotal,
+      prices: {
+        price,
+        originalPrice: Number(serverPrices?.originalPrice) || price,
+        discount: Number(serverPrices?.discount) || 0,
+      },
+      variants: Array.isArray(product.variants) ? product.variants : [],
+      ...(selectedVariant ? { variant: selectedVariant } : {}),
+    });
+  }
+
+  return { cart: pricedCart, subTotal };
+};
+
+const couponDiscount = async (couponCode, subTotal) => {
+  const code = typeof couponCode === "string" ? couponCode.trim() : "";
+  if (!code) return 0;
+  const escapedCode = code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const coupon = await Coupon.findOne({
+    couponCode: { $regex: `^${escapedCode}$`, $options: "i" },
+  });
+  const percentage = Number(coupon?.discountPercentage);
+  const active = coupon?.endTime && new Date(coupon.endTime).getTime() > Date.now();
+  if (!active || !Number.isFinite(percentage) || percentage <= 0) return 0;
+  return (subTotal * percentage) / 100;
+};
 
 // get all orders (staff only: contains every customer's name, phone and address)
 export const GET = async () => {
@@ -68,11 +174,41 @@ export const POST = async (req) => {
     await connectDB();
 
     if (data?.clientToken) {
-      const existingOrder = await Order.findOne({ clientToken: data.clientToken });
+      const existingOrder = await Order.findOne({
+        clientToken: data.clientToken,
+      }).select("+accessToken");
       if (existingOrder) {
         return NextResponse.json({ message: "order create successfully", order: existingOrder }, { status: 200 });
       }
     }
+
+    const shipping = shippingOptionFor(data.shippingOption);
+    if (!shipping || Number(data.shippingCost) !== shipping.cost) {
+      return NextResponse.json(
+        { message: "সঠিক ডেলিভারি এলাকা নির্বাচন করুন।" },
+        { status: 400 }
+      );
+    }
+    if (!ALLOWED_PAYMENT_METHODS.includes(data.paymentMethod)) {
+      return NextResponse.json(
+        { message: "সঠিক পেমেন্ট পদ্ধতি নির্বাচন করুন।" },
+        { status: 400 }
+      );
+    }
+
+    const priced = await priceCart(data.cart);
+    if (priced.error) {
+      return NextResponse.json({ message: priced.error }, { status: 400 });
+    }
+    const discount = await couponDiscount(data.couponCode, priced.subTotal);
+    const total = priced.subTotal + shipping.cost - discount;
+    if (!Number.isFinite(Number(data.total)) || Math.abs(Number(data.total) - total) > 1) {
+      return NextResponse.json(
+        { message: "পণ্যের দাম পরিবর্তন হয়েছে। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।" },
+        { status: 409 }
+      );
+    }
+
     const orderCode = await getNextOrderCode();
     if (orderCode === null || orderCode === undefined) {
       return NextResponse.json(
@@ -88,7 +224,7 @@ export const POST = async (req) => {
       }).sort({ createdAt: 1 });
       const home = settingDoc?.setting?.home || {};
       const minOrder = Number(home.review_gift_min_order) || 0;
-      if (home.review_gift_enabled && Number(data.total) >= minOrder) {
+      if (home.review_gift_enabled && total >= minOrder) {
         const orderUser = await User.findById(user);
         const pending = orderUser?.pendingGifts?.find((gift) => !gift.redeemed);
         if (pending) {
@@ -112,22 +248,23 @@ export const POST = async (req) => {
         }
       }
     }
-    const finalCart = giftLine ? [giftLine, ...data.cart] : data.cart;
+    const finalCart = giftLine ? [giftLine, ...priced.cart] : priced.cart;
 
     const newOrder = new Order({
       clientToken: data.clientToken,
+      accessToken: crypto.randomBytes(16).toString("hex"),
       orderCode: orderCode,
       user,
       cart: finalCart,
       user_info: userInfo,
-      subTotal: data.subTotal,
-      shippingCost: data.shippingCost,
-      discount: data.discount,
-      total: data.total,
-      taxes: data.taxes,
-      shippingOption: data.shippingOption,
+      subTotal: priced.subTotal,
+      shippingCost: shipping.cost,
+      discount,
+      total,
+      taxes: 0,
+      shippingOption: shipping.value,
       paymentMethod: data.paymentMethod,
-      status: data.status,
+      status: "Pending",
     });
     await newOrder.save();
     revalidateTag(CACHE_TAGS.stats);
