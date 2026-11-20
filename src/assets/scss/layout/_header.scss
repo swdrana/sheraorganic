@@ -355,7 +355,8 @@
     .user-menu-wrapper {
         position: absolute;
         top: calc(100% + 10px);
-        left: -15px;
+        // Open towards the page centre: left-anchored, the 200px menu pushed the page 31px wide at ~1280px.
+        right: -15px;
         width: 200px;
         padding-top: 20px;
         opacity: 0;

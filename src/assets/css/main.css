@@ -35615,7 +35615,7 @@ select:focus {
 .gshop-header-user .user-menu-wrapper {
   position: absolute;
   top: calc(100% + 10px);
-  left: -15px;
+  right: -15px;
   width: 200px;
   padding-top: 20px;
   opacity: 0;

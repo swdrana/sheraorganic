@@ -12,7 +12,7 @@
 
 ---
 
-## Round 12 — লুকানো ক্যাটাগরি/পণ্য/brand + Pixel/GTM admin থেকে (2026-11-21, local commit, push বাকি)
+## Round 12 — লুকানো ক্যাটাগরি/পণ্য/brand + Pixel/GTM admin থেকে (2026-11-21, push)
 
 রায়হান জানাল: ক্যাটাগরি hide করলেও সাইটে দেখায়। কারণ code-এ — storefront কোথাও `status` দেখত না, তাই দুই
 দোকানেই (লাইভে রায়হানের "oil" hidden অথচ হোমে ছিল; মেহেদীর তখন কোনো hidden ছিল না)।
@@ -34,8 +34,10 @@
   বদলায়; পরীক্ষার Pixel ID → `init → PageView → ViewContent → AddToCart`, `<head>`-এ verification meta।
   মেহেদীর কপি vs লাইভ (vendor script আটকে): title, ক্যাটাগরি, পাতার উচ্চতা, button-এর লেখা হুবহু, শুধু gtm.js,
   কোনো `fbq` নেই; একমাত্র পার্থক্য dataLayer-এ `view_item`। পরীক্ষার DB/সার্ভার মোছা।
-- **আগে থেকে থাকা, এই round-এর বাইরে:** ডেস্কটপ 1280-এ দুই লাইভ সাইটেই ৩১px পাশের স্ক্রল (offcanvas menu-র
-  অংশ viewport-এর বাইরে)।
+- **ডেস্কটপে ৩১px পাশের স্ক্রল ঠিক:** কারণ Navbar-এর লুকানো user dropdown (`.user-menu-wrapper`, ২০০px,
+  `left:-15px`) — ~1280px চওড়ায় পর্দার ডান কিনারা পেরোত। এখন `right:-15px` (মেনু বাঁ দিকে খোলে)। দুই লাইভ
+  সাইটে CSS বসিয়ে মাপা: 1920–320 light+dark সব চওড়ায় overflow 0, hover-এ মেনু পুরো পর্দার ভিতরে; products,
+  product-details, cart, checkout, about, contact, login পাতাতেও 0।
 - **Deploy-এর পরে:** রায়হান Site settings → Tracking-এ Pixel ID (+ চাইলে domain verification code) দিয়ে
   "ট্র্যাকিং চালু" করে সেভ করবে। মেহেদীকে কিছু করতে হবে না, Pixel ঘর খালি রাখবে। (ঐচ্ছিক: তার GTM-এর Purchase
   tag সবসময় ৳৭৫০ পাঠায়, "Place Order" click-এ — order ব্যর্থ হলেও; GTM-এ সাইটের `purchase` dataLayer event
