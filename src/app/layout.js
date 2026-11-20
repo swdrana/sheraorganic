@@ -7,7 +7,7 @@ import { getDecorSrc } from "@/app/components/store/theme/decorSets";
 import { normalizeTheme } from "@/app/utils/theme";
 
 import { normalizeBrand } from "./utils/brand";
-import { normalizeTracking } from "./utils/tracking";
+import { domainVerificationMetadata, normalizeTracking } from "./utils/tracking";
 import { getSiteUrl } from "./utils/siteUrl";
 
 export async function generateMetadata() {
@@ -25,6 +25,7 @@ export async function generateMetadata() {
       siteName: brand.site_name,
       images: brand.og_image ? [brand.og_image] : [],
     },
+    ...domainVerificationMetadata(setting),
   };
 }
 

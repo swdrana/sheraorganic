@@ -8,7 +8,38 @@
 > gotcha বদলালে `AGENTS.md`-ও একই ভাবে হালনাগাদ করো। machine-local (`~/.claude`) মেমোরিতে
 > এই প্রজেক্টের কিছু আলাদা করে রাখা হয় না — সব knowledge এখানেই।
 
-শেষ হালনাগাদ: 2026-11-06
+শেষ হালনাগাদ: 2026-11-21
+
+---
+
+## Round 12 — লুকানো ক্যাটাগরি/পণ্য/brand + Pixel/GTM admin থেকে (2026-11-21, local commit, push বাকি)
+
+রায়হান জানাল: ক্যাটাগরি hide করলেও সাইটে দেখায়। কারণ code-এ — storefront কোথাও `status` দেখত না, তাই দুই
+দোকানেই (লাইভে রায়হানের "oil" hidden অথচ হোমে ছিল; মেহেদীর তখন কোনো hidden ছিল না)।
+
+- **Hide এখন কাজ করে** (ক্যাটাগরি, পণ্য, brand): হোম carousel, menu, Offcanvas, footer, sidebar, তালিকা,
+  search, related — কোথাও লুকানো জিনিস নেই। লুকানো ক্যাটাগরি/brand-এর পুরনো link → `/products`;
+  লুকানো পণ্যের পাতা 404। ওই ক্যাটাগরির পণ্য অন্য জায়গায় আগের মতো। admin-এ সব আগের মতো দেখা যায়।
+- **Admin পণ্য তালিকায় STATUS toggle** — আগে code-এর ভুল path-এর জন্য দেখাই যেত না; নতুন action শুধু
+  `status` লেখে (পুরনো PATCH toggle-এ categories/brand মুছে দিত)।
+- **Tracking:** admin ব্যবস্থা Round 9 থেকেই ছিল (মেহেদীর DB-তে `GTM-MMLFB63S` চালু, Pixel GTM-এর ভিতরে;
+  রায়হানের সব খালি)। যোগ হলো: পণ্যের পাতায় ViewContent (সরাসরি Pixel/GA4 + dataLayer `view_item`, script
+  লোডের আগে হারায় না), Facebook domain verification ঘর (meta tag), Tracking tab বাংলায় — প্রতিটি ঘরের নাম,
+  কোথায় ID পাওয়া যায়, "Pixel GTM-এর ভিতরে থাকলে এখানে দেবেন না" নোট, GTM+Pixel দুটো ভরলে হলুদ সতর্কতা।
+  কোনো DB লেখা/seed লাগেনি; মেহেদীর মান অক্ষত।
+- যাচাই: 42 file / 304 test, lint exit 0, build। Mac-এ পরীক্ষার mongod-এ মেহেদীর আজকের read-only কপি ও
+  রায়হানের কপি (তার Atlas Mac-এর IP নেয় না, তাই ৪ নভেম্বরের কপি + লাইভ public API-র ক্যাটাগরি/পণ্য/settings),
+  headless 390/320/1280 light+dark: লাইভে "oil" দেখা যায় → নতুন build-এ কোথাও নেই; admin-এ পণ্য hide →
+  তালিকা থেকে উধাও, পাতা 404, অন্য field অপরিবর্তিত, আবার show; admin-এ ক্যাটাগরি hide → static হোম সঙ্গে সঙ্গে
+  বদলায়; পরীক্ষার Pixel ID → `init → PageView → ViewContent → AddToCart`, `<head>`-এ verification meta।
+  মেহেদীর কপি vs লাইভ (vendor script আটকে): title, ক্যাটাগরি, পাতার উচ্চতা, button-এর লেখা হুবহু, শুধু gtm.js,
+  কোনো `fbq` নেই; একমাত্র পার্থক্য dataLayer-এ `view_item`। পরীক্ষার DB/সার্ভার মোছা।
+- **আগে থেকে থাকা, এই round-এর বাইরে:** ডেস্কটপ 1280-এ দুই লাইভ সাইটেই ৩১px পাশের স্ক্রল (offcanvas menu-র
+  অংশ viewport-এর বাইরে)।
+- **Deploy-এর পরে:** রায়হান Site settings → Tracking-এ Pixel ID (+ চাইলে domain verification code) দিয়ে
+  "ট্র্যাকিং চালু" করে সেভ করবে। মেহেদীকে কিছু করতে হবে না, Pixel ঘর খালি রাখবে। (ঐচ্ছিক: তার GTM-এর Purchase
+  tag সবসময় ৳৭৫০ পাঠায়, "Place Order" click-এ — order ব্যর্থ হলেও; GTM-এ সাইটের `purchase` dataLayer event
+  ব্যবহার করলে আসল টাকা যাবে।)
 
 ---
 

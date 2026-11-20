@@ -1,7 +1,35 @@
 // One privacy boundary for all callers, including legacy cards. Never forward caller user_data.
 let tracking = { enabled: false };
-export function configureTracking(value) { tracking = value || { enabled: false }; }
-const active = () => typeof window !== "undefined" && tracking.enabled && !window.location.pathname.startsWith("/admin");
+// Events fired on page mount (ViewContent) run before AnalyticsLoader configures tracking (child
+// effects run first, and a route change resets it to null first), and before the vendor scripts
+// load on the first interaction. They wait here until the loader calls flushPendingTracking().
+const MAX_PENDING = 20;
+let pending = [];
+let flushed = false;
+export function configureTracking(value) {
+  tracking = value || { enabled: false };
+  if (!value) flushed = false;
+}
+const onAdmin = () => window.location.pathname.startsWith("/admin");
+const active = () => typeof window !== "undefined" && tracking.enabled && !onAdmin();
+function later(send) {
+  if (typeof window === "undefined" || onAdmin()) return;
+  if (flushed && active()) return send();
+  if (pending.length < MAX_PENDING) pending.push(send);
+}
+// Called by AnalyticsLoader right after it loads the scripts and sends PageView.
+export function flushPendingTracking() {
+  const queued = pending;
+  pending = [];
+  if (!active()) return;
+  flushed = true;
+  queued.forEach((send) => send());
+}
+// Disabled store or admin page: nothing queued may be sent later.
+export function clearPendingTracking() {
+  pending = [];
+  flushed = false;
+}
 function layer(event, ecommerce) {
   if (!active()) return;
   window.dataLayer = window.dataLayer || [];
@@ -36,6 +64,8 @@ function commerce(fbEvent, gaEvent, input = {}, orderCode) {
   layer(gaEvent, ecommerce);
   if (tracking.ga4_id) window.gtag?.("event", gaEvent, { ...ecommerce, send_to: tracking.ga4_id });
 }
+// Product page view. Same product-only params as the other ecommerce events.
+export const trackViewContent = (input) => later(() => commerce("ViewContent", "view_item", input));
 export const trackAddToCart = (input) => commerce("AddToCart", "add_to_cart", input);
 export const InitiateCheckout = (input) => commerce("InitiateCheckout", "begin_checkout", input);
 export function Purchase(input, orderCode) {

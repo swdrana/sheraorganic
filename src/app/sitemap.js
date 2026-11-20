@@ -2,11 +2,10 @@ import { getCachedCategories, getCachedProducts } from "@/app/data/cachedData";
 import { categoryPath, productPathEncoded } from "@/app/utils/productUrl";
 
 import { getSiteUrl } from "@/app/utils/siteUrl";
+import { isVisible as visible } from "@/app/utils/visibility";
 import { pastDate } from "@/app/utils/productMetadata";
 
 export const revalidate = 3600;
-
-const visible = (item) => item?.status !== "hide";
 
 export default async function sitemap() {
   const BASE_URL = getSiteUrl();

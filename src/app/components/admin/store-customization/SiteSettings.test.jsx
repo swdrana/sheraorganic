@@ -37,13 +37,27 @@ describe("Site Settings form", () => {
     const fetch = vi.fn().mockResolvedValue({ ok: true }); vi.stubGlobal("fetch", fetch);
     render(<SiteSettings group="tracking" />);
     expect(screen.getByRole("switch")).not.toBeChecked();
-    expect(screen.getByLabelText("fb_pixel_id10–20 digits")).toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText("gtm_idGTM-ABC1234"), { target: { value: "GTM-ABC1234" } });
+    for (const label of ["Google Tag Manager (GTM) ID", "Google Analytics 4 (GA4) ID", "Facebook Pixel ID", "Facebook domain verification code", "Microsoft Clarity ID", "TikTok Pixel ID"]) {
+      expect(screen.getByLabelText(label)).toBeInTheDocument();
+    }
+    expect(screen.getByLabelText("Facebook Pixel ID")).toHaveAccessibleDescription(/Meta Events Manager/);
+    fireEvent.change(screen.getByLabelText("Google Tag Manager (GTM) ID"), { target: { value: "GTM-ABC1234" } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Facebook domain verification code"), { target: { value: "abcdefghij0123456789abcdefghij" } });
     fireEvent.click(screen.getByRole("button", { name: "সেভ করুন" }));
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
     const { setting } = JSON.parse(fetch.mock.calls[0][1].body);
     expect(Object.keys(setting)).toEqual(["tracking"]);
     expect(setting.tracking.enabled).toBe(false);
+    expect(setting.tracking.gtm_id).toBe("GTM-ABC1234");
+    expect(setting.tracking.fb_domain_verification).toBe("abcdefghij0123456789abcdefghij");
+  });
+  it("warns (without blocking) when GTM and a direct Pixel are both filled", () => {
+    render(<SiteSettings group="tracking" />);
+    fireEvent.change(screen.getByLabelText("Google Tag Manager (GTM) ID"), { target: { value: "GTM-ABC1234" } });
+    fireEvent.change(screen.getByLabelText("Facebook Pixel ID"), { target: { value: "1234567890123" } });
+    expect(screen.getByRole("alert")).toHaveTextContent("দুবার");
+    expect(screen.getByRole("button", { name: "সেভ করুন" })).toBeEnabled();
   });
 });
 
@@ -52,7 +66,8 @@ it.each(["brand", "tracking"])("shows server validation fields in the %s form AN
   vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 400, json: async () => ({ message: "Invalid settings fields", invalidFields }) }));
   render(<SiteSettings group={group} />);
   fireEvent.click(screen.getByRole("button", { name: "সেভ করুন" }));
-  await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent(invalidFields[0]));
-  expect(toast.error).toHaveBeenCalledWith(`সঠিক মান দিন: ${invalidFields[0]}`);
+  const shown = group === "brand" ? "WhatsApp নম্বর (শুধু সংখ্যা)" : "Google Tag Manager (GTM) ID";
+  await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent(shown));
+  expect(toast.error).toHaveBeenCalledWith(`সঠিক মান দিন: ${shown}`);
   expect(screen.queryByText("সেভ হয়েছে।")).not.toBeInTheDocument();
 });

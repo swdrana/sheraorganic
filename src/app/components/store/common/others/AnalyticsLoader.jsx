@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { normalizeTracking } from "@/app/utils/tracking";
-import { configureTracking, PageView } from "@/app/utilities/facebookPixel";
+import { clearPendingTracking, configureTracking, flushPendingTracking, PageView } from "@/app/utilities/facebookPixel";
 
 // IDs only, never HTML/JS from settings. Each loader is a fixed vendor template.
 function script(key, src, initialize) {
@@ -63,6 +63,7 @@ export default function AnalyticsLoader({ tracking }) {
     const t = JSON.parse(key);
     if (pathname.startsWith("/admin") || !t.enabled) {
       configureTracking(null);
+      clearPendingTracking();
       return;
     }
     configureTracking(t);
@@ -75,6 +76,7 @@ export default function AnalyticsLoader({ tracking }) {
       window.__storeAnalyticsInteracted = true;
       loadTracking(t);
       PageView();
+      flushPendingTracking();
       cleanup();
     }
     if (window.__storeAnalyticsInteracted) load();

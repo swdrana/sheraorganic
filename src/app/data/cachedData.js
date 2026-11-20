@@ -123,5 +123,6 @@ export const getCachedSettings = async () =>
 export const getCachedProducts = safe("products", getCachedProductList, []);
 export const getCachedProductById = safe("product", getCachedProductDoc, null);
 export const getCachedCategories = safe("categories", getCachedCategoryList, []);
+export const getCachedBrands = safe("brands", getCachedBrandList, []);
 export const getCachedBlogs = safe("blogs", getCachedBlogList, []);
 export const getStoreStats = safe("stats", getCachedStoreStats, null);

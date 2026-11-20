@@ -5,14 +5,15 @@ import { notFound, permanentRedirect } from "next/navigation";
 import ProductDetailsBody from "@/app/components/store/productDetails/ProductDetailsBody";
 import ProductBreadcrumb from "@/app/components/store/productDetails/ProductBreadcrumb";
 import RelatatedProduct from "@/app/components/store/productDetails/RelatatedProduct";
-import { getCachedCategories, getCachedProductList, getCachedSettings } from "@/app/data/cachedData";
+import { getCachedCategories, getCachedSettings } from "@/app/data/cachedData";
+import { loadProduct } from "./loadProduct";
 import {
   categoryPath,
-  findProductByParam,
   productPathEncoded,
   productSlug,
 } from "@/app/utils/productUrl";
 import { normalizeCategory, productCategoryList } from "@/app/utils/productCategory";
+import { isVisible } from "@/app/utils/visibility";
 
 const decodeURIComponentSafe = (value) => {
   try {
@@ -24,13 +25,6 @@ const decodeURIComponentSafe = (value) => {
 
 const SITE_URL = getSiteUrl();
 
-// The URL is /product-details/<url path> (the product's unique `slug`). Lookup uses the cached
-// product list: current slug, else a legacy /product-details/<mongo id> link or an old slug, which
-// redirect to the current path. A DB failure throws (app/error.js shows "try again").
-async function loadProduct(param) {
-  const products = await getCachedProductList();
-  return findProductByParam(products, param);
-}
 
 const plainText = (html, max = 160) => {
   const text = String(html || "")
@@ -107,7 +101,7 @@ async function findCategory(product) {
   const names = productCategoryList(product).map(normalizeCategory);
   if (!names.length) return null;
   const categories = await getCachedCategories();
-  const match = categories.find((c) => c?.status !== "hide" && names.includes(normalizeCategory(c?.name)));
+  const match = categories.find((c) => isVisible(c) && names.includes(normalizeCategory(c?.name)));
   return match ? { name: match.name, href: categoryPath(match) } : null;
 }
 

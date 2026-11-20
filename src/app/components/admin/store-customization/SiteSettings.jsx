@@ -15,7 +15,19 @@ const LABELS = {
   product_sidebar_banner_img: "পণ্যের পাশের ব্যানারের ছবি", product_sidebar_banner_title: "ব্যানারের শিরোনাম",
   product_sidebar_banner_subtitle: "ব্যানারের উপশিরোনাম",
 };
-const HINTS = { gtm_id: "GTM-ABC1234", ga4_id: "G-ABC1234567", fb_pixel_id: "10–20 digits", clarity_id: "6–12 lowercase letters/digits", tiktok_pixel_id: "15–25 uppercase letters/digits" };
+// Tracking fields: Bengali name + format/where-to-find hint. Order = TRACKING_PATTERNS order.
+const TRACKING_FIELDS = {
+  gtm_id: { label: "Google Tag Manager (GTM) ID", hint: "যেমন GTM-ABC1234। tagmanager.google.com → container-এর ওপরে লেখা ID।" },
+  ga4_id: { label: "Google Analytics 4 (GA4) ID", hint: "যেমন G-ABC1234567। Analytics → Admin → Data streams → Measurement ID।" },
+  fb_pixel_id: { label: "Facebook Pixel ID", hint: "১০–২০ অঙ্কের সংখ্যা। Meta Events Manager → Data sources → Pixel-এর ID।" },
+  fb_domain_verification: { label: "Facebook domain verification code", hint: "Meta Business settings → Brand safety → Domains → Meta-tag পদ্ধতি। পুরো tag নয়, শুধু content=\"…\"-এর ভিতরের লেখাটা দিন (ছোট হাতের অক্ষর ও সংখ্যা)।" },
+  clarity_id: { label: "Microsoft Clarity ID", hint: "৬–১২ অক্ষর (ছোট হাতের অক্ষর/সংখ্যা)। clarity.microsoft.com → Settings → Project ID।" },
+  tiktok_pixel_id: { label: "TikTok Pixel ID", hint: "১৫–২৫ অক্ষর (বড় হাতের অক্ষর/সংখ্যা)। TikTok Ads Manager → Events → Pixel ID।" },
+};
+const fieldName = (path) => {
+  const [group, key] = String(path).split(".");
+  return (group === "tracking" ? TRACKING_FIELDS[key]?.label : LABELS[key]) || path;
+};
 export default function SiteSettings({ group }) {
   const { setting, settingLoading } = useSetting();
   const [values, setValues] = useState(null);
@@ -37,7 +49,7 @@ export default function SiteSettings({ group }) {
       if (!response.ok) {
         const error = await response.json().catch(() => ({}));
         throw new Error(error.invalidFields?.length
-          ? `সঠিক মান দিন: ${error.invalidFields.join(", ")}`
+          ? `সঠিক মান দিন: ${error.invalidFields.map(fieldName).join(", ")}`
           : error.message || "সেভ হয়নি। অনুমতি ও সংযোগ যাচাই করুন।");
       }
       forgetShared("settings");
@@ -81,12 +93,18 @@ export default function SiteSettings({ group }) {
           </div>
           <p className="text-muted small mb-4">বন্ধ করলে ক্রেতারা লগইন ছাড়াই সরাসরি অর্ডার করবে; মেনু ও ফুটারে লগইন/রেজিস্ট্রেশন দেখাবে না। অ্যাডমিন লগইন /login-এ আগের মতোই কাজ করবে।</p>
         </> : <>
-          <label className="d-flex gap-2 mb-4 align-items-center"><input type="checkbox" role="switch" checked={values.enabled} onChange={(e) => change("enabled", e.target.checked)} />ট্র্যাকিং চালু</label>
-          {Object.entries(TRACKING_PATTERNS).map(([key, pattern]) => <label key={key} className="d-block mb-4">
-            {key}<input className="form-control dark:bg-gray-700 dark:text-gray-100 mt-2" value={values[key]} pattern={pattern.source} onChange={(e) => change(key, e.target.value)} />
-            <small>{HINTS[key]}</small>
-          </label>)}
-          <p>শুধু নির্ধারিত ID দিন; HTML বা JavaScript নয়। একই সেবা GTM-এ থাকলে এখানে আবার চালু করবেন না।</p>
+          <label className="d-flex gap-2 mb-1 align-items-center"><input type="checkbox" role="switch" checked={values.enabled} onChange={(e) => change("enabled", e.target.checked)} />ট্র্যাকিং চালু</label>
+          <p className="text-muted small mb-4">বন্ধ থাকলে কোনো ট্র্যাকিং script লোড হয় না। Facebook domain verification বন্ধ অবস্থাতেও কাজ করে। অ্যাডমিন পাতায় কখনো ট্র্যাকিং চলে না।</p>
+          <p className="small mb-4 p-2 rounded" style={{ background: "#eff6ff", color: "#1e3a8a" }}>আপনার Facebook Pixel যদি GTM-এর ভিতরে বসানো থাকে, এখানে Pixel ID দেবেন না — একই event দুবার গুনবে। GTM ব্যবহার না করলে শুধু Pixel ID দিলেই চলবে।</p>
+          {Object.entries(TRACKING_PATTERNS).map(([key, pattern]) => <div key={key} className="mb-4">
+            <label className="d-block mb-1" htmlFor={`tracking-${key}`}>{TRACKING_FIELDS[key]?.label || key}</label>
+            <input id={`tracking-${key}`} aria-describedby={`tracking-${key}-hint`} className="form-control dark:bg-gray-700 dark:text-gray-100" value={values[key]} pattern={pattern.source} autoComplete="off" spellCheck={false} onChange={(e) => change(key, e.target.value)} />
+            <small id={`tracking-${key}-hint`} className="d-block text-muted mt-1">{TRACKING_FIELDS[key]?.hint}</small>
+          </div>)}
+          {values.gtm_id.trim() && values.fb_pixel_id.trim() && <p role="alert" className="small mb-4 p-2 rounded" style={{ background: "#fef9c3", color: "#854d0e" }}>
+            সতর্কতা: GTM আর Facebook Pixel দুটোই দেওয়া আছে। GTM-এর ভিতরেও এই Pixel থাকলে প্রতিটি event দুবার যাবে — তখন এখানকার Pixel ID মুছে দিন।
+          </p>}
+          <p className="small">শুধু নির্ধারিত ID দিন; HTML বা JavaScript নয়। খালি করে সেভ করলে সেই ট্র্যাকিং বন্ধ হয়।</p>
         </>}
         <button type="submit" className="btn btn-primary">{saving ? "সেভ হচ্ছে…" : "সেভ করুন"}</button>
       </fieldset>

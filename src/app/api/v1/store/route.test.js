@@ -45,7 +45,7 @@ describe("settings API", () => {
 
 const invalid = {
   brand: { email_brand_color: "red", messenger_username: "bad?name", whatsapp_number: "+880 123" },
-  tracking: { gtm_id: "bad", ga4_id: "bad", fb_pixel_id: "bad", clarity_id: "bad", tiktok_pixel_id: "bad" },
+  tracking: { gtm_id: "bad", ga4_id: "bad", fb_pixel_id: "bad", clarity_id: "bad", tiktok_pixel_id: "bad", fb_domain_verification: "<meta content=x>" },
 };
 describe("settings write validation", () => {
   it.each([POST, PATCH])("returns all invalid field names before ANY side effects", async (handler) => {
@@ -71,10 +71,10 @@ describe("settings write validation", () => {
   });
   it("allows explicit clearing, omission and trimmed valid values", async () => {
     mocks.session.mockResolvedValue({ user: { role: "Admin" } });
-    const response = await PATCH(req({ brand: { email_brand_color: "", whatsapp_number: "880123", messenger_username: "shop.name" }, tracking: { gtm_id: " GTM-ABC1234 ", ga4_id: "" } }));
+    const response = await PATCH(req({ brand: { email_brand_color: "", whatsapp_number: "880123", messenger_username: "shop.name" }, tracking: { gtm_id: " GTM-ABC1234 ", ga4_id: "", fb_domain_verification: " abcdefghij0123456789abcdefghij " } }));
     expect(response.status).toBe(200);
     expect(mocks.write.mock.calls[0][1].$set).toEqual({
-      name: "storeCustomizationSetting", "setting.brand.email_brand_color": "", "setting.brand.whatsapp_number": "880123", "setting.brand.messenger_username": "shop.name", "setting.tracking.gtm_id": "GTM-ABC1234", "setting.tracking.ga4_id": "",
+      name: "storeCustomizationSetting", "setting.brand.email_brand_color": "", "setting.brand.whatsapp_number": "880123", "setting.brand.messenger_username": "shop.name", "setting.tracking.gtm_id": "GTM-ABC1234", "setting.tracking.ga4_id": "", "setting.tracking.fb_domain_verification": "abcdefghij0123456789abcdefghij",
     });
   });
 });

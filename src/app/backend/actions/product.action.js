@@ -9,6 +9,23 @@ import { resolveProductSlug } from "../utils/productSlug";
 import { cleanSeo } from "../utils/productSeo";
 import { requireStaff } from "../utils/apiAuth";
 
+// Show/hide toggle from the admin product table: writes ONLY `status` (the old PATCH route would
+// overwrite categories/brand/video with the toggle's partial body).
+export async function productStatusUpdate(id, status) {
+  await requireStaff();
+  if (status !== "show" && status !== "hide") return { message: "invalid status", status: 400 };
+  if (!mongoose.isValidObjectId(id)) return { message: "product not found", status: 404 };
+  try {
+    await connectDB();
+    const result = await Product.updateOne({ _id: id }, { $set: { status } });
+    if (!result.matchedCount) return { message: "product not found", status: 404 };
+    revalidateTag(CACHE_TAGS.products);
+    return { message: "product status updated", status: 200 };
+  } catch (err) {
+    return { message: err.message, status: 500 };
+  }
+}
+
 // category update
 export async function productUpdate(id, updateProductData) {
   await requireStaff();

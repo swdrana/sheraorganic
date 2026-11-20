@@ -42,7 +42,7 @@ describe("customer login switch", () => {
   });
 });
 describe("tracking validators", () => {
-  const valid = { gtm_id: "GTM-MMLFB63S", ga4_id: "G-ABC1234567", fb_pixel_id: "123456789012345", clarity_id: "abc1234567", tiktok_pixel_id: "ABCDEFGHIJKLMNOPQRST" };
+  const valid = { gtm_id: "GTM-MMLFB63S", ga4_id: "G-ABC1234567", fb_pixel_id: "123456789012345", clarity_id: "abc1234567", tiktok_pixel_id: "ABCDEFGHIJKLMNOPQRST", fb_domain_verification: "abcdefghij0123456789abcdefghij" };
   it("is disabled unless explicitly true", () => {
     expect(normalizeTracking().enabled).toBe(false);
     expect(normalizeTracking({ tracking: { enabled: "true" } }).enabled).toBe(false);

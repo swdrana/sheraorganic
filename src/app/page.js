@@ -15,10 +15,11 @@ import {
   getCachedCategories,
   getCachedBlogs,
 } from "./data/cachedData";
+import { onlyVisible } from "./utils/visibility";
 
 const page = async () => {
   // Initial data comes straight from the shared server data cache (tag-revalidated)
-  const [setting, allProducts, categorys, blogs] = await Promise.all([
+  const [setting, allProducts, allCategorys, blogs] = await Promise.all([
     getCachedSettings(),
     getCachedProducts(),
     getCachedCategories(),
@@ -26,7 +27,9 @@ const page = async () => {
   ]);
   // Product cards never show the long HTML description; dropping it keeps the home page's RSC
   // payload small (it was ~30% of the HTML). ProductModal looks it up on demand.
-  const products = (allProducts || []).map(({ description, ...rest }) => rest);
+  // Admin-hidden products/categories never reach the storefront.
+  const products = onlyVisible(allProducts).map(({ description, ...rest }) => rest);
+  const categorys = onlyVisible(allCategorys);
 
   return (
     <>

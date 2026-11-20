@@ -89,6 +89,16 @@ Production env of each store (exported from Coolify) is kept locally in `.local/
   `AnalyticsLoader` handles route PageViews globally; `utilities/facebookPixel.js` allow-lists product-only
   FB/GA4/dataLayer ecommerce params, drops all caller PII, and uses orderCode as Purchase eventID/transaction_id.
   Avoid configuring the same vendor both directly and inside GTM (duplicate events).
+  `trackViewContent` (product details, once per product) waits in a capped in-memory queue until
+  AnalyticsLoader has loaded scripts + sent PageView (`flushPendingTracking`); page effects run before
+  the loader configures tracking, and a route change resets it to null first. `clearPendingTracking`
+  on admin/disabled. `tracking.fb_domain_verification` is validated like the IDs but is never a script:
+  root `generateMetadata` emits `<meta name="facebook-domain-verification">` via
+  `domainVerificationMetadata` even when tracking is off.
+- **Mehedi's Facebook Pixel lives inside his GTM container** (`GTM-MMLFB63S`, Custom HTML tags): page
+  load, URL contains `/product-details/` or `checkout`, and clicks on element text "Add to Cart" /
+  "Place Order" / "Buy Now". His `fb_pixel_id` must stay empty (else double events). Changing those
+  button texts or URLs silently breaks his Pixel — tell the owner first.
 - `scripts/seed-brand-settings.mjs`: `MONGODB_URI` (preferred) or `MONGO_URI` + `--store=mehedi|raihan`, dry run by default. Apply requires
   `--apply --backup=<new-file.json>`; exclusive private backup first, then only missing brand/tracking leaves.
   **Seed BEFORE deploying this code** to preserve Mehedi's existing texts/IDs; saving the Brand tab
@@ -291,6 +301,18 @@ Production env of each store (exported from Coolify) is kept locally in `.local/
   `cleanSeo` (`backend/utils/productSeo.js`). Metadata falls back to name / description / legacy `tag`.
 - Product page has `generateMetadata` (title/description/canonical/OG), Product + BreadcrumbList JSON-LD,
   the name as `h1`, and the slim `ProductBreadcrumb` instead of the big page banner.
+
+### Show/hide status (round 12)
+
+- `Category`/`Product`/`Brand` `status: "show" | "hide"`. Admin and storefront read the SAME public APIs
+  and `cachedData` loaders, so never filter there. Storefront filters with `utils/visibility.js`
+  (`isVisible` — missing status = visible, `onlyVisible`, `isHiddenListing`): `useCategory`/`useProducts`/
+  `useBrand` drop hidden items unless `{ includeHidden: true }` (admin `BlogDrawer` uses it); home
+  `page.js`, sitemap, `product-details/[id]/loadProduct.js` (hidden → 404) and
+  `products/[slug]/hiddenListing.js` (hidden category/brand link → `redirect("/products")`).
+  Products of a hidden category stay visible elsewhere; order POST ignores status (old carts still work).
+- Admin product show/hide uses the staff-only `productStatusUpdate` action (writes only `status`). Never
+  use the legacy `PATCH /api/v1/products/[productId]` for it — it overwrites categories/brand/video.
 
 ### Multi-category (round-2)
 

@@ -9,7 +9,7 @@ import { Controller } from "swiper"; // Import Controller from modules in Swiper
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import useAttributes from "../dataFetching/useAttributes";
-import { trackAddToCart } from "../../../utilities/facebookPixel";
+import { trackAddToCart, trackViewContent } from "../../../utilities/facebookPixel";
 import PreLoader from "../common/others/PreLoader";
 import StarRating from "../common/others/StartRating";
 import usebrands from "../dataFetching/useBrand";
@@ -87,6 +87,16 @@ const ProductDetailsContent = ({ single }) => {
   const [volume, setVolume] = useState(0);
   const [totalVolume, setTotalVolume] = useState(0);
   const [discount, setDiscount] = useState("");
+
+  // One ViewContent per product page (queued until the tracking scripts load).
+  const viewedId = product?._id ? String(product._id) : "";
+  useEffect(() => {
+    if (!viewedId) return;
+    const firstVariantPrice = Number(product?.variants?.[0]?.price) || 0;
+    const itemPrice = Number(product?.prices?.price) || firstVariantPrice;
+    trackViewContent({ contents: [{ id: viewedId, quantity: 1, item_price: itemPrice }], value: itemPrice });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewedId]);
 
   let [selectVariant, setSelectVariant] = useState({});
   const [selectVa, setSelectVa] = useState({});

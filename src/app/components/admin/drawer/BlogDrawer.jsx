@@ -27,7 +27,7 @@ const BlogDrawer = () => {
     category,
     control,
   } = useBlogSubmit();
-  const { categorys, categoryLoading } = useCategory();
+  const { categorys, categoryLoading } = useCategory({ includeHidden: true });
 
   return (
     <Transition.Root show={isOpenBlogDrawer} as={Fragment}>

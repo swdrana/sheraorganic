@@ -5,7 +5,7 @@ import { BiSolidShow } from "react-icons/bi";
 import { LiaEdit } from "react-icons/lia";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { toast } from "react-toastify";
-import { updateProduct } from "@/app/backend/controllers/product.controller";
+import { productStatusUpdate } from "@/app/backend/actions/product.action";
 import { useMainContext } from "../context/mainContext";
 import Link from "next/link";
 import Pagination from "../shared/Pagination";
@@ -24,28 +24,15 @@ const ProductTable = ({ products, pageCount, handlePageChange }) => {
   const handelProductUpdate = async (data) => {
     setProductSubmitting(true);
     setUpdateProduct(false);
-    const productData = {
-      name: data.name,
-      category: data.category,
-      currentPrice: data.currentPrice,
-      previousPrice: data.previousPrice,
-      des: data.des,
-      img: data.imgUrl,
-      status: data.status === "show" ? "hide" : "show",
-    };
-    // const res = await updateProduct({ product: productData, path, id: productDetails?._id });
-    // console.log("click", res);
-    const res = await updateProduct({
-      id: data._id,
-      updateProductData: productData,
-    });
-    // console.log("res..in update porudct ", res);
+    const res = await productStatusUpdate(data._id, data.status === "hide" ? "show" : "hide").catch(
+      (error) => ({ message: error?.message })
+    );
+    setProductSubmitting(false);
     if (res?.status === 200) {
-      setProductSubmitting(false);
-      toast.success("product update successfully");
+      toast.success(data.status === "hide" ? "পণ্যটি এখন ওয়েবসাইটে দেখা যাবে" : "পণ্যটি ওয়েবসাইট থেকে লুকানো হয়েছে");
       setUpdateProduct(true);
     } else {
-      setProductSubmitting(false);
+      toast.error(res?.message || "status update failed");
     }
   };
 
@@ -102,7 +89,7 @@ const ProductTable = ({ products, pageCount, handlePageChange }) => {
                     >
                       VIEW
                     </th>
-                    {path === "/product" && (
+                    {path === "/admin/product" && (
                       <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-dark"
@@ -153,7 +140,7 @@ const ProductTable = ({ products, pageCount, handlePageChange }) => {
                           </Link>
                         </div>
                       </td>
-                      {path === "/product" && (
+                      {path === "/admin/product" && (
                         <td className="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
                           {/* swite status update */}
                           <SwitchToggleStatus
